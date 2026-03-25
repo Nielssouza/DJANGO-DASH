@@ -1,0 +1,32 @@
+{% extends "dashboard/base.html" %}
+{% load plotly_dash %}
+{% block title %}Analytics | PIB Mundial{% endblock %}
+{% block nav_pib %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Reset do padding da página principal para analytics */
+    .page-main {
+        padding: 40px 0 !important;
+    }
+    
+    /* Garantir que o app plotly ocupe o máximo de tela sem barras de scroll duplas */
+    .dash-wrapper {
+        width: 100%;
+        min-height: 85vh; /* Quase a tela toda */
+        position: relative;
+    }
+
+    /* Sobrescrever qualquer estilo de dash que venha por padrão no iframe */
+    #dash-app-container {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper" id="dash-app-container">
+    {% plotly_app name="PIBMundial" ratio=0.8 %}
+</div>
+{% endblock %}
