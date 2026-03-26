@@ -20,7 +20,8 @@ def env_list(name, default=""):
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-dev-only")
-DEBUG = env_bool("DEBUG", True)
+ON_HEROKU = bool(os.environ.get("DYNO"))
+DEBUG = env_bool("DEBUG", not ON_HEROKU)
 
 if not DEBUG and SECRET_KEY == "django-insecure-local-dev-only":
     raise ImproperlyConfigured("Set the SECRET_KEY environment variable for production.")
@@ -37,7 +38,7 @@ if HEROKU_APP_NAME:
     if heroku_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(heroku_origin)
 
-if not DEBUG and ".herokuapp.com" not in ALLOWED_HOSTS:
+if ".herokuapp.com" not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(".herokuapp.com")
 
 INSTALLED_APPS = [
