@@ -1,258 +1,432 @@
 import os
-import requests
+
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
-from dash import Input, Output, dcc, html, dash_table, ctx
+import requests
+from dash import Input, Output, ctx, dash_table, dcc, html
 from django_plotly_dash import DjangoDash
 
-# Premium Dark Theme Palette
 BG = "#000000"
-SURFACE = "#0a0a0c"
-BORDER = "rgba(255, 255, 255, 0.1)"
-TXT_PRIMARY = "#ffffff"
-TXT_SECONDARY = "rgba(255, 255, 255, 0.55)"
-TXT_TERTIARY = "rgba(255, 255, 255, 0.3)"
-ACCENT_BLUE = "#3b82f6"
+SURFACE = "rgba(8, 8, 8, 0.94)"
+BORDER = "rgba(255, 255, 255, 0.08)"
+BORDER_STRONG = "rgba(255, 255, 255, 0.16)"
+TXT_PRIMARY = "#f8fbff"
+TXT_SECONDARY = "rgba(248, 251, 255, 0.76)"
+ACCENT = "#a1a1aa"
 CACHE_FILE = "gdp_data_cache.csv"
+DEFAULT_COUNTRIES = ["World", "United States", "China", "India", "Brazil"]
+
+
+def normalize_columns(dataframe):
+    if dataframe.empty:
+        return dataframe
+
+    return dataframe.rename(
+        columns={
+            "PaÃ­s": "Pais",
+            "País": "Pais",
+            "Country": "Pais",
+            "Year": "Ano",
+            "GDP": "gdp",
+        }
+    )
+
 
 def load_data(force=False):
     if not force and os.path.exists(CACHE_FILE):
-        return pd.read_csv(CACHE_FILE)
-    url = "http://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json&per_page=20000"
+        return normalize_columns(pd.read_csv(CACHE_FILE))
+
+    url = "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json&per_page=20000"
     try:
-        r = requests.get(url, timeout=15)
-        data = r.json()[1]
-        rows = [{"País": i["country"]["value"], "Ano": int(i["date"]), "gdp": i["value"]} for i in data if i["value"] is not None]
-        df = pd.DataFrame(rows).sort_values(["País", "Ano"])
-        df.to_csv(CACHE_FILE, index=False)
-        return df
-    except:
-        return pd.read_csv(CACHE_FILE) if os.path.exists(CACHE_FILE) else pd.DataFrame()
+        response = requests.get(url, timeout=20)
+        response.raise_for_status()
+        payload = response.json()
+        rows = [
+            {"Pais": item["country"]["value"], "Ano": int(item["date"]), "gdp": item["value"]}
+            for item in payload[1]
+            if item["value"] is not None
+        ]
+        dataframe = pd.DataFrame(rows).sort_values(["Pais", "Ano"])
+        dataframe.to_csv(CACHE_FILE, index=False)
+        return dataframe
+    except Exception:
+        if os.path.exists(CACHE_FILE):
+            return normalize_columns(pd.read_csv(CACHE_FILE))
+        return pd.DataFrame(columns=["Pais", "Ano", "gdp"])
 
-df_init = load_data()
-paises = sorted(df_init["País"].unique()) if not df_init.empty else []
-max_y = int(df_init["Ano"].max()) if not df_init.empty else 2023
 
-app = DjangoDash("PIBMundial")
+def value_for(dataframe, country_name):
+    if dataframe.empty:
+        return None
 
-# Injecting Custom CSS for Animations and Premium Feel
-custom_css = """
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+    country_data = dataframe[dataframe["Pais"] == country_name]
+    if country_data.empty:
+        return None
+    return country_data["gdp"].iloc[0]
 
-.dash-app-wrapper { font-family: 'Inter', sans-serif; }
-.metric-card {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-    box-shadow: 0 4px 24px -8px rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-}
-.metric-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255,255,255,0.2) !important;
-    box-shadow: 0 12px 32px -8px rgba(0,0,0,0.8);
-}
-.btn-primary {
-    background: linear-gradient(135deg, #ffffff 0%, #d4d4d4 100%);
-    color: #000;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 24px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    font-family: 'Outfit', sans-serif;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(255,255,255,0.1);
-}
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 25px rgba(255,255,255,0.3);
-}
-.input-field {
-    background: rgba(0,0,0,0.5) !important;
-    color: #fff !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    padding: 10px 12px;
-    border-radius: 6px;
-    width: 100%;
-    font-size: 0.85rem;
-    transition: border-color 0.3s ease;
-}
-.input-field:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-}
-.text-gradient {
-    background: linear-gradient(90deg, #ffffff, #888888);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-/* Estilizando o Dropdown do Dash */
-.Select-control {
-    background-color: #000 !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    color: #fff !important;
-    border-radius: 8px !important;
-    padding: 4px !important;
-    transition: border-color 0.3s ease;
-}
-.Select-control:hover { border-color: rgba(255,255,255,0.3) !important; }
-.Select-menu-outer {
-    background-color: #0a0a0c !important;
-    border: 1px solid rgba(255,255,255,0.2) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.8) !important;
-    color: #fff !important;
-}
-.Select-option:hover { background-color: rgba(255,255,255,0.1) !important; }
-.Select-value-label { color: #fff !important; }
-.dash-spreadsheet-container .dash-spreadsheet-inner * {
-    font-family: 'Inter', sans-serif !important;
-}
-"""
 
-def metric_card(title, value, subtitle=None, **kwargs):
-    return html.Div(className="metric-card", style={
-        "padding": "32px", "borderRadius": "12px", 
-        "border": f"1px solid {BORDER}", "flex": "1",
-        "position": "relative", "overflow": "hidden"
-    }, children=[
-        html.Div(title, style={"fontSize": "0.7rem", "fontWeight": "600", "color": TXT_SECONDARY, "textTransform": "uppercase", "letterSpacing": "0.15em", "marginBottom": "16px"}),
-        html.Div(value, className="text-gradient", style={"fontSize": "2.5rem", "fontWeight": "800", "fontFamily": "Outfit", "letterSpacing": "-0.03em", "lineHeight": "1"}),
-        html.Div(subtitle, style={"fontSize": "0.75rem", "color": TXT_TERTIARY, "marginTop": "12px", "fontWeight": "500"}) if subtitle else None
-    ], **kwargs)
+def fmt(value):
+    if value is None or pd.isna(value):
+        return "--"
+    if value >= 1e12:
+        return f"${value / 1e12:.2f}T"
+    if value >= 1e9:
+        return f"${value / 1e9:.2f}B"
+    return f"${value / 1e6:.2f}M"
 
-app.layout = html.Div(className="dash-app-wrapper", style={"backgroundColor": BG, "minHeight": "100vh", "padding": "20px"}, children=[
-    # Injetando CSS via dcc.Markdown (Fallback seguro quando html.Style não existe)
-    dcc.Markdown(f"<style>{custom_css}</style>", dangerously_allow_html=True),
-    
-    # Header Section
-    html.Div(style={"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "borderBottom": f"1px solid {BORDER}", "paddingBottom": "32px", "marginBottom": "48px"}, children=[
-        html.Div([
-            html.H2("Global Economic Intelligence", style={"fontSize": "2.2rem", "fontWeight": "800", "fontFamily": "Outfit", "margin": "0", "letterSpacing": "-0.02em", "color": TXT_PRIMARY}),
-            html.P("Plataforma de monitoramento macroeconômico em tempo real", style={"color": TXT_SECONDARY, "fontSize": "0.95rem", "fontWeight": "400", "margin": "12px 0 0 0"})
-        ]),
-        html.Button("RELOAD DATA", id="refresh-btn", className="btn-primary")
-    ]),
 
-    # Main KPI Bar
-    html.Div(style={"display": "grid", "gridTemplateColumns": "1fr 1fr", "gap": "32px", "marginBottom": "32px"}, children=[
-        metric_card("Total Aggregate GDP", id="total-val", value="Loading..."),
-        metric_card("Dominant Economy", id="top-unit", value="Loading...")
-    ]),
-    
-    # Secondary KPIs
-    html.Div(id="bench-container", style={"display": "flex", "gap": "32px", "marginBottom": "56px"}),
+def empty_figure(message):
+    figure = go.Figure()
+    figure.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        margin={"l": 0, "r": 0, "t": 0, "b": 0},
+        xaxis={"visible": False},
+        yaxis={"visible": False},
+        annotations=[
+            {
+                "text": message,
+                "xref": "paper",
+                "yref": "paper",
+                "x": 0.5,
+                "y": 0.5,
+                "showarrow": False,
+                "font": {"family": "Manrope", "size": 16, "color": TXT_SECONDARY},
+            }
+        ],
+    )
+    return figure
 
-    # Analytics Core
-    html.Div(style={"display": "grid", "gridTemplateColumns": "320px 1fr", "gap": "40px"}, children=[
-        # Controls Column
-        html.Div(children=[
-            html.Div(style={"background": SURFACE, "padding": "32px", "borderRadius": "12px", "border": f"1px solid {BORDER}"}, children=[
-                html.Label("Filtro de Países", style={"fontSize": "0.75rem", "fontWeight": "700", "color": TXT_SECONDARY, "textTransform": "uppercase", "display": "block", "marginBottom": "16px", "letterSpacing": "0.05em"}),
-                dcc.Dropdown(id="country-drop", options=[{"label": c, "value": c} for c in paises], value=["Brazil", "United States", "China", "India"], multi=True, className="custom-dropdown"),
-                
-                html.Hr(style={"border": "0", "borderTop": f"1px solid {BORDER}", "margin": "32px 0"}),
-                
-                html.Label("Intervalo de Tempo", style={"fontSize": "0.75rem", "fontWeight": "700", "color": TXT_SECONDARY, "textTransform": "uppercase", "display": "block", "marginBottom": "16px", "letterSpacing": "0.05em"}),
-                html.Div(style={"display": "flex", "gap": "12px", "alignItems": "center"}, children=[
-                    dcc.Input(id="y-start", type="number", value=max_y-10, className="input-field"),
-                    html.Span("—", style={"color": TXT_TERTIARY}),
-                    dcc.Input(id="y-end", type="number", value=max_y, className="input-field"),
-                ])
-            ])
-        ]),
 
-        # Content Column
-        html.Div(children=[
-            # Graph
-            html.Div(className="metric-card", style={"padding": "32px", "borderRadius": "12px", "border": f"1px solid {BORDER}", "marginBottom": "40px"}, children=[
-                html.Div("GDP Relative Ranking", style={"fontSize": "0.75rem", "fontWeight": "700", "color": TXT_SECONDARY, "textTransform": "uppercase", "letterSpacing": "0.05em", "marginBottom": "24px"}),
-                dcc.Graph(id="main-graph", config={"displayModeBar": False})
-            ]),
-            # Table
-            html.Div(style={"background": SURFACE, "padding": "32px", "borderRadius": "12px", "border": f"1px solid {BORDER}"}, children=[
-                html.Div("Data Matrix Intelligence", style={"fontSize": "0.75rem", "fontWeight": "700", "color": TXT_SECONDARY, "textTransform": "uppercase", "letterSpacing": "0.05em", "marginBottom": "24px"}),
-                html.Div(id="table-container")
-            ])
-        ])
-    ])
-])
+def empty_table_notice(message):
+    return html.Div(message, className="empty-state")
 
-def fmt(v):
-    if not v: return "-"
-    if v >= 1e12: return f"${v/1e12:.2f}T"
-    if v >= 1e9: return f"${v/1e9:.2f}B"
-    return f"${v/1e6:.2f}M"
+
+def metric_card(title, value, subtitle=None, value_id=None):
+    value_kwargs = {"className": "metric-value"}
+    if value_id:
+        value_kwargs["id"] = value_id
+
+    return html.Div(
+        className="metric-card panel-surface",
+        children=[
+            html.Div(title, className="metric-label"),
+            html.Div(value, **value_kwargs),
+            html.Div(subtitle, className="metric-subtitle") if subtitle else None,
+        ],
+    )
+
+
+DATAFRAME = load_data()
+COUNTRIES = sorted(DATAFRAME["Pais"].unique()) if not DATAFRAME.empty else []
+DEFAULT_SELECTION = [country for country in DEFAULT_COUNTRIES if country in COUNTRIES] or COUNTRIES[:5]
+MAX_YEAR = int(DATAFRAME["Ano"].max()) if not DATAFRAME.empty else 2024
+MIN_YEAR = max(1960, int(DATAFRAME["Ano"].min())) if not DATAFRAME.empty else 1960
+YEAR_OPTIONS = [{"label": str(year), "value": year} for year in range(MAX_YEAR, MIN_YEAR - 1, -1)]
+
+
+def get_runtime_dataframe(force=False):
+    global DATAFRAME
+
+    if force:
+        refreshed = load_data(force=True)
+        if not refreshed.empty:
+            DATAFRAME = refreshed
+        return DATAFRAME
+
+    if DATAFRAME.empty:
+        DATAFRAME = load_data(force=False)
+
+    return DATAFRAME
+
+app = DjangoDash(
+    "PIBMundial",
+    serve_locally=True,
+    external_stylesheets=["/static/dashboard/pib_mundial_dash.css"],
+)
+
+app.layout = html.Div(
+    className="dash-shell",
+    style={"backgroundColor": BG, "minHeight": "100vh", "padding": "6px"},
+    children=[
+        html.Div(
+            className="dash-hero panel-surface",
+            children=[
+                html.Div(
+                    className="dash-hero-grid",
+                    children=[
+                        html.Div(
+                            children=[
+                                html.Div("Serie historica de pib", className="hero-kicker"),
+                                html.H2("PIB mundial e por pais de 1960 ate o ano atual.", className="hero-title"),
+                                html.P(
+                                    "Este painel foi reorganizado para listar a serie historica completa desde 1960, "
+                                    "comparar paises em barras por ano e resumir tudo em cards de dashboard.",
+                                    className="hero-copy",
+                                ),
+                                html.Div(
+                                    className="hero-pill-grid",
+                                    children=[
+                                        html.Div(className="hero-pill", children=[html.Strong("1960 ate hoje"), html.Span("Cobertura historica fixa ate o ultimo ano disponivel.")]),
+                                        html.Div(className="hero-pill", children=[html.Strong("Filtro por pais"), html.Span("Compare economias especificas com selecao multipla.")]),
+                                        html.Div(className="hero-pill", children=[html.Strong("Cards + barras"), html.Span("Leitura rapida do ano escolhido e listagem completa abaixo.")]),
+                                    ],
+                                ),
+                            ]
+                        ),
+                        html.Div(
+                            className="hero-side",
+                            children=[
+                                html.Div(
+                                    className="hero-side-card",
+                                    children=[
+                                        html.Div("Cobertura", className="hero-kicker"),
+                                        html.Strong(f"{MIN_YEAR} -> {MAX_YEAR}"),
+                                        html.P("Serie historica consolidada do Banco Mundial para o indicador de PIB."),
+                                    ],
+                                ),
+                                html.Div(
+                                    className="hero-side-card",
+                                    children=[
+                                        html.Div("Visao atual", className="hero-kicker"),
+                                        html.Strong("Comparativo por ano"),
+                                        html.P("Escolha um ano para o grafico de barras e acompanhe a lista historica completa."),
+                                    ],
+                                ),
+                                html.Button("RELOAD DATA", id="refresh-btn", className="btn-primary"),
+                            ],
+                        ),
+                    ],
+                )
+            ],
+        ),
+        html.Div(
+            className="dash-kpi-grid",
+            children=[
+                metric_card("PIB mundial", "Loading...", "Valor do agregado World para o ano selecionado.", value_id="world-val"),
+                metric_card("Maior economia do ano", "Loading...", "Lider entre os paises filtrados no ano do grafico.", value_id="top-unit"),
+            ],
+        ),
+        html.Div(id="bench-container", className="dash-bench-grid"),
+        html.Div(
+            className="core-grid",
+            children=[
+                html.Div(
+                    className="control-surface panel-surface",
+                    children=[
+                        html.Div("Control stack", className="panel-kicker"),
+                        html.H3("Filtros do painel", className="panel-title", style={"marginBottom": "10px"}),
+                        html.P(
+                            "A serie fica fixa entre 1960 e o ano mais recente. Aqui voce escolhe os paises e o ano usado no grafico de barras.",
+                            className="panel-copy",
+                            style={"marginBottom": "24px"},
+                        ),
+                        html.Div(
+                            className="field-group",
+                            children=[
+                                html.Div("Paises", className="field-label"),
+                                html.P("Escolha quais economias entram no comparativo.", className="field-copy"),
+                                dcc.Dropdown(
+                                    id="country-drop",
+                                    options=[{"label": country, "value": country} for country in COUNTRIES],
+                                    value=DEFAULT_SELECTION,
+                                    multi=True,
+                                ),
+                            ],
+                        ),
+                        html.Div(
+                            className="field-group",
+                            children=[
+                                html.Div("Ano do grafico", className="field-label"),
+                                html.P(f"Snapshot em barras dentro da serie {MIN_YEAR}-{MAX_YEAR}.", className="field-copy"),
+                                dcc.Dropdown(
+                                    id="year-drop",
+                                    options=YEAR_OPTIONS,
+                                    value=MAX_YEAR,
+                                    clearable=False,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                html.Div(
+                    children=[
+                        html.Div(
+                            className="chart-surface panel-surface",
+                            children=[
+                                html.Div(
+                                    className="panel-head",
+                                    children=[
+                                        html.Div(children=[html.Div("Bar comparison", className="panel-kicker"), html.H3("PIB por pais no ano selecionado", className="panel-title")]),
+                                        html.P("Grafico de barras comparando os paises filtrados no ano escolhido no seletor lateral.", className="panel-copy"),
+                                    ],
+                                ),
+                                dcc.Graph(id="main-graph", className="dash-graph", config={"displayModeBar": False}),
+                            ],
+                        ),
+                        html.Div(
+                            className="table-surface panel-surface",
+                            children=[
+                                html.Div(
+                                    className="panel-head",
+                                    children=[
+                                        html.Div(children=[html.Div("Year list", className="panel-kicker"), html.H3("Lista do ano selecionado", className="panel-title")]),
+                                        html.P("O carregamento inicial traz apenas o ano mais recente disponivel. Use o seletor para navegar pela serie de 1960 ate 2024.", className="panel-copy"),
+                                    ],
+                                ),
+                                html.Div(id="table-container"),
+                            ],
+                        ),
+                    ]
+                ),
+            ],
+        ),
+    ],
+)
+
 
 @app.callback(
-    [Output("main-graph", "figure"), Output("total-val", "children"), Output("top-unit", "children"), 
-     Output("table-container", "children"), Output("bench-container", "children")],
-    [Input("country-drop", "value"), Input("y-start", "value"), Input("y-end", "value"), Input("refresh-btn", "n_clicks")]
+    [
+        Output("main-graph", "figure"),
+        Output("world-val", "children"),
+        Output("top-unit", "children"),
+        Output("table-container", "children"),
+        Output("bench-container", "children"),
+    ],
+    [
+        Input("country-drop", "value"),
+        Input("year-drop", "value"),
+        Input("refresh-btn", "n_clicks"),
+    ],
 )
-def update(sel, ys, ye, n):
-    try: forced = ctx.triggered_id == "refresh-btn"
-    except: forced = False
-    
-    df = load_data(force=forced)
-    if df.empty or not sel: return go.Figure(), [], [], "", []
-    ys, ye = ys or df["Ano"].min(), ye or df["Ano"].max()
-    
-    # Benchmarks
-    df_b = df[df["Ano"] == ye]
-    v_w = df_b[df_b["País"] == "World"]["gdp"].iloc[0] if "World" in df_b["País"].values else 0
-    v_e = df_b[df_b["País"] == "European Union"]["gdp"].iloc[0] if "European Union" in df_b["País"].values else 0
-    bench = [metric_card("Index World", fmt(v_w), f"FY {ye}"), metric_card("UE Region", fmt(v_e), f"FY {ye}")]
+def update(selected_countries, selected_year, _n_clicks):
+    try:
+        forced_reload = ctx.triggered_id == "refresh-btn"
+    except Exception:
+        forced_reload = False
+    dataframe = get_runtime_dataframe(force=forced_reload)
 
-    # Process
-    df_f = df[(df["País"].isin(sel)) & (df["Ano"] >= ys) & (df["Ano"] <= ye)]
-    if df_f.empty: return go.Figure(), [], [], "", bench
-    df_l = df_f[df_f["Ano"] == df_f["Ano"].max()].sort_values("gdp", ascending=False)
-    
-    # KPIs
-    tot = [html.Div("Total Group Vol", style={"fontSize": "0.65rem", "fontWeight": "600", "color": TXT_SECONDARY, "textTransform": "uppercase", "marginBottom": "12px", "letterSpacing": "0.1em"}),
-           html.Div(fmt(df_l["gdp"].sum()), className="text-gradient", style={"fontSize": "2.2rem", "fontWeight": "700", "fontFamily": "Outfit"})]
-    top = [html.Div(f"Leader: {df_l.iloc[0]['País']}", style={"fontSize": "0.65rem", "fontWeight": "600", "color": TXT_SECONDARY, "textTransform": "uppercase", "marginBottom": "12px", "letterSpacing": "0.1em"}),
-           html.Div(fmt(df_l.iloc[0]["gdp"]), className="text-gradient", style={"fontSize": "2.2rem", "fontWeight": "700", "fontFamily": "Outfit"})]
+    if dataframe.empty or not selected_countries:
+        return (
+            empty_figure("Sem dados disponiveis para exibir."),
+            "--",
+            "--",
+            empty_table_notice("Nenhum dado foi carregado para o painel."),
+            [],
+        )
 
-    # Graph
-    fig = px.bar(df_l, x="País", y="gdp", template="plotly_dark", color="gdp", color_continuous_scale=["#3b82f6", "#60a5fa", "#ffffff"])
-    fig.update_coloraxes(showscale=False)
-    fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", 
-        font={"family": "Inter", "color": TXT_SECONDARY, "size": 11},
-        yaxis={"gridcolor": "rgba(255,255,255,0.05)", "tickprefix": "$", "tickformat": ".2s"},
-        xaxis={"gridcolor": "rgba(0,0,0,0)", "title": ""}, 
-        margin={"l":0,"r":0,"t":10,"b":0},
-        bargap=0.3,
-        hoverlabel={"bgcolor": "#0a0a0c", "font_size": 13, "font_family": "Inter", "bordercolor": "rgba(255,255,255,0.2)"}
-    )
-    fig.update_traces(marker_line_width=0, opacity=0.9, hovertemplate="<b>%{x}</b><br>GDP: %{y:$,.0f}<extra></extra>")
+    selected_year = int(selected_year or MAX_YEAR)
+    selected_year = min(max(selected_year, MIN_YEAR), MAX_YEAR)
 
-    # Table
-    df_p = df_f[df_f["Ano"] >= ye-5].pivot(index="País", columns="Ano", values="gdp").reset_index()
-    for col in df_p.columns[1:]: df_p[col] = df_p[col].apply(fmt)
-    
+    filtered = dataframe[
+        (dataframe["Pais"].isin(selected_countries))
+        & (dataframe["Ano"] >= MIN_YEAR)
+        & (dataframe["Ano"] <= MAX_YEAR)
+    ]
+    if filtered.empty:
+        return (
+            empty_figure("Nenhum resultado encontrado para os paises selecionados."),
+            "--",
+            "--",
+            empty_table_notice("Ajuste os paises filtrados para preencher a serie historica."),
+            [],
+        )
+
+    year_frame = filtered[filtered["Ano"] == selected_year].sort_values("gdp", ascending=False)
+    world_value = value_for(dataframe[dataframe["Ano"] == selected_year], "World")
+
+    if year_frame.empty:
+        top_value = "--"
+        figure = empty_figure(f"Nenhum dado encontrado para {selected_year} nos paises filtrados.")
+    else:
+        top_country = year_frame.iloc[0]["Pais"]
+        top_country_value = fmt(year_frame.iloc[0]["gdp"])
+        top_value = html.Div(
+            className="metric-stack",
+            children=[html.Span(top_country), html.Small(top_country_value, className="metric-stack-note")],
+        )
+
+        colors = []
+        for index, country_name in enumerate(year_frame["Pais"]):
+            if country_name == "World":
+                colors.append("#ffffff")
+            elif index < 3:
+                colors.append("#d4d4d8")
+            else:
+                colors.append(ACCENT)
+
+        figure = go.Figure(
+            data=[
+                go.Bar(
+                    x=year_frame["Pais"],
+                    y=year_frame["gdp"],
+                    marker={"color": colors, "line": {"color": "rgba(255,255,255,0.08)", "width": 1.2}},
+                    hovertemplate="<b>%{x}</b><br>PIB: %{y:$,.0f}<extra></extra>",
+                )
+            ]
+        )
+        figure.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            margin={"l": 0, "r": 0, "t": 10, "b": 0},
+            font={"family": "Manrope", "color": TXT_SECONDARY, "size": 12},
+            xaxis={"title": "", "tickangle": -18, "gridcolor": "rgba(0,0,0,0)", "tickfont": {"size": 11}},
+            yaxis={"title": "", "gridcolor": "rgba(255,255,255,0.06)", "zerolinecolor": "rgba(255,255,255,0.08)", "tickprefix": "$", "tickformat": ".2s"},
+            bargap=0.28,
+            hoverlabel={"bgcolor": SURFACE, "bordercolor": BORDER_STRONG, "font": {"family": "Manrope", "size": 13, "color": TXT_PRIMARY}},
+        )
+
+    benchmark_cards = [
+        metric_card("Cobertura historica", f"{MIN_YEAR}-{MAX_YEAR}", "Serie disponivel no painel."),
+        metric_card("Ano do grafico", str(selected_year), "Base usada para o comparativo em barras."),
+        metric_card("Paises filtrados", str(len(selected_countries)), "Economias selecionadas no filtro."),
+        metric_card("Registros listados", f"{len(filtered):,}".replace(",", "."), "Linhas historicas desde 1960."),
+    ]
+
+    table_frame = filtered[filtered["Ano"] == selected_year].sort_values(["gdp", "Pais"], ascending=[False, True]).copy()
+    table_frame["Ano"] = table_frame["Ano"].astype(int)
+    table_frame["PIB"] = table_frame["gdp"].apply(fmt)
+    table_frame = table_frame[["Ano", "Pais", "PIB"]]
+
     table = dash_table.DataTable(
-        data=df_p.to_dict('records'),
-        columns=[{"name": str(i), "id": str(i)} for i in df_p.columns],
+        data=table_frame.to_dict("records"),
+        columns=[{"name": column, "id": column} for column in table_frame.columns],
         style_header={
-            'backgroundColor': 'rgba(255, 255, 255, 0.03)', 'color': "#fff", 'fontWeight': '600', 
-            'borderBottom': f'1px solid {BORDER}', 'border': 'none', 'padding': '16px', 
-            'fontFamily': 'Inter', 'fontSize': '0.75rem', 'textTransform': 'uppercase', 'letterSpacing': '0.05em'
+            "backgroundColor": "rgba(255, 255, 255, 0.04)",
+            "color": TXT_PRIMARY,
+            "fontWeight": "700",
+            "borderBottom": f"1px solid {BORDER}",
+            "border": "none",
+            "padding": "16px 18px",
+            "fontFamily": "JetBrains Mono",
+            "fontSize": "11px",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.12em",
         },
         style_cell={
-            'backgroundColor': 'transparent', 'color': TXT_SECONDARY, 'textAlign': 'left', 
-            'borderBottom': f'1px solid {BORDER}', 'border': 'none', 'padding': '16px 20px', 
-            'fontFamily': 'Inter', 'fontSize': '0.85rem'
+            "backgroundColor": "transparent",
+            "color": TXT_SECONDARY,
+            "textAlign": "left",
+            "borderBottom": f"1px solid {BORDER}",
+            "border": "none",
+            "padding": "16px 18px",
+            "fontFamily": "Manrope",
+            "fontSize": "14px",
         },
         style_data_conditional=[
-            {'if': {'row_index': 'odd'}, 'backgroundColor': 'rgba(255,255,255,0.01)'},
-            {'if': {'state': 'hover'}, 'backgroundColor': 'rgba(255,255,255,0.05)', 'border': '1px solid rgba(255,255,255,0.1)'}
+            {"if": {"row_index": "odd"}, "backgroundColor": "rgba(255, 255, 255, 0.018)"},
+            {"if": {"state": "hover"}, "backgroundColor": "rgba(255, 255, 255, 0.05)", "border": f"1px solid {BORDER_STRONG}"},
         ],
-        style_table={'borderRadius': '8px', 'overflow': 'hidden'}
+        style_table={"borderRadius": "20px", "overflow": "hidden", "overflowX": "auto"},
+        sort_action="native",
+        page_action="native",
+        page_size=15,
     )
 
-    return fig, tot, top, table, bench
+    return (
+        figure,
+        fmt(world_value),
+        top_value,
+        table,
+        benchmark_cards,
+    )

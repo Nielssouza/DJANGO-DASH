@@ -5,137 +5,577 @@
 
 {% block extra_head %}
 <style>
-    .hero {
-        padding: 120px 0;
-        text-align: left;
+    .home-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+        gap: 32px;
+        align-items: stretch;
+        padding: 24px 0 34px;
     }
 
-    .hero-label {
-        color: var(--text-tertiary);
-        font-family: 'Outfit', sans-serif;
-        text-transform: uppercase;
-        font-weight: 600;
-        font-size: 0.75rem;
-        letter-spacing: 0.15em;
-        margin-bottom: 24px;
-        display: block;
-    }
-
-    .hero h1 {
-        font-family: 'Outfit', sans-serif;
-        font-size: clamp(3rem, 8vw, 5.5rem);
-        font-weight: 800;
-        line-height: 1.05;
-        letter-spacing: -0.04em;
-        margin-bottom: 32px;
-        color: var(--text-primary);
-    }
-
-    .hero p {
-        font-size: 1.25rem;
-        color: var(--text-secondary);
-        max-width: 600px;
-        margin-bottom: 48px;
-        font-weight: 300;
-    }
-
-    .hero-actions {
+    .hero-copy {
         display: flex;
+        flex-direction: column;
+        gap: 26px;
+        padding: 28px 0 0;
+    }
+
+    .hero-copy .display-title {
+        max-width: 10ch;
+    }
+
+    .hero-copy .section-copy {
+        max-width: 58ch;
+    }
+
+    .hero-signals {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 8px;
+    }
+
+    .signal-chip {
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .signal-chip span {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        margin-bottom: 10px;
+    }
+
+    .signal-chip strong {
+        display: block;
+        font-family: var(--font-heading);
+        font-size: 1.18rem;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+    }
+
+    .signal-chip small {
+        display: block;
+        margin-top: 8px;
+        color: var(--text-secondary);
+        font-size: 0.88rem;
+        line-height: 1.6;
+    }
+
+    .hero-panel {
+        min-height: 620px;
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .hero-panel-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .hero-panel-top h2 {
+        margin-top: 8px;
+        font-family: var(--font-heading);
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        letter-spacing: -0.06em;
+        line-height: 1;
+    }
+
+    .panel-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+    }
+
+    .panel-status::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 20px var(--glow);
+    }
+
+    .console-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .console-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 212px;
+        padding: 22px;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .console-card.wide {
+        grid-column: 1 / -1;
+        min-height: 240px;
+    }
+
+    .console-kicker {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+    }
+
+    .console-value {
+        font-family: var(--font-heading);
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        letter-spacing: -0.06em;
+        line-height: 1;
+        margin-bottom: 10px;
+    }
+
+    .console-copy {
+        max-width: 26ch;
+        color: var(--text-secondary);
+        font-size: 0.92rem;
+        line-height: 1.7;
+    }
+
+    .bar-stack {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        height: 124px;
+        margin-top: 28px;
+    }
+
+    .bar-stack span {
+        flex: 1;
+        border-radius: 999px 999px 14px 14px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.14));
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
+    }
+
+    .radar-shell {
+        position: absolute;
+        inset: auto 18px 18px auto;
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background:
+            radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 52%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+        overflow: hidden;
+    }
+
+    .radar-shell::before,
+    .radar-shell::after {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .radar-shell::after {
+        inset: 34px;
+    }
+
+    .radar-beam {
+        position: absolute;
+        inset: 4px 50%;
+        transform-origin: bottom center;
+        background: linear-gradient(180deg, transparent 15%, rgba(255, 255, 255, 0.2) 100%);
+        clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        animation: radar-sweep 5s linear infinite;
+    }
+
+    .trace-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+    }
+
+    .trace-node {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.025);
+    }
+
+    .trace-node strong {
+        display: block;
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        letter-spacing: -0.04em;
+        margin-bottom: 8px;
+    }
+
+    .trace-node p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .overview-panel {
+        margin-top: 20px;
+        padding: 30px;
+    }
+
+    .overview-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .overview-head .section-copy {
+        max-width: 58ch;
+    }
+
+    .capability-section {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 32px;
+        align-items: start;
+        margin-top: 34px;
+    }
+
+    .capability-copy {
+        position: sticky;
+        top: 118px;
+        padding: 28px;
+    }
+
+    .capability-list {
+        display: grid;
         gap: 20px;
     }
 
-    .btn {
-        padding: 16px 40px;
-        border-radius: 12px;
-        font-family: 'Outfit', sans-serif;
-        font-weight: 700;
-        font-size: 0.9375rem;
-        text-decoration: none;
-        transition: var(--transition);
+    .capability-card {
+        padding: 30px;
+    }
+
+    .capability-index {
         display: inline-flex;
         align-items: center;
-        gap: 12px;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        margin-bottom: 22px;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+        color: var(--text-primary);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.06);
     }
 
-    .btn-white {
-        background: var(--accent);
-        color: #000;
-        border: 1px solid var(--accent);
+    .capability-card h3 {
+        font-family: var(--font-heading);
+        font-size: 1.45rem;
+        letter-spacing: -0.05em;
+        margin-bottom: 14px;
     }
 
-    .btn-white:hover {
-        background: rgba(255, 255, 255, 0.9);
-        transform: translateY(-2px);
+    .capability-card p {
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 20px;
     }
 
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 32px;
-        margin-top: 100px;
-    }
-
-    .f-card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 40px;
-        transition: var(--transition);
-    }
-
-    .f-card:hover { border-color: var(--border-hover); background: var(--surface-hover); }
-
-    .f-icon {
-        width: 48px;
-        height: 48px;
+    .capability-line {
         display: flex;
         align-items: center;
-        justify-content: center;
-        background: rgba(255,255,255,0.05);
-        border-radius: 12px;
-        margin-bottom: 28px;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
     }
 
-    .f-card h3 { font-family: 'Outfit', sans-serif; margin-bottom: 16px; font-size: 1.25rem; }
-    .f-card p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+    .capability-line::before {
+        content: "";
+        width: 26px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), transparent);
+    }
 
-    @media (max-width: 1024px) {
-        .features-grid { grid-template-columns: 1fr; }
-        .hero { text-align: center; }
-        .hero p { margin: 0 auto 48px; }
-        .hero-actions { justify-content: center; }
+    .cta-panel {
+        margin-top: 34px;
+        padding: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+    }
+
+    .cta-panel .section-copy {
+        max-width: 52ch;
+    }
+
+    @keyframes radar-sweep {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (max-width: 1180px) {
+        .home-hero,
+        .capability-section {
+            grid-template-columns: 1fr;
+        }
+
+        .capability-copy {
+            position: static;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .hero-signals,
+        .console-grid,
+        .trace-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .overview-head,
+        .cta-panel {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .hero-panel {
+            min-height: auto;
+            padding: 22px;
+        }
+
+        .hero-panel-top {
+            flex-direction: column;
+        }
+
+        .console-card {
+            min-height: auto;
+        }
+
+        .radar-shell {
+            position: relative;
+            inset: auto;
+            margin-top: 24px;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="hero">
-    <span class="hero-label">Inteligência Estratégica v4.0</span>
-    <h1>Análise Global<br>em tempo real.</h1>
-    <p>Visualize tendências econômicas globais com precisão absoluta através de nossa plataforma analítica centralizada.</p>
-    <div class="hero-actions">
-        <a href="/pib-mundial/" class="btn btn-white">
-            Abrir Analytics
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+<section class="home-hero">
+    <div class="hero-copy">
+        <span class="eyebrow">DS Corp // Command Surface</span>
+        <h1 class="display-title">Uma central anal&iacute;tica com cara de futuro.</h1>
+        <p class="section-copy">
+            O projeto agora assume uma linguagem mais cinematogr&aacute;fica, com profundidade, glow controlado e leitura r&aacute;pida para transformar dados macroecon&ocirc;micos em sinal estrat&eacute;gico.
+        </p>
+
+        <div class="button-row">
+            <a href="/pib-mundial/" class="button button-primary">
+                Abrir analytics
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <a href="#capabilities" class="button button-secondary">
+                Explorar estrutura
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14"/>
+                    <path d="M19 12l-7 7-7-7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="hero-signals">
+            <div class="signal-chip">
+                <span>Realtime Stack</span>
+                <strong>Monitoramento vivo</strong>
+                <small>Camadas de leitura r&aacute;pida para tomada de decis&atilde;o sem fric&ccedil;&atilde;o.</small>
+            </div>
+            <div class="signal-chip">
+                <span>Visual Depth</span>
+                <strong>Vidro + glow</strong>
+                <small>Superf&iacute;cies mais densas, com contraste forte e identidade contempor&acirc;nea.</small>
+            </div>
+            <div class="signal-chip">
+                <span>Core Palette</span>
+                <strong>Mesmo DNA visual</strong>
+                <small>Preto, branco e o azul do analytics preservados como assinatura da interface.</small>
+            </div>
+        </div>
     </div>
 
-    <div class="features-grid">
-        <div class="f-card">
-            <div class="f-icon">📊</div>
-            <h3>Matrix Render</h3>
-            <p>Visualização unificada de dados macroeconômicos com rankings automáticos e comparativos.</p>
+    <div class="panel hero-panel">
+        <div>
+            <div class="hero-panel-top">
+                <div>
+                    <div class="page-note">Live Command View</div>
+                    <h2>Economic Signal Mesh</h2>
+                </div>
+                <div class="panel-status">Operational</div>
+            </div>
+
+            <div class="console-grid">
+                <article class="console-card">
+                    <div class="console-kicker">Throughput</div>
+                    <div class="console-value">+128%</div>
+                    <p class="console-copy">Fluxo visual mais forte para destacar prioridade, ritmo e hierarquia da informa&ccedil;&atilde;o.</p>
+                    <div class="bar-stack">
+                        <span style="height: 44%;"></span>
+                        <span style="height: 66%;"></span>
+                        <span style="height: 92%;"></span>
+                        <span style="height: 78%;"></span>
+                        <span style="height: 100%;"></span>
+                    </div>
+                </article>
+
+                <article class="console-card">
+                    <div class="console-kicker">Signal Radar</div>
+                    <div class="console-value">24/7</div>
+                    <p class="console-copy">Estado permanente de leitura com foco em dados globais, ranking e intera&ccedil;&atilde;o direta.</p>
+                    <div class="radar-shell">
+                        <span class="radar-beam"></span>
+                    </div>
+                </article>
+
+                <article class="console-card wide">
+                    <div class="console-kicker">Protocol Layers</div>
+                    <div class="console-value">Three Active Streams</div>
+                    <p class="console-copy">A home deixa de ser uma capa est&aacute;tica e passa a funcionar como um painel de comando, com densidade visual e narrativa de produto.</p>
+                    <div class="trace-grid">
+                        <div class="trace-node">
+                            <strong>Data Sync</strong>
+                            <p>Entrada limpa para navegar do overview ao dashboard interativo.</p>
+                        </div>
+                        <div class="trace-node">
+                            <strong>UX Rhythm</strong>
+                            <p>Cards, linhas e glow discretos para guiar o olhar sem poluir a tela.</p>
+                        </div>
+                        <div class="trace-node">
+                            <strong>Visual Trust</strong>
+                            <p>Leitura premium, com forte contraste e mais presen&ccedil;a em desktop e mobile.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
         </div>
-        <div class="f-card">
-            <div class="f-icon">🎛️</div>
-            <h3>Precision Control</h3>
-            <p>Filtros refinados para recortes temporais e seleções geopolíticas de alta complexidade.</p>
+    </div>
+</section>
+
+<section class="panel overview-panel">
+    <div class="overview-head">
+        <div>
+            <div class="page-note">Front-End Refresh</div>
+            <h2 class="section-title">A interface agora opera como um cockpit visual.</h2>
         </div>
-        <div class="f-card">
-            <div class="f-icon">🔌</div>
-            <h3>Direct Stream</h3>
-            <p>Integração direta com protocolos do Banco Mundial garantindo atualização contínua.</p>
-        </div>
+        <p class="section-copy">
+            A repagina&ccedil;&atilde;o refor&ccedil;a identidade, profundidade e ritmo. Em vez de blocos planos, o layout trabalha com atmosfera, contraste e textura para entregar uma sensa&ccedil;&atilde;o mais futurista sem abandonar a paleta atual.
+        </p>
+    </div>
+
+    <div class="grid-3">
+        <article class="metric-tile">
+            <div class="metric-kicker">Visual Engine</div>
+            <div class="metric-value">Black / White / Blue</div>
+            <p class="metric-copy">A base crom&aacute;tica foi preservada, mas com grada&ccedil;&otilde;es mais densas e highlights mais precisos.</p>
+        </article>
+        <article class="metric-tile">
+            <div class="metric-kicker">Navigation Flow</div>
+            <div class="metric-value">Frictionless</div>
+            <p class="metric-copy">Header, CTAs e se&ccedil;&otilde;es foram reorganizados para criar uma jornada mais clara entre overview e analytics.</p>
+        </article>
+        <article class="metric-tile">
+            <div class="metric-kicker">Responsive Core</div>
+            <div class="metric-value">Adaptive</div>
+            <p class="metric-copy">A nova estrutura preserva impacto visual em telas grandes sem perder legibilidade em mobile.</p>
+        </article>
+    </div>
+</section>
+
+<section class="capability-section" id="capabilities">
+    <div class="panel capability-copy">
+        <div class="page-note">System Capabilities</div>
+        <h2 class="section-title">Mais presen&ccedil;a visual, sem quebrar a linguagem do projeto.</h2>
+        <p class="section-copy" style="margin-top: 18px;">
+            O redesenho foi pensado para parecer uma evolu&ccedil;&atilde;o natural do que j&aacute; existe: o mesmo espectro crom&aacute;tico, agora com composi&ccedil;&atilde;o mais sofisticada, superf&iacute;cies mais ricas e uma home que comunica valor logo na primeira dobra.
+        </p>
+    </div>
+
+    <div class="capability-list">
+        <article class="panel capability-card">
+            <span class="capability-index">01</span>
+            <h3>Hero com narrativa de produto</h3>
+            <p>O topo da home agora vende a experi&ecirc;ncia com uma headline forte, sinais operacionais e um painel visual que antecipa o universo do dashboard.</p>
+            <div class="capability-line">Command-first composition</div>
+        </article>
+
+        <article class="panel capability-card">
+            <span class="capability-index">02</span>
+            <h3>Cards com mais profundidade</h3>
+            <p>Os blocos foram redesenhados com brilho, contorno t&eacute;cnico, camadas transl&uacute;cidas e hierarquia tipogr&aacute;fica mais n&iacute;tida para refor&ccedil;ar a ideia de sistema premium.</p>
+            <div class="capability-line">Layered surfaces and glow</div>
+        </article>
+
+        <article class="panel capability-card">
+            <span class="capability-index">03</span>
+            <h3>Analytics integrado ao mesmo ecossistema</h3>
+            <p>A tela do dashboard foi enquadrada dentro de um frame visual mais forte e o app Dash recebeu o mesmo vocabul&aacute;rio est&eacute;tico para evitar ruptura entre telas.</p>
+            <div class="capability-line">Single visual language</div>
+        </article>
+    </div>
+</section>
+
+<section class="panel cta-panel">
+    <div>
+        <div class="page-note">Ready To Launch</div>
+        <h2 class="section-title" style="margin-top: 10px;">Abra o analytics e veja o novo visual em opera&ccedil;&atilde;o.</h2>
+        <p class="section-copy" style="margin-top: 14px;">
+            A p&aacute;gina principal e o dashboard agora compartilham a mesma assinatura: atmosfera escura, detalhes luminosos e leitura de dados com mais impacto.
+        </p>
+    </div>
+
+    <div class="button-row">
+        <a href="/pib-mundial/" class="button button-primary">Ir para o painel</a>
     </div>
 </section>
 {% endblock %}

@@ -1,0 +1,351 @@
+body {
+    background: #000000;
+}
+
+.dash-shell {
+    color: #f8fbff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.dash-shell * {
+    box-sizing: border-box;
+}
+
+.panel-surface {
+    position: relative;
+    overflow: hidden;
+    border-radius: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.98), rgba(3, 3, 3, 0.98));
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+}
+
+.panel-surface::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 32%, transparent 72%, rgba(255, 255, 255, 0.03));
+    pointer-events: none;
+}
+
+.dash-hero {
+    padding: 26px;
+    margin-bottom: 18px;
+}
+
+.dash-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.8fr);
+    gap: 20px;
+    align-items: end;
+}
+
+.hero-kicker,
+.metric-label,
+.panel-kicker,
+.field-label {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(248, 251, 255, 0.46);
+}
+
+.hero-title {
+    margin: 10px 0 14px;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-size: clamp(34px, 5vw, 52px);
+    line-height: 0.94;
+    letter-spacing: -0.07em;
+}
+
+.hero-copy {
+    max-width: 68ch;
+    color: rgba(248, 251, 255, 0.76);
+    line-height: 1.8;
+}
+
+.hero-pill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.hero-pill {
+    padding: 13px 14px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    min-width: 150px;
+}
+
+.hero-pill strong {
+    display: block;
+    margin-bottom: 6px;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    letter-spacing: -0.04em;
+}
+
+.hero-pill span {
+    display: block;
+    color: rgba(248, 251, 255, 0.56);
+    font-size: 13px;
+}
+
+.hero-side {
+    display: grid;
+    gap: 14px;
+}
+
+.hero-side-card {
+    padding: 16px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.hero-side-card strong {
+    display: block;
+    margin: 8px 0 6px;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    letter-spacing: -0.05em;
+}
+
+.hero-side-card p {
+    color: rgba(248, 251, 255, 0.6);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 16px 18px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ffffff, #d4d4d8);
+    color: #02060b;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 18px 40px rgba(255, 255, 255, 0.14);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 44px rgba(255, 255, 255, 0.18);
+}
+
+.dash-kpi-grid,
+.dash-bench-grid {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.dash-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dash-bench-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    padding: 24px;
+    min-height: 172px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.metric-value {
+    margin-top: 16px;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    line-height: 1;
+    color: #f8fbff;
+    word-break: break-word;
+}
+
+.metric-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.metric-stack-note {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(248, 251, 255, 0.46);
+}
+
+.metric-subtitle {
+    margin-top: 12px;
+    color: rgba(248, 251, 255, 0.56);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.core-grid {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.control-surface {
+    position: sticky;
+    top: 16px;
+    padding: 28px;
+}
+
+.field-group + .field-group {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.field-copy {
+    margin-top: 8px;
+    color: rgba(248, 251, 255, 0.58);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.Select-control {
+    min-height: 50px !important;
+    padding: 4px 10px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    box-shadow: none !important;
+}
+
+.Select.is-focused > .Select-control,
+.Select-control:hover {
+    border-color: rgba(255, 255, 255, 0.28) !important;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08) !important;
+}
+
+.Select-menu-outer {
+    background: rgba(10, 10, 10, 0.98) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+.Select-placeholder,
+.Select-value-label,
+.Select--multi .Select-value-label,
+.Select-input > input {
+    color: #f8fbff !important;
+}
+
+.Select-option {
+    background: transparent !important;
+    color: rgba(248, 251, 255, 0.72) !important;
+}
+
+.Select-option.is-focused,
+.Select-option:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.Select--multi .Select-value {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 999px !important;
+    color: #f8fbff !important;
+}
+
+.panel-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.panel-title {
+    margin-top: 10px;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-size: clamp(26px, 3vw, 34px);
+    letter-spacing: -0.05em;
+}
+
+.panel-copy {
+    max-width: 58ch;
+    color: rgba(248, 251, 255, 0.64);
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.chart-surface,
+.table-surface {
+    padding: 28px;
+}
+
+.chart-surface {
+    margin-bottom: 18px;
+}
+
+.dash-graph .js-plotly-plot,
+.dash-graph .plot-container {
+    border-radius: 22px;
+    overflow: hidden;
+}
+
+.empty-state {
+    padding: 44px 24px;
+    border-radius: 20px;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+    color: rgba(248, 251, 255, 0.62);
+    text-align: center;
+    line-height: 1.8;
+}
+
+.dash-spreadsheet-container .dash-spreadsheet-inner * {
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+}
+
+@media (max-width: 1180px) {
+    .dash-hero-grid,
+    .core-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .control-surface {
+        position: static;
+    }
+
+    .dash-bench-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .dash-hero,
+    .chart-surface,
+    .table-surface,
+    .control-surface {
+        padding: 22px;
+    }
+
+    .dash-kpi-grid,
+    .dash-bench-grid {
+        grid-template-columns: 1fr;
+    }
+}
