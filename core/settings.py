@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 
 import dj_database_url
-from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,20 +17,16 @@ def env_bool(name, default=False):
 def env_list(name, default=""):
     return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
 
-
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-dev-only")
 ON_HEROKU = bool(os.environ.get("DYNO"))
 DEBUG = env_bool("DEBUG", not ON_HEROKU)
 
-if not DEBUG and SECRET_KEY == "django-insecure-local-dev-only":
-    raise ImproperlyConfigured("Set the SECRET_KEY environment variable for production.")
-
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
 
-HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", "").strip()
-if HEROKU_APP_NAME:
-    heroku_host = f"{HEROKU_APP_NAME}.herokuapp.com"
+APP_NAME = os.environ.get("APP_NAME", os.environ.get("HEROKU_APP_NAME", "")).strip()
+if APP_NAME:
+    heroku_host = f"{APP_NAME}.herokuapp.com"
     heroku_origin = f"https://{heroku_host}"
     if heroku_host not in ALLOWED_HOSTS:
         ALLOWED_HOSTS.append(heroku_host)
@@ -95,13 +90,22 @@ CHANNEL_LAYERS = {
     },
 }
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{(BASE_DIR / 'db.sqlite3').as_posix()}",
-        conn_max_age=600,
-        ssl_require=not DEBUG,
-    )
-}
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=not DEBUG,
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
