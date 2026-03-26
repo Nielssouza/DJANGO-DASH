@@ -20,6 +20,73 @@
         padding: 28px 0 0;
     }
 
+    .ticker-shell {
+        position: relative;
+        overflow: hidden;
+        width: min(100%, 760px);
+        padding: 12px 0;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .ticker-shell::before,
+    .ticker-shell::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 52px;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .ticker-shell::before {
+        left: 0;
+        background: linear-gradient(90deg, rgba(10, 10, 10, 0.96), transparent);
+    }
+
+    .ticker-shell::after {
+        right: 0;
+        background: linear-gradient(270deg, rgba(10, 10, 10, 0.96), transparent);
+    }
+
+    .ticker-track {
+        display: flex;
+        width: max-content;
+        animation: home-ticker 28s linear infinite;
+    }
+
+    .ticker-group {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        flex-shrink: 0;
+        padding: 0 24px;
+    }
+
+    .ticker-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        white-space: nowrap;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+    }
+
+    .ticker-item::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 14px rgba(255, 255, 255, 0.14);
+    }
+
     .hero-copy .display-title {
         max-width: 10ch;
     }
@@ -352,6 +419,21 @@
         }
     }
 
+    @keyframes home-ticker {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ticker-track {
+            animation: none;
+        }
+    }
+
     @media (max-width: 1180px) {
         .home-hero,
         .capability-section {
@@ -403,22 +485,46 @@
 {% block content %}
 <section class="home-hero">
     <div class="hero-copy">
-        <span class="eyebrow">DS Corp // Command Surface</span>
-        <h1 class="display-title">Uma central anal&iacute;tica com cara de futuro.</h1>
+        <div class="ticker-shell" aria-label="Destaques do painel de PIB">
+            <div class="ticker-track">
+                <div class="ticker-group">
+                    <span class="ticker-item">Banco Mundial</span>
+                    <span class="ticker-item">FMI</span>
+                    <span class="ticker-item">S&eacute;rie hist&oacute;rica desde 1960</span>
+                    <span class="ticker-item">Ranking anual por pa&iacute;s</span>
+                    <span class="ticker-item">PIB nominal</span>
+                    <span class="ticker-item">Crescimento do PIB</span>
+                    <span class="ticker-item">PIB per capita</span>
+                    <span class="ticker-item">Fontes oficiais</span>
+                </div>
+                <div class="ticker-group" aria-hidden="true">
+                    <span class="ticker-item">Banco Mundial</span>
+                    <span class="ticker-item">FMI</span>
+                    <span class="ticker-item">S&eacute;rie hist&oacute;rica desde 1960</span>
+                    <span class="ticker-item">Ranking anual por pa&iacute;s</span>
+                    <span class="ticker-item">PIB nominal</span>
+                    <span class="ticker-item">Crescimento do PIB</span>
+                    <span class="ticker-item">PIB per capita</span>
+                    <span class="ticker-item">Fontes oficiais</span>
+                </div>
+            </div>
+        </div>
+        <h1 class="display-title">Ranking do PIB por pa&iacute;s, com s&eacute;rie hist&oacute;rica e fontes oficiais.</h1>
         <p class="section-copy">
-            O projeto agora assume uma linguagem mais cinematogr&aacute;fica, com profundidade, glow controlado e leitura r&aacute;pida para transformar dados macroecon&ocirc;micos em sinal estrat&eacute;gico.
+            Consulte rankings anuais do PIB, compare pa&iacute;ses e acesse s&eacute;ries hist&oacute;ricas com base em dados do Banco Mundial e do FMI.
+            A navega&ccedil;&atilde;o foi organizada para destacar o dado, a fonte e o recorte escolhido.
         </p>
 
         <div class="button-row">
             <a href="/pib-mundial/" class="button button-primary">
-                Abrir analytics
+                Abrir PIB Mundial
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M5 12h14"/>
                     <path d="M12 5l7 7-7 7"/>
                 </svg>
             </a>
             <a href="#capabilities" class="button button-secondary">
-                Explorar estrutura
+                Ver se&ccedil;&otilde;es
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 5v14"/>
                     <path d="M19 12l-7 7-7-7"/>
@@ -428,19 +534,19 @@
 
         <div class="hero-signals">
             <div class="signal-chip">
-                <span>Realtime Stack</span>
-                <strong>Monitoramento vivo</strong>
-                <small>Camadas de leitura r&aacute;pida para tomada de decis&atilde;o sem fric&ccedil;&atilde;o.</small>
+                <span>S&eacute;rie Hist&oacute;rica</span>
+                <strong>1960 at&eacute; hoje</strong>
+                <small>Consulte a evolu&ccedil;&atilde;o do PIB ao longo do tempo e compare mudan&ccedil;as no ranking mundial.</small>
             </div>
             <div class="signal-chip">
-                <span>Visual Depth</span>
-                <strong>Vidro + glow</strong>
-                <small>Superf&iacute;cies mais densas, com contraste forte e identidade contempor&acirc;nea.</small>
+                <span>Fontes Oficiais</span>
+                <strong>Banco Mundial e FMI</strong>
+                <small>Os dados do painel podem ser consultados a partir das duas bases, com troca direta na interface.</small>
             </div>
             <div class="signal-chip">
-                <span>Core Palette</span>
-                <strong>Mesmo DNA visual</strong>
-                <small>Preto, branco e o azul do analytics preservados como assinatura da interface.</small>
+                <span>Indicadores</span>
+                <strong>PIB, crescimento e per capita</strong>
+                <small>Uma mesma consulta re&uacute;ne tamanho da economia, varia&ccedil;&atilde;o anual e leitura por habitante.</small>
             </div>
         </div>
     </div>
@@ -449,17 +555,17 @@
         <div>
             <div class="hero-panel-top">
                 <div>
-                    <div class="page-note">Live Command View</div>
-                    <h2>Economic Signal Mesh</h2>
+                    <div class="page-note">Conte&uacute;do do Painel</div>
+                    <h2>Ranking, filtros e s&eacute;rie hist&oacute;rica</h2>
                 </div>
-                <div class="panel-status">Operational</div>
+                <div class="panel-status">Leitura por pa&iacute;s</div>
             </div>
 
             <div class="console-grid">
                 <article class="console-card">
-                    <div class="console-kicker">Throughput</div>
-                    <div class="console-value">+128%</div>
-                    <p class="console-copy">Fluxo visual mais forte para destacar prioridade, ritmo e hierarquia da informa&ccedil;&atilde;o.</p>
+                    <div class="console-kicker">Recorte Temporal</div>
+                    <div class="console-value">1960-hoje</div>
+                    <p class="console-copy">O painel permite observar o PIB no ano atual ou voltar d&eacute;cadas para comparar a evolu&ccedil;&atilde;o das economias.</p>
                     <div class="bar-stack">
                         <span style="height: 44%;"></span>
                         <span style="height: 66%;"></span>
@@ -470,30 +576,30 @@
                 </article>
 
                 <article class="console-card">
-                    <div class="console-kicker">Signal Radar</div>
-                    <div class="console-value">24/7</div>
-                    <p class="console-copy">Estado permanente de leitura com foco em dados globais, ranking e intera&ccedil;&atilde;o direta.</p>
+                    <div class="console-kicker">Indicadores</div>
+                    <div class="console-value">PIB / Crescimento / Per capita</div>
+                    <p class="console-copy">A mesma consulta mostra o tamanho da economia, a varia&ccedil;&atilde;o anual e a leitura por habitante.</p>
                     <div class="radar-shell">
                         <span class="radar-beam"></span>
                     </div>
                 </article>
 
                 <article class="console-card wide">
-                    <div class="console-kicker">Protocol Layers</div>
-                    <div class="console-value">Three Active Streams</div>
-                    <p class="console-copy">A home deixa de ser uma capa est&aacute;tica e passa a funcionar como um painel de comando, com densidade visual e narrativa de produto.</p>
+                    <div class="console-kicker">Estrutura da Consulta</div>
+                    <div class="console-value">Do ranking ao detalhe</div>
+                    <p class="console-copy">A leitura parte da tabela principal e avan&ccedil;a para filtros, indicadores e hist&oacute;rico por pa&iacute;s quando o recorte &eacute; fechado.</p>
                     <div class="trace-grid">
                         <div class="trace-node">
-                            <strong>Data Sync</strong>
-                            <p>Entrada limpa para navegar do overview ao dashboard interativo.</p>
+                            <strong>Ranking anual</strong>
+                            <p>Ordena os pa&iacute;ses conforme o indicador escolhido no ano selecionado.</p>
                         </div>
                         <div class="trace-node">
-                            <strong>UX Rhythm</strong>
-                            <p>Cards, linhas e glow discretos para guiar o olhar sem poluir a tela.</p>
+                            <strong>Filtros principais</strong>
+                            <p>Re&uacute;ne ano, fonte, idioma, indicador e recorte em uma &uacute;nica barra.</p>
                         </div>
                         <div class="trace-node">
-                            <strong>Visual Trust</strong>
-                            <p>Leitura premium, com forte contraste e mais presen&ccedil;a em desktop e mobile.</p>
+                            <strong>Hist&oacute;rico por pa&iacute;s</strong>
+                            <p>Quando a consulta &eacute; reduzida a um pa&iacute;s, a s&eacute;rie anual completa aparece ao final da p&aacute;gina.</p>
                         </div>
                     </div>
                 </article>
@@ -505,77 +611,79 @@
 <section class="panel overview-panel">
     <div class="overview-head">
         <div>
-            <div class="page-note">Front-End Refresh</div>
-            <h2 class="section-title">A interface agora opera como um cockpit visual.</h2>
+            <div class="page-note">Vis&atilde;o Geral</div>
+            <h2 class="section-title">Uma entrada direta para consultar o PIB mundial.</h2>
         </div>
         <p class="section-copy">
-            A repagina&ccedil;&atilde;o refor&ccedil;a identidade, profundidade e ritmo. Em vez de blocos planos, o layout trabalha com atmosfera, contraste e textura para entregar uma sensa&ccedil;&atilde;o mais futurista sem abandonar a paleta atual.
+            A home resume a estrutura da consulta antes da abertura do painel principal. O objetivo &eacute; mostrar quais dados est&atilde;o dispon&iacute;veis,
+            quais filtros podem ser aplicados e onde encontrar a leitura hist&oacute;rica.
         </p>
     </div>
 
     <div class="grid-3">
         <article class="metric-tile">
-            <div class="metric-kicker">Visual Engine</div>
-            <div class="metric-value">Black / White / Blue</div>
-            <p class="metric-copy">A base crom&aacute;tica foi preservada, mas com grada&ccedil;&otilde;es mais densas e highlights mais precisos.</p>
+            <div class="metric-kicker">Ano</div>
+            <div class="metric-value">Recorte temporal</div>
+            <p class="metric-copy">O ano define o momento da compara&ccedil;&atilde;o e altera a posi&ccedil;&atilde;o dos pa&iacute;ses no ranking.</p>
         </article>
         <article class="metric-tile">
-            <div class="metric-kicker">Navigation Flow</div>
-            <div class="metric-value">Frictionless</div>
-            <p class="metric-copy">Header, CTAs e se&ccedil;&otilde;es foram reorganizados para criar uma jornada mais clara entre overview e analytics.</p>
+            <div class="metric-kicker">Fonte</div>
+            <div class="metric-value">Base dos dados</div>
+            <p class="metric-copy">A consulta pode ser feita a partir da base do Banco Mundial ou da base do FMI.</p>
         </article>
         <article class="metric-tile">
-            <div class="metric-kicker">Responsive Core</div>
-            <div class="metric-value">Adaptive</div>
-            <p class="metric-copy">A nova estrutura preserva impacto visual em telas grandes sem perder legibilidade em mobile.</p>
+            <div class="metric-kicker">Indicador</div>
+            <div class="metric-value">Diferentes leituras</div>
+            <p class="metric-copy">O painel permite alternar entre PIB nominal, crescimento anual e PIB per capita.</p>
         </article>
     </div>
 </section>
 
 <section class="capability-section" id="capabilities">
     <div class="panel capability-copy">
-        <div class="page-note">System Capabilities</div>
-        <h2 class="section-title">Mais presen&ccedil;a visual, sem quebrar a linguagem do projeto.</h2>
+        <div class="page-note">Estrutura da Informa&ccedil;&atilde;o</div>
+        <h2 class="section-title">O painel concentra os principais pontos de leitura do PIB.</h2>
         <p class="section-copy" style="margin-top: 18px;">
-            O redesenho foi pensado para parecer uma evolu&ccedil;&atilde;o natural do que j&aacute; existe: o mesmo espectro crom&aacute;tico, agora com composi&ccedil;&atilde;o mais sofisticada, superf&iacute;cies mais ricas e uma home que comunica valor logo na primeira dobra.
+            Cada bloco abaixo resume uma parte da consulta. A ideia &eacute; deixar claro onde o ranking aparece, como os filtros funcionam
+            e em que momento o hist&oacute;rico detalhado entra na leitura.
         </p>
     </div>
 
     <div class="capability-list">
         <article class="panel capability-card">
             <span class="capability-index">01</span>
-            <h3>Hero com narrativa de produto</h3>
-            <p>O topo da home agora vende a experi&ecirc;ncia com uma headline forte, sinais operacionais e um painel visual que antecipa o universo do dashboard.</p>
-            <div class="capability-line">Command-first composition</div>
+            <h3>Ranking por pa&iacute;s</h3>
+            <p>A tabela principal ordena os pa&iacute;ses conforme o indicador escolhido para o ano selecionado.</p>
+            <div class="capability-line">Compara&ccedil;&atilde;o anual</div>
         </article>
 
         <article class="panel capability-card">
             <span class="capability-index">02</span>
-            <h3>Cards com mais profundidade</h3>
-            <p>Os blocos foram redesenhados com brilho, contorno t&eacute;cnico, camadas transl&uacute;cidas e hierarquia tipogr&aacute;fica mais n&iacute;tida para refor&ccedil;ar a ideia de sistema premium.</p>
-            <div class="capability-line">Layered surfaces and glow</div>
+            <h3>Filtros de consulta</h3>
+            <p>A barra superior concentra ano, fonte, idioma, indicador e recorte sem separar a consulta em v&aacute;rias telas.</p>
+            <div class="capability-line">Leitura orientada</div>
         </article>
 
         <article class="panel capability-card">
             <span class="capability-index">03</span>
-            <h3>Analytics integrado ao mesmo ecossistema</h3>
-            <p>A tela do dashboard foi enquadrada dentro de um frame visual mais forte e o app Dash recebeu o mesmo vocabul&aacute;rio est&eacute;tico para evitar ruptura entre telas.</p>
-            <div class="capability-line">Single visual language</div>
+            <h3>S&eacute;rie hist&oacute;rica</h3>
+            <p>Ao focar um pa&iacute;s espec&iacute;fico, a tela mostra a s&eacute;rie anual completa para acompanhar a evolu&ccedil;&atilde;o do indicador.</p>
+            <div class="capability-line">Hist&oacute;rico detalhado</div>
         </article>
     </div>
 </section>
 
 <section class="panel cta-panel">
     <div>
-        <div class="page-note">Ready To Launch</div>
-        <h2 class="section-title" style="margin-top: 10px;">Abra o analytics e veja o novo visual em opera&ccedil;&atilde;o.</h2>
+        <div class="page-note">Acesso ao Painel</div>
+        <h2 class="section-title" style="margin-top: 10px;">Abra o ranking e consulte os dados diretamente.</h2>
         <p class="section-copy" style="margin-top: 14px;">
-            A p&aacute;gina principal e o dashboard agora compartilham a mesma assinatura: atmosfera escura, detalhes luminosos e leitura de dados com mais impacto.
+            A consulta principal mostra o ranking do ano selecionado. Quando necess&aacute;rio, os filtros e o hist&oacute;rico ampliam a leitura.
         </p>
     </div>
 
     <div class="button-row">
-        <a href="/pib-mundial/" class="button button-primary">Ir para o painel</a>
+        <a href="/pib-mundial/" class="button button-primary">Abrir ranking de PIB</a>
     </div>
 </section>
 {% endblock %}

@@ -3,8 +3,8 @@ import os
 from django_plotly_dash.finders import DashComponentFinder
 
 
-class WindowsDashComponentFinder(DashComponentFinder):
-    """Dash component finder with URL/path normalization for Windows."""
+class NormalizedDashComponentFinder(DashComponentFinder):
+    """Dash component finder with normalized path handling across platforms."""
 
     def find(self, path, find_all=False, all=False):
         all = all or find_all
@@ -26,3 +26,6 @@ class WindowsDashComponentFinder(DashComponentFinder):
                     matches.append(matched_path)
 
         return matches
+
+
+WindowsDashComponentFinder = NormalizedDashComponentFinder
