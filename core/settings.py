@@ -6,6 +6,7 @@ import os
 import secrets
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
@@ -20,6 +21,36 @@ def env_bool(name, default=False):
 def env_list(name, default=""):
     return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
 
+
+def normalize_host(value):
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+    if "://" in raw:
+        parsed = urlparse(raw)
+        raw = parsed.netloc or parsed.path
+    return raw.split("/", 1)[0].strip()
+
+
+def build_https_origin(host):
+    normalized = normalize_host(host)
+    if not normalized:
+        return ""
+    if normalized.startswith("localhost") or normalized.startswith("127.0.0.1"):
+        return f"http://{normalized}"
+    return f"https://{normalized}"
+
+
+def normalize_origin(value):
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+    if "://" in raw:
+        parsed = urlparse(raw)
+        if parsed.scheme and parsed.netloc:
+            return f"{parsed.scheme}://{parsed.netloc}"
+    return build_https_origin(raw)
+
 ON_HEROKU = bool(os.environ.get("DYNO"))
 CURRENT_COMMAND = sys.argv[1] if len(sys.argv) > 1 else ""
 LOCAL_DEV_COMMANDS = {"runserver", "test", "shell", "check", "makemigrations", "migrate"}
@@ -33,19 +64,37 @@ if not SECRET_KEY:
     else:
         raise ImproperlyConfigured("SECRET_KEY environment variable must be set when DEBUG is False.")
 
-ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
-CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
+ALLOWED_HOSTS = [host for host in (normalize_host(item) for item in env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")) if host]
+CSRF_TRUSTED_ORIGINS = [origin for origin in (normalize_origin(item) for item in env_list("CSRF_TRUSTED_ORIGINS")) if origin]
 EXPLICIT_ALLOWED_HOSTS = bool(os.environ.get("ALLOWED_HOSTS", "").strip())
+
+
+def add_host_and_origin(host):
+    normalized_host = normalize_host(host)
+    if normalized_host and normalized_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(normalized_host)
+
+    origin = build_https_origin(normalized_host)
+    if origin and origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(origin)
 
 APP_NAME = os.environ.get("APP_NAME", os.environ.get("HEROKU_APP_NAME", "")).strip()
 if APP_NAME:
-    heroku_host = f"{APP_NAME}.herokuapp.com"
-    heroku_origin = f"https://{heroku_host}"
-    if heroku_host not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append(heroku_host)
-    if heroku_origin not in CSRF_TRUSTED_ORIGINS:
-        CSRF_TRUSTED_ORIGINS.append(heroku_origin)
-elif ON_HEROKU and not EXPLICIT_ALLOWED_HOSTS and ".herokuapp.com" not in ALLOWED_HOSTS:
+    normalized_app = normalize_host(APP_NAME)
+    if "." in normalized_app:
+        add_host_and_origin(normalized_app)
+    else:
+        add_host_and_origin(f"{normalized_app}.herokuapp.com")
+
+for platform_host in [
+    os.environ.get("RENDER_EXTERNAL_HOSTNAME", ""),
+    os.environ.get("RAILWAY_PUBLIC_DOMAIN", ""),
+    os.environ.get("VERCEL_URL", ""),
+    os.environ.get("WEBSITE_HOSTNAME", ""),
+]:
+    add_host_and_origin(platform_host)
+
+if ON_HEROKU and ".herokuapp.com" not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(".herokuapp.com")
 
 INSTALLED_APPS = [
