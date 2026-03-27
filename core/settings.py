@@ -35,6 +35,7 @@ if not SECRET_KEY:
 
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
+EXPLICIT_ALLOWED_HOSTS = bool(os.environ.get("ALLOWED_HOSTS", "").strip())
 
 APP_NAME = os.environ.get("APP_NAME", os.environ.get("HEROKU_APP_NAME", "")).strip()
 if APP_NAME:
@@ -44,6 +45,8 @@ if APP_NAME:
         ALLOWED_HOSTS.append(heroku_host)
     if heroku_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(heroku_origin)
+elif ON_HEROKU and not EXPLICIT_ALLOWED_HOSTS and ".herokuapp.com" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(".herokuapp.com")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
