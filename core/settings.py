@@ -3,9 +3,12 @@ Django settings for core project.
 """
 
 import os
+import secrets
+import sys
 from pathlib import Path
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,9 +20,18 @@ def env_bool(name, default=False):
 def env_list(name, default=""):
     return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-dev-only")
 ON_HEROKU = bool(os.environ.get("DYNO"))
-DEBUG = env_bool("DEBUG", not ON_HEROKU)
+CURRENT_COMMAND = sys.argv[1] if len(sys.argv) > 1 else ""
+LOCAL_DEV_COMMANDS = {"runserver", "test", "shell", "check", "makemigrations", "migrate"}
+ALLOW_LOCAL_DEV_DEFAULTS = not ON_HEROKU and Path(sys.argv[0]).name == "manage.py" and CURRENT_COMMAND in LOCAL_DEV_COMMANDS
+DEBUG = env_bool("DEBUG", ALLOW_LOCAL_DEV_DEFAULTS and CURRENT_COMMAND == "runserver")
+SECRET_KEY = os.environ.get("SECRET_KEY", "").strip()
+
+if not SECRET_KEY:
+    if ALLOW_LOCAL_DEV_DEFAULTS:
+        SECRET_KEY = secrets.token_urlsafe(50)
+    else:
+        raise ImproperlyConfigured("SECRET_KEY environment variable must be set when DEBUG is False.")
 
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
@@ -32,9 +44,6 @@ if APP_NAME:
         ALLOWED_HOSTS.append(heroku_host)
     if heroku_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(heroku_origin)
-
-if ".herokuapp.com" not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(".herokuapp.com")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
