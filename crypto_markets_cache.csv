@@ -1,0 +1,9 @@
+id,symbol,name,current_price_usd,price_change_pct_24h,market_cap_rank
+bitcoin,BTC,Bitcoin,65986.0,-4.04746,1
+ethereum,ETH,Ethereum,1981.67,-3.89144,2
+tether,USDT,Tether,0.999256,-0.01318,3
+binancecoin,BNB,BNB,609.95,-3.00051,4
+ripple,XRP,XRP,1.32,-2.91104,5
+solana,SOL,Solana,82.59,-4.77587,7
+dogecoin,DOGE,Dogecoin,0.089738,-2.42561,10
+cardano,ADA,Cardano,0.245391,-3.627,15

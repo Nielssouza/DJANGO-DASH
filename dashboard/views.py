@@ -9,21 +9,79 @@ from django.shortcuts import render
 
 CACHE_FILE = "gdp_data_cache.csv"
 PER_CAPITA_CACHE_FILE = "gdp_per_capita_cache.csv"
+GDP_REAL_GROWTH_CACHE_FILE = "gdp_growth_real_cache.csv"
+INFLATION_CACHE_FILE = "inflation_data_cache.csv"
+UNEMPLOYMENT_CACHE_FILE = "unemployment_data_cache.csv"
+CURRENT_ACCOUNT_CACHE_FILE = "current_account_data_cache.csv"
+EXPORTS_CACHE_FILE = "exports_data_cache.csv"
+REAL_INTEREST_RATE_CACHE_FILE = "real_interest_rate_cache.csv"
 IMF_WEO_CACHE_FILE = "imf_weo_cache.csv"
 IMF_WEO_DATA_URL = "https://data.imf.org/-/media/iData/External%20Storage/Documents/5661B7CB2FCC4A56866765D4281AEF01/en/WEOOct2025all"
 WORLD_BANK_COUNTRY_CACHE_FILE = "world_bank_countries_cache.csv"
 COUNTRY_NAME_CACHE_FILE = "country_names_locale_cache.csv"
+CURRENCY_CATALOG_CACHE_FILE = "currency_catalog_cache.csv"
+CRYPTO_MARKETS_CACHE_FILE = "crypto_markets_cache.csv"
+GLOBAL_STOCKS_CACHE_FILE = "global_stocks_cache.csv"
 HDI_CACHE_FILE = "hdi_data_cache.csv"
 HDI_SOURCE_PAGE_URL = "https://hdr.undp.org/data-center/human-development-index"
 HDI_DATA_FALLBACK_URL = "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Statistical_Annex_HDI_Table.xlsx"
 HDI_TIME_SERIES_CACHE_FILE = "hdi_time_series_cache.csv"
 HDI_TIME_SERIES_FALLBACK_URL = "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_complete_time_series.csv"
 HDI_REPORT_PAGE_URL_TEMPLATE = "https://hdr.undp.org/content/human-development-report-{edition}"
+CURRENCY_API_URL = "https://api.frankfurter.dev/v2"
+CURRENCY_DEFAULT_BASE = "BRL"
+CURRENCY_QUICK_QUOTES = ["USD", "EUR", "GBP", "JPY", "ARS", "CNY"]
+CRYPTO_API_URL = "https://api.coingecko.com/api/v3"
+GLOBAL_STOCKS_API_URL = "https://query1.finance.yahoo.com/v7/finance/spark"
+CRYPTO_DEFAULT_IDS = [
+    "bitcoin",
+    "ethereum",
+    "tether",
+    "binancecoin",
+    "solana",
+    "ripple",
+    "cardano",
+    "dogecoin",
+]
+GLOBAL_STOCK_DEFAULT_BASE = CURRENCY_DEFAULT_BASE
+GLOBAL_STOCK_DEFAULT_CAPITAL = 10000.0
+GLOBAL_STOCK_MARKET_FILTERS = {
+    "all": {"label": "Todos os mercados"},
+    "us": {"label": "Estados Unidos"},
+    "europe": {"label": "Europa"},
+    "asia": {"label": "Asia-Pacifico"},
+    "latam": {"label": "America Latina"},
+}
+GLOBAL_STOCK_WATCHLIST = [
+    {"symbol": "AAPL", "company": "Apple Inc.", "market_key": "us", "market_label": "Estados Unidos", "market_short": "EUA", "sector": "Tecnologia"},
+    {"symbol": "MSFT", "company": "Microsoft Corporation", "market_key": "us", "market_label": "Estados Unidos", "market_short": "EUA", "sector": "Software e nuvem"},
+    {"symbol": "NVDA", "company": "NVIDIA Corporation", "market_key": "us", "market_label": "Estados Unidos", "market_short": "EUA", "sector": "Semicondutores"},
+    {"symbol": "AMZN", "company": "Amazon.com, Inc.", "market_key": "us", "market_label": "Estados Unidos", "market_short": "EUA", "sector": "Consumo e cloud"},
+    {"symbol": "SAP.DE", "company": "SAP SE", "market_key": "europe", "market_label": "Europa", "market_short": "Europa", "sector": "Software empresarial"},
+    {"symbol": "ASML.AS", "company": "ASML Holding N.V.", "market_key": "europe", "market_label": "Europa", "market_short": "Europa", "sector": "Equipamentos para chips"},
+    {"symbol": "MC.PA", "company": "LVMH", "market_key": "europe", "market_label": "Europa", "market_short": "Europa", "sector": "Luxo"},
+    {"symbol": "7203.T", "company": "Toyota Motor Corporation", "market_key": "asia", "market_label": "Asia-Pacifico", "market_short": "Asia", "sector": "Automotivo"},
+    {"symbol": "6758.T", "company": "Sony Group Corporation", "market_key": "asia", "market_label": "Asia-Pacifico", "market_short": "Asia", "sector": "Tecnologia e entretenimento"},
+    {"symbol": "005930.KS", "company": "Samsung Electronics Co., Ltd.", "market_key": "asia", "market_label": "Asia-Pacifico", "market_short": "Asia", "sector": "Eletronicos e chips"},
+    {"symbol": "9988.HK", "company": "Alibaba Group Holding Limited", "market_key": "asia", "market_label": "Asia-Pacifico", "market_short": "Asia", "sector": "E-commerce e cloud"},
+    {"symbol": "VALE3.SA", "company": "Vale S.A.", "market_key": "latam", "market_label": "America Latina", "market_short": "LatAm", "sector": "Mineracao"},
+    {"symbol": "PETR4.SA", "company": "Petrobras PN", "market_key": "latam", "market_label": "America Latina", "market_short": "LatAm", "sector": "Petroleo e gas"},
+    {"symbol": "ITUB4.SA", "company": "Itau Unibanco PN", "market_key": "latam", "market_label": "America Latina", "market_short": "LatAm", "sector": "Bancos"},
+]
 GDP_CACHE = None
 GDP_PER_CAPITA_CACHE = None
+GDP_REAL_GROWTH_CACHE = None
+INFLATION_CACHE = None
+UNEMPLOYMENT_CACHE = None
+CURRENT_ACCOUNT_CACHE = None
+EXPORTS_CACHE = None
+REAL_INTEREST_RATE_CACHE = None
 IMF_WEO_CACHE = None
 WORLD_BANK_COUNTRY_CACHE = None
 COUNTRY_NAME_CACHE = None
+CURRENCY_CATALOG_CACHE = None
+CRYPTO_MARKETS_CACHE = None
+GLOBAL_STOCKS_CACHE = None
 HDI_CACHE = None
 HDI_TIME_SERIES_CACHE = None
 HDI_DATA_URL_CACHE = HDI_DATA_FALLBACK_URL
@@ -33,6 +91,24 @@ METRIC_DEFINITIONS = {
     "gdp": {"label": "PIB Nominal (US$)", "short_label": "PIB", "field": "gdp"},
     "growth": {"label": "Crescimento do PIB (%)", "short_label": "Crescimento do PIB", "field": "growth_pct"},
     "per_capita": {"label": "PIB per capita (US$)", "short_label": "PIB per capita", "field": "gdp_per_capita"},
+}
+MACRO_METRIC_DEFINITIONS = {
+    "gdp": {"label": "PIB Nominal (US$)", "short_label": "PIB nominal", "field": "gdp"},
+    "growth_real": {"label": "Crescimento real do PIB (%)", "short_label": "Crescimento real", "field": "growth_real_pct"},
+    "per_capita": {"label": "PIB per capita (US$)", "short_label": "PIB per capita", "field": "gdp_per_capita"},
+    "inflation": {"label": "Inflacao ao consumidor (%)", "short_label": "Inflacao", "field": "inflation_pct"},
+    "unemployment": {
+        "label": "Desemprego (% da forca de trabalho)",
+        "short_label": "Desemprego",
+        "field": "unemployment_pct",
+    },
+    "current_account": {
+        "label": "Conta corrente (US$)",
+        "short_label": "Conta corrente",
+        "field": "current_account_usd",
+    },
+    "exports": {"label": "Exportacoes de bens e servicos (US$)", "short_label": "Exportacoes", "field": "exports_usd"},
+    "real_interest": {"label": "Juros reais (%)", "short_label": "Juros reais", "field": "real_interest_pct"},
 }
 HDI_GROUP_FILTERS = {
     "all": {"label": "Todas as faixas", "group": None},
@@ -117,6 +193,56 @@ def normalize_columns(dataframe):
     )
 
 
+def normalize_currency_catalog(dataframe):
+    if dataframe.empty:
+        return pd.DataFrame(columns=["code", "name", "symbol"])
+
+    normalized = dataframe.rename(columns={"iso_code": "code"}).copy()
+    for column in ["code", "name", "symbol"]:
+        if column not in normalized.columns:
+            normalized[column] = ""
+    normalized["code"] = normalized["code"].astype(str).str.upper()
+    normalized["name"] = normalized["name"].fillna("")
+    normalized["symbol"] = normalized["symbol"].fillna("")
+    return normalized[["code", "name", "symbol"]].drop_duplicates(subset=["code"]).sort_values("code")
+
+
+def normalize_global_stock_quotes(dataframe):
+    columns = [
+        "symbol",
+        "company",
+        "market_key",
+        "market_label",
+        "market_short",
+        "sector",
+        "currency",
+        "exchange",
+        "price_local",
+        "previous_close",
+        "day_high",
+        "day_low",
+        "volume",
+        "regular_market_time",
+        "market_state",
+    ]
+    if dataframe.empty:
+        return pd.DataFrame(columns=columns)
+
+    normalized = dataframe.copy()
+    for column in columns:
+        if column not in normalized.columns:
+            normalized[column] = ""
+
+    for column in ["symbol", "company", "market_key", "market_label", "market_short", "sector", "currency", "exchange", "market_state"]:
+        normalized[column] = normalized[column].fillna("")
+
+    for column in ["price_local", "previous_close", "day_high", "day_low", "volume", "regular_market_time"]:
+        normalized[column] = pd.to_numeric(normalized[column], errors="coerce")
+
+    normalized["symbol"] = normalized["symbol"].astype(str).str.upper()
+    return normalized[columns].drop_duplicates(subset=["symbol"]).sort_values(["market_key", "symbol"])
+
+
 def load_indicator_data(cache_name, cache_file, indicator_code, value_column, force=False):
     global GDP_CACHE, GDP_PER_CAPITA_CACHE
 
@@ -163,6 +289,290 @@ def load_gdp_per_capita_data(force=False):
         PER_CAPITA_CACHE_FILE,
         "NY.GDP.PCAP.CD",
         "gdp_per_capita",
+        force=force,
+    )
+
+
+def load_gdp_growth_real_data(force=False):
+    return load_indicator_data(
+        "GDP_REAL_GROWTH_CACHE",
+        GDP_REAL_GROWTH_CACHE_FILE,
+        "NY.GDP.MKTP.KD.ZG",
+        "growth_real_pct",
+        force=force,
+    )
+
+
+def load_inflation_data(force=False):
+    return load_indicator_data(
+        "INFLATION_CACHE",
+        INFLATION_CACHE_FILE,
+        "FP.CPI.TOTL.ZG",
+        "inflation_pct",
+        force=force,
+    )
+
+
+def load_unemployment_data(force=False):
+    return load_indicator_data(
+        "UNEMPLOYMENT_CACHE",
+        UNEMPLOYMENT_CACHE_FILE,
+        "SL.UEM.TOTL.ZS",
+        "unemployment_pct",
+        force=force,
+    )
+
+
+def build_currency_rates_cache_file(base_currency):
+    return f"currency_rates_{str(base_currency or CURRENCY_DEFAULT_BASE).strip().lower()}_cache.csv"
+
+
+def load_currency_catalog(force=False):
+    global CURRENCY_CATALOG_CACHE
+
+    if force:
+        CURRENCY_CATALOG_CACHE = None
+
+    if CURRENCY_CATALOG_CACHE is not None and not CURRENCY_CATALOG_CACHE.empty:
+        return CURRENCY_CATALOG_CACHE
+
+    if os.path.exists(CURRENCY_CATALOG_CACHE_FILE):
+        CURRENCY_CATALOG_CACHE = normalize_currency_catalog(pd.read_csv(CURRENCY_CATALOG_CACHE_FILE))
+        if not CURRENCY_CATALOG_CACHE.empty:
+            return CURRENCY_CATALOG_CACHE
+
+    try:
+        response = requests.get(f"{CURRENCY_API_URL}/currencies", timeout=30)
+        response.raise_for_status()
+        payload = response.json()
+        rows = [
+            {
+                "code": item.get("iso_code"),
+                "name": item.get("name"),
+                "symbol": item.get("symbol"),
+            }
+            for item in payload
+        ]
+        CURRENCY_CATALOG_CACHE = normalize_currency_catalog(pd.DataFrame(rows))
+        if not CURRENCY_CATALOG_CACHE.empty:
+            CURRENCY_CATALOG_CACHE.to_csv(CURRENCY_CATALOG_CACHE_FILE, index=False)
+        return CURRENCY_CATALOG_CACHE
+    except Exception:
+        return normalize_currency_catalog(pd.DataFrame())
+
+
+def load_currency_rates(base_currency, quotes=None, force=False):
+    base_code = str(base_currency or CURRENCY_DEFAULT_BASE).strip().upper()
+    cache_file = build_currency_rates_cache_file(base_code)
+    quote_codes = []
+    if quotes:
+        quote_codes = [
+            str(code).strip().upper()
+            for code in quotes
+            if str(code).strip() and str(code).strip().upper() != base_code
+        ]
+
+    if not force and os.path.exists(cache_file):
+        cached = pd.read_csv(cache_file)
+        if not cached.empty:
+            cached["quote"] = cached["quote"].astype(str).str.upper()
+            if quote_codes:
+                cached = cached[cached["quote"].isin(quote_codes)].copy()
+            if not cached.empty:
+                cached["rate"] = pd.to_numeric(cached["rate"], errors="coerce")
+                return cached
+
+    params = {"base": base_code}
+    if quote_codes:
+        params["quotes"] = ",".join(quote_codes)
+
+    try:
+        response = requests.get(f"{CURRENCY_API_URL}/rates", params=params, timeout=30)
+        response.raise_for_status()
+        payload = response.json()
+        rows = [
+            {
+                "date": item.get("date"),
+                "base": item.get("base"),
+                "quote": item.get("quote"),
+                "rate": item.get("rate"),
+            }
+            for item in payload
+        ]
+        dataframe = pd.DataFrame(rows)
+        if not dataframe.empty:
+            dataframe["quote"] = dataframe["quote"].astype(str).str.upper()
+            dataframe["rate"] = pd.to_numeric(dataframe["rate"], errors="coerce")
+            dataframe.to_csv(cache_file, index=False)
+        return dataframe
+    except Exception:
+        if os.path.exists(cache_file):
+            cached = pd.read_csv(cache_file)
+            if not cached.empty:
+                cached["quote"] = cached["quote"].astype(str).str.upper()
+                if quote_codes:
+                    cached = cached[cached["quote"].isin(quote_codes)].copy()
+                cached["rate"] = pd.to_numeric(cached["rate"], errors="coerce")
+                return cached
+        return pd.DataFrame(columns=["date", "base", "quote", "rate"])
+
+
+def load_crypto_markets(force=False):
+    global CRYPTO_MARKETS_CACHE
+
+    if force:
+        CRYPTO_MARKETS_CACHE = None
+
+    if CRYPTO_MARKETS_CACHE is not None and not CRYPTO_MARKETS_CACHE.empty:
+        return CRYPTO_MARKETS_CACHE
+
+    if os.path.exists(CRYPTO_MARKETS_CACHE_FILE):
+        CRYPTO_MARKETS_CACHE = pd.read_csv(CRYPTO_MARKETS_CACHE_FILE)
+        if not CRYPTO_MARKETS_CACHE.empty:
+            for column in ["current_price_usd", "price_change_pct_24h", "market_cap_rank"]:
+                if column in CRYPTO_MARKETS_CACHE.columns:
+                    CRYPTO_MARKETS_CACHE[column] = pd.to_numeric(CRYPTO_MARKETS_CACHE[column], errors="coerce")
+            return CRYPTO_MARKETS_CACHE
+
+    params = {
+        "vs_currency": "usd",
+        "ids": ",".join(CRYPTO_DEFAULT_IDS),
+        "price_change_percentage": "24h",
+        "sparkline": "false",
+    }
+    try:
+        response = requests.get(f"{CRYPTO_API_URL}/coins/markets", params=params, timeout=30, headers={"accept": "application/json"})
+        response.raise_for_status()
+        payload = response.json()
+        rows = [
+            {
+                "id": item.get("id"),
+                "symbol": str(item.get("symbol") or "").upper(),
+                "name": item.get("name"),
+                "current_price_usd": item.get("current_price"),
+                "price_change_pct_24h": item.get("price_change_percentage_24h"),
+                "market_cap_rank": item.get("market_cap_rank"),
+            }
+            for item in payload
+        ]
+        CRYPTO_MARKETS_CACHE = pd.DataFrame(rows)
+        if not CRYPTO_MARKETS_CACHE.empty:
+            CRYPTO_MARKETS_CACHE.to_csv(CRYPTO_MARKETS_CACHE_FILE, index=False)
+        return CRYPTO_MARKETS_CACHE
+    except Exception:
+        if os.path.exists(CRYPTO_MARKETS_CACHE_FILE):
+            cached = pd.read_csv(CRYPTO_MARKETS_CACHE_FILE)
+            if not cached.empty:
+                for column in ["current_price_usd", "price_change_pct_24h", "market_cap_rank"]:
+                    if column in cached.columns:
+                        cached[column] = pd.to_numeric(cached[column], errors="coerce")
+                return cached
+        return pd.DataFrame(columns=["id", "symbol", "name", "current_price_usd", "price_change_pct_24h", "market_cap_rank"])
+
+
+def load_global_stock_quotes(force=False):
+    global GLOBAL_STOCKS_CACHE
+
+    if force:
+        GLOBAL_STOCKS_CACHE = None
+
+    if GLOBAL_STOCKS_CACHE is not None and not GLOBAL_STOCKS_CACHE.empty:
+        return GLOBAL_STOCKS_CACHE
+
+    if os.path.exists(GLOBAL_STOCKS_CACHE_FILE):
+        GLOBAL_STOCKS_CACHE = normalize_global_stock_quotes(pd.read_csv(GLOBAL_STOCKS_CACHE_FILE))
+        if not GLOBAL_STOCKS_CACHE.empty:
+            return GLOBAL_STOCKS_CACHE
+
+    watchlist_map = {item["symbol"]: item for item in GLOBAL_STOCK_WATCHLIST}
+    params = {
+        "symbols": ",".join(watchlist_map.keys()),
+        "range": "1d",
+        "interval": "1d",
+    }
+    headers = {
+        "accept": "application/json",
+        "user-agent": "Mozilla/5.0",
+    }
+
+    try:
+        response = requests.get(GLOBAL_STOCKS_API_URL, params=params, timeout=30, headers=headers)
+        response.raise_for_status()
+        payload = response.json()
+        rows = []
+        for item in payload.get("spark", {}).get("result", []):
+            symbol = str(item.get("symbol") or "").upper()
+            metadata = watchlist_map.get(symbol, {})
+            response_payload = item.get("response") or []
+            if not response_payload:
+                continue
+
+            stock_payload = response_payload[0]
+            meta = stock_payload.get("meta") or {}
+            quote_block = (((stock_payload.get("indicators") or {}).get("quote") or [{}])[0])
+            close_prices = [value for value in (quote_block.get("close") or []) if value is not None]
+            price_local = meta.get("regularMarketPrice")
+            if price_local is None and close_prices:
+                price_local = close_prices[-1]
+
+            rows.append(
+                {
+                    "symbol": symbol,
+                    "company": meta.get("longName") or meta.get("shortName") or metadata.get("company") or symbol,
+                    "market_key": metadata.get("market_key", ""),
+                    "market_label": metadata.get("market_label", ""),
+                    "market_short": metadata.get("market_short", ""),
+                    "sector": metadata.get("sector", ""),
+                    "currency": meta.get("currency", ""),
+                    "exchange": meta.get("fullExchangeName") or meta.get("exchangeName") or "",
+                    "price_local": price_local,
+                    "previous_close": meta.get("chartPreviousClose") or meta.get("previousClose"),
+                    "day_high": meta.get("regularMarketDayHigh"),
+                    "day_low": meta.get("regularMarketDayLow"),
+                    "volume": meta.get("regularMarketVolume"),
+                    "regular_market_time": meta.get("regularMarketTime"),
+                    "market_state": meta.get("marketState", ""),
+                }
+            )
+
+        GLOBAL_STOCKS_CACHE = normalize_global_stock_quotes(pd.DataFrame(rows))
+        if not GLOBAL_STOCKS_CACHE.empty:
+            GLOBAL_STOCKS_CACHE.to_csv(GLOBAL_STOCKS_CACHE_FILE, index=False)
+        return GLOBAL_STOCKS_CACHE
+    except Exception:
+        if os.path.exists(GLOBAL_STOCKS_CACHE_FILE):
+            cached = normalize_global_stock_quotes(pd.read_csv(GLOBAL_STOCKS_CACHE_FILE))
+            if not cached.empty:
+                return cached
+        return normalize_global_stock_quotes(pd.DataFrame())
+
+
+def load_current_account_data(force=False):
+    return load_indicator_data(
+        "CURRENT_ACCOUNT_CACHE",
+        CURRENT_ACCOUNT_CACHE_FILE,
+        "BN.CAB.XOKA.CD",
+        "current_account_usd",
+        force=force,
+    )
+
+
+def load_exports_data(force=False):
+    return load_indicator_data(
+        "EXPORTS_CACHE",
+        EXPORTS_CACHE_FILE,
+        "NE.EXP.GNFS.CD",
+        "exports_usd",
+        force=force,
+    )
+
+
+def load_real_interest_rate_data(force=False):
+    return load_indicator_data(
+        "REAL_INTEREST_RATE_CACHE",
+        REAL_INTEREST_RATE_CACHE_FILE,
+        "FR.INR.RINR",
+        "real_interest_pct",
         force=force,
     )
 
@@ -260,11 +670,42 @@ def load_world_bank_country_metadata(force=False):
 def fmt_currency(value):
     if value is None or pd.isna(value):
         return "--"
-    if value >= 1e12:
+    abs_value = abs(value)
+    if abs_value >= 1e12:
         return f"US$ {value / 1e12:.2f} tri".replace(".", ",")
-    if value >= 1e9:
+    if abs_value >= 1e9:
         return f"US$ {value / 1e9:.2f} bi".replace(".", ",")
     return f"US$ {value / 1e6:.2f} mi".replace(".", ",")
+
+
+def fmt_rate(value):
+    if value is None or pd.isna(value):
+        return "--"
+    abs_value = abs(value)
+    if abs_value >= 100:
+        return f"{value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    if abs_value >= 1:
+        return f"{value:,.4f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"{value:,.6f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def fmt_amount_value(value):
+    if value is None or pd.isna(value):
+        return "--"
+    return f"{value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def fmt_compact_number(value):
+    if value is None or pd.isna(value):
+        return "--"
+    abs_value = abs(float(value))
+    if abs_value >= 1e9:
+        return f"{value / 1e9:.2f} bi".replace(".", ",")
+    if abs_value >= 1e6:
+        return f"{value / 1e6:.2f} mi".replace(".", ",")
+    if abs_value >= 1e3:
+        return f"{value / 1e3:.2f} mil".replace(".", ",")
+    return f"{value:,.0f}".replace(",", ".")
 
 
 def fmt_currency_full(value):
@@ -310,6 +751,15 @@ def fmt_decimal(value, digits=1):
     return f"{value:.{digits}f}".replace(".", ",")
 
 
+def fmt_quote_date(value):
+    if value is None or pd.isna(value):
+        return "--"
+    try:
+        return pd.to_datetime(int(value), unit="s", utc=True).strftime("%d/%m/%Y")
+    except (TypeError, ValueError):
+        return "--"
+
+
 def fmt_signed_int(value):
     if value is None or pd.isna(value):
         return "--"
@@ -352,8 +802,41 @@ def parse_metric(raw_metric):
     return raw_metric if raw_metric in METRIC_DEFINITIONS else "gdp"
 
 
+def parse_macro_metric(raw_metric):
+    return raw_metric if raw_metric in MACRO_METRIC_DEFINITIONS else "gdp"
+
+
 def parse_hdi_group(raw_group):
     return raw_group if raw_group in HDI_GROUP_FILTERS else "all"
+
+
+def parse_stock_market(raw_market):
+    return raw_market if raw_market in GLOBAL_STOCK_MARKET_FILTERS else "all"
+
+
+def parse_amount(raw_amount, fallback=100.0):
+    try:
+        amount = float(str(raw_amount).replace(",", "."))
+    except (TypeError, ValueError):
+        return fallback
+    return max(amount, 0.0)
+
+
+def convert_value_to_base(value, quote_code, selected_base, rate_map):
+    if value is None or pd.isna(value):
+        return None
+
+    currency_code = str(quote_code or "").strip().upper()
+    base_code = str(selected_base or "").strip().upper()
+    if not currency_code:
+        return None
+    if currency_code == base_code:
+        return value
+
+    rate = rate_map.get(currency_code)
+    if rate is None or pd.isna(rate) or rate == 0:
+        return None
+    return value / rate
 
 
 def get_hdi_available_years(dataframe):
@@ -665,6 +1148,27 @@ def build_hdi_dashboard_link(selected_year, selected_limit, selected_group, sele
     return query
 
 
+def build_macro_dashboard_link(selected_year, selected_limit, selected_query, selected_metric):
+    query = f"/panorama-macroeconomico/?year={selected_year}&top={selected_limit}&metric={selected_metric}"
+    if selected_query:
+        query += f"&q={requests.utils.quote(selected_query)}"
+    return query
+
+
+def build_currency_dashboard_link(selected_base, selected_amount, selected_query):
+    query = f"/cotacao-moedas/?base={selected_base}&amount={selected_amount}"
+    if selected_query:
+        query += f"&q={requests.utils.quote(selected_query)}"
+    return query
+
+
+def build_stock_dashboard_link(selected_base, selected_capital, selected_market, selected_query):
+    query = f"/acoes-mercado-mundial/?base={selected_base}&capital={selected_capital}&market={selected_market}"
+    if selected_query:
+        query += f"&q={requests.utils.quote(selected_query)}"
+    return query
+
+
 def format_metric_value(metric_key, value):
     if metric_key == "growth":
         return fmt_percent(value, signed=True)
@@ -673,8 +1177,484 @@ def format_metric_value(metric_key, value):
     return fmt_currency(value)
 
 
+def format_macro_metric_value(metric_key, value):
+    if metric_key in {"growth_real", "inflation", "real_interest"}:
+        return fmt_percent(value, signed=True)
+    if metric_key == "unemployment":
+        return fmt_percent(value, signed=False)
+    if metric_key in {"current_account", "exports"}:
+        return fmt_currency(value)
+    if metric_key == "per_capita":
+        return fmt_currency_unit(value)
+    return fmt_currency(value)
+
+
+def collect_available_years(*dataframes):
+    years = set()
+    for dataframe in dataframes:
+        if dataframe is None or dataframe.empty or "Ano" not in dataframe.columns:
+            continue
+        numeric_years = pd.to_numeric(dataframe["Ano"], errors="coerce").dropna().astype(int)
+        years.update(numeric_years.tolist())
+    return sorted(years)
+
+
+def merge_indicator_frames_by_year(indicator_frames, selected_year):
+    merged = None
+    for dataframe, column in indicator_frames:
+        if dataframe is None or dataframe.empty or column not in dataframe.columns:
+            continue
+        year_frame = dataframe[dataframe["Ano"] == selected_year][["Pais", column]].copy()
+        if merged is None:
+            merged = year_frame
+        else:
+            merged = merged.merge(year_frame, on="Pais", how="outer")
+
+    if merged is None:
+        return pd.DataFrame(columns=["Pais"])
+    return merged
+
+
+def merge_country_history_frames(country_name, indicator_frames):
+    merged = None
+    for dataframe, column in indicator_frames:
+        if dataframe is None or dataframe.empty or column not in dataframe.columns:
+            continue
+        country_frame = dataframe[dataframe["Pais"] == country_name][["Ano", column]].copy()
+        if merged is None:
+            merged = country_frame
+        else:
+            merged = merged.merge(country_frame, on="Ano", how="outer")
+
+    if merged is None:
+        return pd.DataFrame(columns=["Ano"])
+
+    merged["Ano"] = pd.to_numeric(merged["Ano"], errors="coerce")
+    return merged.dropna(subset=["Ano"]).sort_values("Ano")
+
+
 def index(request):
     return render(request, "dashboard/index.html")
+
+
+def cotacao_moedas(request):
+    force_refresh = request.GET.get("refresh") == "1"
+    selected_query = request.GET.get("q", "").strip()
+    query_key = normalize_search(selected_query)
+    selected_amount = parse_amount(request.GET.get("amount"), 100.0)
+    catalog = load_currency_catalog(force=force_refresh)
+    crypto_markets = load_crypto_markets(force=force_refresh)
+
+    if catalog.empty:
+        return render(
+            request,
+            "dashboard/cotacao_moedas.html",
+            {
+                "cards": [],
+                "quick_cards": [],
+                "table_rows": [],
+                "crypto_cards": [],
+                "crypto_table_rows": [],
+                "currency_options": [],
+                "selected_base": CURRENCY_DEFAULT_BASE,
+                "selected_base_label": CURRENCY_DEFAULT_BASE,
+                "selected_amount": selected_amount,
+                "selected_amount_display": fmt_amount_value(selected_amount),
+                "selected_query": selected_query,
+                "updated_date": "--",
+                "results_label": "Nenhuma moeda encontrada",
+                "crypto_results_label": "Nenhuma criptomoeda encontrada",
+                "clear_link": build_currency_dashboard_link(CURRENCY_DEFAULT_BASE, 100, ""),
+                "empty_message": "Nao foi possivel carregar as cotacoes.",
+                "crypto_empty_message": "Nao foi possivel carregar os dados de criptomoedas.",
+                "source_title": "Frankfurter",
+                "source_points": [],
+            },
+        )
+
+    available_codes = catalog["code"].tolist()
+    selected_base = str(request.GET.get("base") or CURRENCY_DEFAULT_BASE).strip().upper()
+    if selected_base not in available_codes:
+        selected_base = CURRENCY_DEFAULT_BASE if CURRENCY_DEFAULT_BASE in available_codes else available_codes[0]
+
+    rates = load_currency_rates(selected_base, force=force_refresh)
+    if rates.empty:
+        return render(
+            request,
+            "dashboard/cotacao_moedas.html",
+            {
+                "cards": [],
+                "quick_cards": [],
+                "table_rows": [],
+                "crypto_cards": [],
+                "crypto_table_rows": [],
+                "currency_options": [
+                    {"code": row["code"], "label": f'{row["code"]} - {row["name"]}'}
+                    for _, row in catalog.iterrows()
+                ],
+                "selected_base": selected_base,
+                "selected_base_label": f"{selected_base} - {selected_base}",
+                "selected_amount": selected_amount,
+                "selected_amount_display": fmt_amount_value(selected_amount),
+                "selected_query": selected_query,
+                "updated_date": "--",
+                "results_label": "Nenhuma moeda encontrada",
+                "crypto_results_label": "Nenhuma criptomoeda encontrada",
+                "clear_link": build_currency_dashboard_link(CURRENCY_DEFAULT_BASE, 100, ""),
+                "empty_message": "Nao foi possivel carregar as cotacoes para a moeda base selecionada.",
+                "crypto_empty_message": "Nao foi possivel carregar os dados de criptomoedas.",
+                "source_title": "Frankfurter",
+                "source_points": [],
+            },
+        )
+
+    rates["quote"] = rates["quote"].astype(str).str.upper()
+    rates["rate"] = pd.to_numeric(rates["rate"], errors="coerce")
+    rates = rates[rates["rate"].notna()].copy()
+    rates = rates[rates["quote"] != selected_base].copy()
+    rates = rates.merge(catalog, left_on="quote", right_on="code", how="left")
+    rates["search_key"] = (
+        rates["quote"].fillna("")
+        + " "
+        + rates["name"].fillna("")
+        + " "
+        + rates["symbol"].fillna("")
+    ).map(normalize_search)
+    all_rates = rates.sort_values(["quote", "name"]).reset_index(drop=True)
+    if query_key:
+        rates = all_rates[all_rates["search_key"].str.contains(query_key, na=False)].copy()
+    else:
+        rates = all_rates.copy()
+
+    updated_date = str(all_rates["date"].dropna().iloc[0]) if not all_rates.empty and all_rates["date"].notna().any() else "--"
+    base_name_match = catalog.loc[catalog["code"] == selected_base]
+    base_name = base_name_match.iloc[0]["name"] if not base_name_match.empty else selected_base
+    if selected_base == "USD":
+        usd_to_base = 1.0
+    else:
+        usd_rate_match = all_rates.loc[all_rates["quote"] == "USD", "rate"]
+        usd_to_base = (1 / usd_rate_match.iloc[0]) if not usd_rate_match.empty and usd_rate_match.iloc[0] else None
+
+    cards = [
+        {"label": "Moeda base", "value": selected_base, "copy": base_name},
+        {"label": "Valor de referencia", "value": f"{fmt_amount_value(selected_amount)} {selected_base}", "copy": "Conversao aplicada em todos os cards."},
+        {"label": "Data da cotacao", "value": updated_date, "copy": "Serie diaria via Frankfurter."},
+        {"label": "Moedas listadas", "value": str(len(rates)), "copy": "Cotacoes disponiveis para a base selecionada."},
+    ]
+
+    quick_cards = []
+    quick_frame = rates[rates["quote"].isin([code for code in CURRENCY_QUICK_QUOTES if code != selected_base])].copy()
+    quick_frame = quick_frame.sort_values("quote")
+    for _, row in quick_frame.iterrows():
+        converted_amount = selected_amount * row["rate"]
+        inverse_rate = (1 / row["rate"]) if row["rate"] else None
+        quick_cards.append(
+            {
+                "code": row["quote"],
+                "name": row["name"] or row["quote"],
+                "rate": fmt_rate(row["rate"]),
+                "conversion": f'{fmt_amount_value(selected_amount)} {selected_base} = {fmt_amount_value(converted_amount)} {row["quote"]}',
+                "inverse": f'1 {row["quote"]} = {fmt_rate(inverse_rate)} {selected_base}' if inverse_rate else "--",
+            }
+        )
+
+    table_rows = []
+    for _, row in rates.iterrows():
+        inverse_rate = (1 / row["rate"]) if row["rate"] else None
+        converted_amount = selected_amount * row["rate"]
+        table_rows.append(
+            {
+                "quote": row["quote"],
+                "name": row["name"] or row["quote"],
+                "symbol": row["symbol"] or "--",
+                "rate": fmt_rate(row["rate"]),
+                "inverse_rate": fmt_rate(inverse_rate),
+                "converted_amount": fmt_amount_value(converted_amount),
+            }
+        )
+
+    crypto_cards = []
+    crypto_table_rows = []
+    if not crypto_markets.empty and usd_to_base is not None:
+        crypto_markets = crypto_markets.copy()
+        crypto_markets["symbol"] = crypto_markets["symbol"].astype(str).str.upper()
+        crypto_markets["name"] = crypto_markets["name"].fillna("")
+        crypto_markets["search_key"] = (
+            crypto_markets["symbol"].fillna("")
+            + " "
+            + crypto_markets["name"].fillna("")
+        ).map(normalize_search)
+        if query_key:
+            crypto_markets = crypto_markets[crypto_markets["search_key"].str.contains(query_key, na=False)].copy()
+
+        crypto_markets = crypto_markets.sort_values(["market_cap_rank", "name"], ascending=[True, True]).reset_index(drop=True)
+        for _, row in crypto_markets.iterrows():
+            price_in_base = row["current_price_usd"] * usd_to_base
+            amount_in_crypto = (selected_amount / price_in_base) if price_in_base else None
+            crypto_row = {
+                "symbol": row["symbol"],
+                "name": row["name"] or row["symbol"],
+                "rank": int(row["market_cap_rank"]) if pd.notna(row["market_cap_rank"]) else "--",
+                "price_usd": fmt_rate(row["current_price_usd"]),
+                "price_base": fmt_rate(price_in_base),
+                "change_24h": fmt_percent(row["price_change_pct_24h"], signed=True),
+                "change_24h_tone": tone_for_number(row["price_change_pct_24h"]),
+                "amount_buys": fmt_rate(amount_in_crypto),
+            }
+            crypto_table_rows.append(crypto_row)
+
+        for crypto_row in crypto_table_rows[:4]:
+            crypto_cards.append(
+                {
+                    "symbol": crypto_row["symbol"],
+                    "name": crypto_row["name"],
+                    "price_usd": crypto_row["price_usd"],
+                    "price_base": crypto_row["price_base"],
+                    "change_24h": crypto_row["change_24h"],
+                    "change_24h_tone": crypto_row["change_24h_tone"],
+                    "amount_buys": crypto_row["amount_buys"],
+                }
+            )
+
+    source_points = [
+        'Fonte: <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter API</a>.',
+        "A documentacao oficial informa que a API agrega taxas diarias de 20+ bancos centrais e instituicoes oficiais.",
+        "As cotacoes desta tela sao referenciais diarias; nao sao intraday.",
+        'A secao de cripto usa <a href="https://docs.coingecko.com/" target="_blank" rel="noopener noreferrer">CoinGecko API</a> para preco spot em USD e variacao de 24h.',
+    ]
+    context = {
+        "cards": cards,
+        "quick_cards": quick_cards,
+        "table_rows": table_rows,
+        "crypto_cards": crypto_cards,
+        "crypto_table_rows": crypto_table_rows,
+        "currency_options": [
+            {"code": row["code"], "label": f'{row["code"]} - {row["name"]}'}
+            for _, row in catalog.iterrows()
+        ],
+        "selected_base": selected_base,
+        "selected_base_label": f"{selected_base} - {base_name}",
+        "selected_amount": selected_amount,
+        "selected_amount_display": fmt_amount_value(selected_amount),
+        "selected_query": selected_query,
+        "updated_date": updated_date,
+        "results_label": f"{len(table_rows)} moedas exibidas" if table_rows else "Nenhuma moeda encontrada",
+        "crypto_results_label": f"{len(crypto_table_rows)} criptomoedas exibidas" if crypto_table_rows else "Nenhuma criptomoeda encontrada",
+        "clear_link": build_currency_dashboard_link(CURRENCY_DEFAULT_BASE, 100, ""),
+        "empty_message": "Nenhuma moeda encontrada para o filtro atual." if not table_rows else "",
+        "crypto_empty_message": "Nenhuma criptomoeda encontrada para o filtro atual." if not crypto_table_rows else "",
+        "source_title": "Frankfurter",
+        "source_points": source_points,
+    }
+    return render(request, "dashboard/cotacao_moedas.html", context)
+
+
+def acoes_mercado_mundial(request):
+    force_refresh = request.GET.get("refresh") == "1"
+    selected_query = request.GET.get("q", "").strip()
+    query_key = normalize_search(selected_query)
+    selected_capital = parse_amount(request.GET.get("capital"), GLOBAL_STOCK_DEFAULT_CAPITAL)
+    selected_market = parse_stock_market(request.GET.get("market"))
+    selected_market_label = GLOBAL_STOCK_MARKET_FILTERS[selected_market]["label"]
+
+    stock_frame = load_global_stock_quotes(force=force_refresh)
+    currency_catalog = load_currency_catalog(force=force_refresh)
+    available_codes = currency_catalog["code"].tolist() if not currency_catalog.empty else []
+    selected_base = str(request.GET.get("base") or GLOBAL_STOCK_DEFAULT_BASE).strip().upper()
+    if available_codes and selected_base not in available_codes:
+        if GLOBAL_STOCK_DEFAULT_BASE in available_codes:
+            selected_base = GLOBAL_STOCK_DEFAULT_BASE
+        else:
+            selected_base = available_codes[0]
+
+    base_match = currency_catalog.loc[currency_catalog["code"] == selected_base] if not currency_catalog.empty else pd.DataFrame()
+    base_name = base_match.iloc[0]["name"] if not base_match.empty else selected_base
+    selected_base_label = f"{selected_base} - {base_name}" if base_name else selected_base
+    currency_options = (
+        [{"code": row["code"], "label": f'{row["code"]} - {row["name"]}'} for _, row in currency_catalog.iterrows()]
+        if not currency_catalog.empty
+        else [{"code": selected_base, "label": selected_base_label}]
+    )
+    market_options = [
+        {"key": key, "label": config["label"]}
+        for key, config in GLOBAL_STOCK_MARKET_FILTERS.items()
+    ]
+
+    if stock_frame.empty:
+        return render(
+            request,
+            "dashboard/acoes_mercado_mundial.html",
+            {
+                "cards": [],
+                "quick_cards": [],
+                "table_rows": [],
+                "currency_options": currency_options,
+                "market_options": market_options,
+                "selected_base": selected_base,
+                "selected_base_label": selected_base_label,
+                "selected_capital": selected_capital,
+                "selected_capital_display": fmt_amount_value(selected_capital),
+                "selected_query": selected_query,
+                "selected_market": selected_market,
+                "selected_market_label": selected_market_label,
+                "updated_date": "--",
+                "results_label": "Nenhuma acao encontrada",
+                "clear_link": build_stock_dashboard_link(GLOBAL_STOCK_DEFAULT_BASE, GLOBAL_STOCK_DEFAULT_CAPITAL, "all", ""),
+                "empty_message": "Nao foi possivel carregar as acoes globais no momento.",
+                "source_title": "Yahoo Finance",
+                "source_points": [],
+            },
+        )
+
+    stock_frame = stock_frame.copy()
+    quote_currencies = sorted(
+        {
+            str(currency).strip().upper()
+            for currency in stock_frame["currency"].dropna().tolist()
+            if str(currency).strip()
+        }
+    )
+    conversion_map = {selected_base: 1.0}
+    if quote_currencies:
+        rates = load_currency_rates(selected_base, quotes=quote_currencies, force=force_refresh)
+        if not rates.empty:
+            rates["quote"] = rates["quote"].astype(str).str.upper()
+            rates["rate"] = pd.to_numeric(rates["rate"], errors="coerce")
+            for _, row in rates.iterrows():
+                if pd.notna(row["rate"]) and row["rate"]:
+                    conversion_map[row["quote"]] = row["rate"]
+
+    stock_frame["currency"] = stock_frame["currency"].astype(str).str.upper()
+    stock_frame["price_local"] = pd.to_numeric(stock_frame["price_local"], errors="coerce")
+    stock_frame["previous_close"] = pd.to_numeric(stock_frame["previous_close"], errors="coerce")
+    stock_frame["day_high"] = pd.to_numeric(stock_frame["day_high"], errors="coerce")
+    stock_frame["day_low"] = pd.to_numeric(stock_frame["day_low"], errors="coerce")
+    stock_frame["volume"] = pd.to_numeric(stock_frame["volume"], errors="coerce")
+    stock_frame["regular_market_time"] = pd.to_numeric(stock_frame["regular_market_time"], errors="coerce")
+    stock_frame["change_pct"] = (
+        (stock_frame["price_local"] - stock_frame["previous_close"]) / stock_frame["previous_close"] * 100
+    )
+    stock_frame["price_base"] = stock_frame.apply(
+        lambda row: convert_value_to_base(row["price_local"], row["currency"], selected_base, conversion_map),
+        axis=1,
+    )
+    stock_frame["capital_buys"] = stock_frame["price_base"].apply(
+        lambda price: (selected_capital / price) if price and not pd.isna(price) else None
+    )
+    stock_frame["search_key"] = (
+        stock_frame["symbol"].fillna("")
+        + " "
+        + stock_frame["company"].fillna("")
+        + " "
+        + stock_frame["market_label"].fillna("")
+        + " "
+        + stock_frame["sector"].fillna("")
+        + " "
+        + stock_frame["exchange"].fillna("")
+    ).map(normalize_search)
+
+    filtered = stock_frame.copy()
+    if selected_market != "all":
+        filtered = filtered[filtered["market_key"] == selected_market].copy()
+    if query_key:
+        filtered = filtered[filtered["search_key"].str.contains(query_key, na=False)].copy()
+
+    filtered = filtered.sort_values(["market_label", "symbol"]).reset_index(drop=True)
+    latest_timestamp = stock_frame["regular_market_time"].dropna().max() if stock_frame["regular_market_time"].notna().any() else None
+    updated_date = fmt_quote_date(latest_timestamp)
+
+    performance_frame = filtered.dropna(subset=["change_pct"]).sort_values(["change_pct", "symbol"], ascending=[False, True])
+    best_row = performance_frame.iloc[0] if not performance_frame.empty else None
+    cards = [
+        {"label": "Mercado ativo", "value": selected_market_label, "copy": "Watchlist global distribuido por regioes."},
+        {"label": "Moeda base", "value": selected_base, "copy": base_name or selected_base},
+        {
+            "label": "Capital simulado",
+            "value": f"{fmt_amount_value(selected_capital)} {selected_base}",
+            "copy": "Quantidade estimada de acoes em cada papel.",
+        },
+        {
+            "label": "Melhor pregao",
+            "value": best_row["symbol"] if best_row is not None else "--",
+            "copy": (
+                f'{best_row["company"]} | {fmt_percent(best_row["change_pct"], signed=True)}'
+                if best_row is not None
+                else "Sem variacao disponivel no filtro atual."
+            ),
+        },
+    ]
+
+    quick_cards = []
+    quick_frame = filtered.dropna(subset=["change_pct"]).copy()
+    quick_frame["abs_change"] = quick_frame["change_pct"].abs()
+    quick_frame = quick_frame.sort_values(["abs_change", "symbol"], ascending=[False, True]).head(8)
+    for _, row in quick_frame.iterrows():
+        quick_cards.append(
+            {
+                "symbol": row["symbol"],
+                "company": row["company"],
+                "market_short": row["market_short"] or row["market_label"],
+                "price_base": fmt_rate(row["price_base"]),
+                "price_local": fmt_rate(row["price_local"]),
+                "currency": row["currency"],
+                "change": fmt_percent(row["change_pct"], signed=True),
+                "change_tone": tone_for_number(row["change_pct"]),
+                "capital_buys": fmt_rate(row["capital_buys"]),
+            }
+        )
+
+    table_rows = []
+    for _, row in filtered.iterrows():
+        day_range = "--"
+        if pd.notna(row["day_low"]) and pd.notna(row["day_high"]):
+            day_range = f'{fmt_rate(row["day_low"])} - {fmt_rate(row["day_high"])} {row["currency"]}'
+
+        table_rows.append(
+            {
+                "symbol": row["symbol"],
+                "company": row["company"],
+                "market_label": row["market_label"],
+                "exchange": row["exchange"] or "--",
+                "sector": row["sector"] or "--",
+                "price_local": fmt_rate(row["price_local"]),
+                "currency": row["currency"] or "--",
+                "price_base": fmt_rate(row["price_base"]),
+                "change": fmt_percent(row["change_pct"], signed=True),
+                "change_tone": tone_for_number(row["change_pct"]),
+                "day_range": day_range,
+                "volume": fmt_compact_number(row["volume"]),
+                "capital_buys": fmt_rate(row["capital_buys"]),
+                "quote_date": fmt_quote_date(row["regular_market_time"]),
+            }
+        )
+
+    source_points = [
+        'Fonte principal: <a href="https://finance.yahoo.com/" target="_blank" rel="noopener noreferrer">Yahoo Finance</a> para ultimo preco regular, fechamento anterior, faixa diaria e volume por papel.',
+        'Conversao para a moeda base via <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a>.',
+        "Como cada bolsa fecha em horarios diferentes, a data do pregao pode variar de uma acao para outra.",
+        "A tela trabalha com uma watchlist internacional curada para leitura rapida de Estados Unidos, Europa, Asia-Pacifico e America Latina.",
+    ]
+    context = {
+        "cards": cards,
+        "quick_cards": quick_cards,
+        "table_rows": table_rows,
+        "currency_options": currency_options,
+        "market_options": market_options,
+        "selected_base": selected_base,
+        "selected_base_label": selected_base_label,
+        "selected_capital": selected_capital,
+        "selected_capital_display": fmt_amount_value(selected_capital),
+        "selected_query": selected_query,
+        "selected_market": selected_market,
+        "selected_market_label": selected_market_label,
+        "updated_date": updated_date,
+        "results_label": f"{len(table_rows)} acoes exibidas" if table_rows else "Nenhuma acao encontrada",
+        "clear_link": build_stock_dashboard_link(GLOBAL_STOCK_DEFAULT_BASE, GLOBAL_STOCK_DEFAULT_CAPITAL, "all", ""),
+        "empty_message": "Nenhuma acao encontrada para o filtro atual." if not table_rows else "",
+        "source_title": "Yahoo Finance + Frankfurter",
+        "source_points": source_points,
+    }
+    return render(request, "dashboard/acoes_mercado_mundial.html", context)
 
 
 def idh_mundial(request):
@@ -939,6 +1919,266 @@ def idh_mundial(request):
         "empty_message": "Nenhum pais encontrado para o filtro atual." if not table_rows else "",
     }
     return render(request, "dashboard/idh_mundial.html", context)
+
+
+def panorama_macroeconomico(request):
+    force_refresh = request.GET.get("refresh") == "1"
+    selected_metric = parse_macro_metric(request.GET.get("metric"))
+    selected_limit = parse_limit(request.GET.get("top"))
+    selected_query = request.GET.get("q", "").strip()
+    query_key = normalize_search(selected_query)
+    metric_definition = MACRO_METRIC_DEFINITIONS[selected_metric]
+    source_title = "Banco Mundial"
+    source_points = [
+        'Fonte: <a href="https://data.worldbank.org/indicator/NY.GDP.MKTP.CD" target="_blank" rel="noopener noreferrer">PIB nominal</a>, <a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.CD" target="_blank" rel="noopener noreferrer">PIB per capita</a>, <a href="https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG" target="_blank" rel="noopener noreferrer">crescimento real do PIB</a>, <a href="https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG" target="_blank" rel="noopener noreferrer">inflacao ao consumidor</a> e <a href="https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS" target="_blank" rel="noopener noreferrer">desemprego</a> do Banco Mundial.',
+        'O painel agora inclui tambem <a href="https://data.worldbank.org/indicator/BN.CAB.XOKA.CD" target="_blank" rel="noopener noreferrer">conta corrente</a>, <a href="https://data.worldbank.org/indicator/NE.EXP.GNFS.CD" target="_blank" rel="noopener noreferrer">exportacoes</a> e <a href="https://data.worldbank.org/indicator/FR.INR.RINR" target="_blank" rel="noopener noreferrer">juros reais</a>, todos em serie anual oficial.',
+        "O ranking ordena os paises pelo indicador selecionado, mas mantem as demais variaveis macroeconomicas lado a lado na mesma tabela.",
+        "Quando a busca retorna um unico pais, a tela abre a serie historica completa para atividade, renda, inflacao e mercado de trabalho.",
+    ]
+
+    gdp_dataframe = load_gdp_data(force=force_refresh)
+    per_capita_dataframe = load_gdp_per_capita_data(force=force_refresh)
+    growth_real_dataframe = load_gdp_growth_real_data(force=force_refresh)
+    inflation_dataframe = load_inflation_data(force=force_refresh)
+    unemployment_dataframe = load_unemployment_data(force=force_refresh)
+    current_account_dataframe = load_current_account_data(force=force_refresh)
+    exports_dataframe = load_exports_data(force=force_refresh)
+    real_interest_dataframe = load_real_interest_rate_data(force=force_refresh)
+    world_bank_metadata = load_world_bank_country_metadata(force=force_refresh)
+    indicator_frames = [
+        (gdp_dataframe, "gdp"),
+        (per_capita_dataframe, "gdp_per_capita"),
+        (growth_real_dataframe, "growth_real_pct"),
+        (inflation_dataframe, "inflation_pct"),
+        (unemployment_dataframe, "unemployment_pct"),
+        (current_account_dataframe, "current_account_usd"),
+        (exports_dataframe, "exports_usd"),
+        (real_interest_dataframe, "real_interest_pct"),
+    ]
+    indicator_frame_map = {
+        "gdp": gdp_dataframe,
+        "per_capita": per_capita_dataframe,
+        "growth_real": growth_real_dataframe,
+        "inflation": inflation_dataframe,
+        "unemployment": unemployment_dataframe,
+        "current_account": current_account_dataframe,
+        "exports": exports_dataframe,
+        "real_interest": real_interest_dataframe,
+    }
+
+    available_years = collect_available_years(
+        gdp_dataframe,
+        per_capita_dataframe,
+        growth_real_dataframe,
+        inflation_dataframe,
+        unemployment_dataframe,
+        current_account_dataframe,
+        exports_dataframe,
+        real_interest_dataframe,
+    )
+    metric_years = collect_available_years(indicator_frame_map.get(selected_metric))
+    year_options = metric_years or available_years
+    fallback_year = year_options[-1] if year_options else None
+    default_clear_year = collect_available_years(gdp_dataframe)
+    default_clear_year = default_clear_year[-1] if default_clear_year else 2024
+
+    if not available_years:
+        return render(
+            request,
+            "dashboard/panorama_macroeconomico.html",
+            {
+                "cards": [],
+                "table_rows": [],
+                "history_rows": [],
+                "history_country": "",
+                "year_options": [],
+                "selected_year": None,
+                "selected_metric": selected_metric,
+                "metric_label": metric_definition["label"],
+                "metric_options": MACRO_METRIC_DEFINITIONS,
+                "selected_limit": selected_limit,
+                "limit_options": LIMIT_OPTIONS,
+                "selected_query": selected_query,
+                "results_label": "Nenhum pais encontrado",
+                "coverage_label": "--",
+                "source_title": source_title,
+                "source_points": source_points,
+                "clear_link": build_macro_dashboard_link(default_clear_year, 25, "", "gdp"),
+                "empty_message": "Nao foi possivel carregar os dados macroeconomicos.",
+            },
+        )
+
+    min_year = min(year_options)
+    max_year = max(year_options)
+    selected_year = parse_year(request.GET.get("year"), fallback_year, min_year, max_year)
+    full_year = merge_indicator_frames_by_year(indicator_frames, selected_year)
+
+    if full_year.empty:
+        return render(
+            request,
+            "dashboard/panorama_macroeconomico.html",
+            {
+                "cards": [],
+                "table_rows": [],
+                "history_rows": [],
+                "history_country": "",
+                "year_options": list(reversed(year_options)),
+                "selected_year": selected_year,
+                "selected_metric": selected_metric,
+                "metric_label": metric_definition["label"],
+                "metric_options": MACRO_METRIC_DEFINITIONS,
+                "selected_limit": selected_limit,
+                "limit_options": LIMIT_OPTIONS,
+                "selected_query": selected_query,
+                "results_label": "Nenhum pais encontrado",
+                "coverage_label": f"{min_year} ate {max_year}",
+                "source_title": source_title,
+                "source_points": source_points,
+                "clear_link": build_macro_dashboard_link(default_clear_year, 25, "", "gdp"),
+                "empty_message": "Nao ha dados disponiveis para o ano selecionado.",
+            },
+        )
+
+    valid_country_names = (
+        set(world_bank_metadata.loc[~world_bank_metadata["is_aggregate"], "Pais"].tolist())
+        if not world_bank_metadata.empty
+        else set()
+    )
+    if valid_country_names:
+        full_year = full_year[full_year["Pais"].isin(valid_country_names)]
+    full_year = full_year[full_year["Pais"] != "World"].copy()
+
+    if not world_bank_metadata.empty:
+        full_year = full_year.merge(
+            world_bank_metadata[["Pais", "country_code", "region"]],
+            on="Pais",
+            how="left",
+        )
+    else:
+        full_year["country_code"] = None
+        full_year["region"] = ""
+
+    if not full_year.empty:
+        country_parts = full_year.apply(
+            lambda row: get_country_display_parts(row["Pais"], row.get("country_code"), "pt"),
+            axis=1,
+        )
+        full_year["country_display"] = country_parts.str[0]
+        full_year["country_detail"] = country_parts.str[1]
+    else:
+        full_year["country_display"] = pd.Series(dtype=str)
+        full_year["country_detail"] = pd.Series(dtype=str)
+
+    full_year["region"] = full_year["region"].fillna("").replace("", "--")
+    full_year["metric_value"] = pd.to_numeric(full_year[metric_definition["field"]], errors="coerce")
+    full_year = (
+        full_year[full_year["metric_value"].notna()]
+        .sort_values("metric_value", ascending=False)
+        .reset_index(drop=True)
+    )
+    full_year["rank"] = full_year.index + 1
+    full_year["search_key"] = (
+        full_year["Pais"].fillna("")
+        + " "
+        + full_year["country_display"].fillna("")
+        + " "
+        + full_year["region"].fillna("")
+    ).map(normalize_search)
+
+    current_year = full_year.copy()
+    if query_key:
+        current_year = current_year[current_year["search_key"].str.contains(query_key, na=False)].copy()
+
+    total_matches = len(current_year)
+    year_frame = current_year if selected_limit == 0 else current_year.head(selected_limit).copy()
+
+    first_country = year_frame.iloc[0]["country_display"] if not year_frame.empty else "--"
+    first_value = format_macro_metric_value(selected_metric, year_frame.iloc[0]["metric_value"]) if not year_frame.empty else "--"
+    cards = [
+        {"label": "Indicador ativo", "value": metric_definition["short_label"], "copy": f"Banco Mundial | ano {selected_year}."},
+        {"label": "Primeiro no recorte", "value": first_country, "copy": first_value},
+        {"label": "Paises listados", "value": str(len(year_frame)), "copy": f"De {total_matches} resultados encontrados."},
+        {"label": "Cobertura", "value": f"{min_year}-{max_year}", "copy": "Serie macroeconomica consolidada."},
+    ]
+
+    table_rows = [
+        {
+            "rank": int(row["rank"]),
+            "country": row["country_display"],
+            "country_detail": row["country_detail"],
+            "country_raw": row["Pais"],
+            "region": row["region"],
+            "gdp": fmt_currency(row.get("gdp")),
+            "gdp_full": build_full_currency_display(row.get("gdp"))["formatted"],
+            "per_capita": fmt_currency_unit(row.get("gdp_per_capita")),
+            "growth_real": fmt_percent(row.get("growth_real_pct"), signed=True),
+            "growth_real_tone": tone_for_number(row.get("growth_real_pct")),
+            "inflation": fmt_percent(row.get("inflation_pct"), signed=True),
+            "inflation_tone": "neutral",
+            "unemployment": fmt_percent(row.get("unemployment_pct")),
+            "unemployment_tone": "neutral",
+            "current_account": fmt_currency(row.get("current_account_usd")),
+            "current_account_full": build_full_currency_display(row.get("current_account_usd"))["formatted"],
+            "exports": fmt_currency(row.get("exports_usd")),
+            "exports_full": build_full_currency_display(row.get("exports_usd"))["formatted"],
+            "real_interest": fmt_percent(row.get("real_interest_pct"), signed=True),
+            "real_interest_tone": tone_for_number(row.get("real_interest_pct")),
+        }
+        for _, row in year_frame.iterrows()
+    ]
+
+    history_country = ""
+    history_rows = []
+    if len(table_rows) == 1:
+        history_country = table_rows[0]["country"]
+        history_frame = merge_country_history_frames(table_rows[0]["country_raw"], indicator_frames)
+        history_frame = history_frame[
+            (history_frame["Ano"] >= min_year)
+            & (history_frame["Ano"] <= max_year)
+        ].sort_values("Ano", ascending=False)
+        history_rows = [
+            {
+                "year": int(row["Ano"]),
+                "gdp": fmt_currency(row.get("gdp")),
+                "gdp_full": build_full_currency_display(row.get("gdp"))["formatted"],
+                "per_capita": fmt_currency_unit(row.get("gdp_per_capita")),
+                "growth_real": fmt_percent(row.get("growth_real_pct"), signed=True),
+                "growth_real_tone": tone_for_number(row.get("growth_real_pct")),
+                "inflation": fmt_percent(row.get("inflation_pct"), signed=True),
+                "inflation_tone": "neutral",
+                "unemployment": fmt_percent(row.get("unemployment_pct")),
+                "unemployment_tone": "neutral",
+                "current_account": fmt_currency(row.get("current_account_usd")),
+                "current_account_full": build_full_currency_display(row.get("current_account_usd"))["formatted"],
+                "exports": fmt_currency(row.get("exports_usd")),
+                "exports_full": build_full_currency_display(row.get("exports_usd"))["formatted"],
+                "real_interest": fmt_percent(row.get("real_interest_pct"), signed=True),
+                "real_interest_tone": tone_for_number(row.get("real_interest_pct")),
+            }
+            for _, row in history_frame.iterrows()
+        ]
+
+    context = {
+        "cards": cards,
+        "table_rows": table_rows,
+        "history_rows": history_rows,
+        "history_country": history_country,
+        "year_options": list(reversed(year_options)),
+        "selected_year": selected_year,
+        "selected_metric": selected_metric,
+        "metric_label": metric_definition["label"],
+        "metric_options": MACRO_METRIC_DEFINITIONS,
+        "selected_limit": selected_limit,
+        "limit_options": LIMIT_OPTIONS,
+        "selected_query": selected_query,
+        "results_label": f"{len(table_rows)} de {total_matches} paises exibidos" if table_rows else "Nenhum pais encontrado",
+        "coverage_label": f"{min_year} ate {max_year}",
+        "source_title": source_title,
+        "source_points": source_points,
+        "clear_link": build_macro_dashboard_link(default_clear_year, 25, "", "gdp"),
+        "empty_message": "Nenhum dado encontrado para o filtro atual." if not table_rows else "",
+    }
+    return render(request, "dashboard/panorama_macroeconomico.html", context)
 
 
 def pib_mundial(request):
