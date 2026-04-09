@@ -68,6 +68,318 @@ GLOBAL_STOCK_WATCHLIST = [
     {"symbol": "PETR4.SA", "company": "Petrobras PN", "market_key": "latam", "market_label": "America Latina", "market_short": "LatAm", "sector": "Petroleo e gas"},
     {"symbol": "ITUB4.SA", "company": "Itau Unibanco PN", "market_key": "latam", "market_label": "America Latina", "market_short": "LatAm", "sector": "Bancos"},
 ]
+BUSINESS_DRE_SERIES = [
+    {
+        "year": 2023,
+        "gross_revenue": 820_000_000,
+        "deductions": 94_000_000,
+        "cost_of_sales": 430_000_000,
+        "selling_expenses": 92_000_000,
+        "administrative_expenses": 58_000_000,
+        "research_expenses": 22_000_000,
+        "other_operating_income": 8_000_000,
+        "depreciation_amortization": 38_000_000,
+        "financial_expenses": 21_000_000,
+        "income_tax": 24_000_000,
+    },
+    {
+        "year": 2024,
+        "gross_revenue": 930_000_000,
+        "deductions": 105_000_000,
+        "cost_of_sales": 476_000_000,
+        "selling_expenses": 101_000_000,
+        "administrative_expenses": 61_000_000,
+        "research_expenses": 24_000_000,
+        "other_operating_income": 11_000_000,
+        "depreciation_amortization": 42_000_000,
+        "financial_expenses": 18_000_000,
+        "income_tax": 36_000_000,
+    },
+    {
+        "year": 2025,
+        "gross_revenue": 1_080_000_000,
+        "deductions": 121_000_000,
+        "cost_of_sales": 542_000_000,
+        "selling_expenses": 110_000_000,
+        "administrative_expenses": 67_000_000,
+        "research_expenses": 26_000_000,
+        "other_operating_income": 13_000_000,
+        "depreciation_amortization": 45_000_000,
+        "financial_expenses": 15_000_000,
+        "income_tax": 54_000_000,
+    },
+]
+BUSINESS_DRE_ROW_DEFINITIONS = [
+    {"key": "gross_revenue", "label": "Receita bruta", "kind": "positive", "row_class": "is-headline"},
+    {"key": "deductions", "label": "Deducoes e impostos sobre vendas", "kind": "negative", "row_class": "is-detail"},
+    {"key": "net_revenue", "label": "Receita liquida", "kind": "positive", "row_class": "is-total"},
+    {"key": "cost_of_sales", "label": "Custo dos produtos vendidos (CPV)", "kind": "negative", "row_class": "is-detail"},
+    {"key": "gross_profit", "label": "Lucro bruto", "kind": "positive", "row_class": "is-subtotal"},
+    {"key": "selling_expenses", "label": "Despesas comerciais", "kind": "negative", "row_class": "is-detail"},
+    {"key": "administrative_expenses", "label": "Despesas administrativas", "kind": "negative", "row_class": "is-detail"},
+    {"key": "research_expenses", "label": "Pesquisa e desenvolvimento", "kind": "negative", "row_class": "is-detail"},
+    {"key": "other_operating_income", "label": "Outras receitas operacionais", "kind": "positive", "row_class": "is-detail"},
+    {"key": "ebitda", "label": "EBITDA", "kind": "positive", "row_class": "is-highlight"},
+    {"key": "depreciation_amortization", "label": "Depreciacao e amortizacao", "kind": "negative", "row_class": "is-detail"},
+    {"key": "ebit", "label": "EBIT", "kind": "positive", "row_class": "is-subtotal"},
+    {"key": "financial_expenses", "label": "Resultado financeiro", "kind": "negative", "row_class": "is-detail"},
+    {"key": "pretax_income", "label": "Lucro antes do IR/CS", "kind": "positive", "row_class": "is-subtotal"},
+    {"key": "income_tax", "label": "IR e CSLL", "kind": "negative", "row_class": "is-detail"},
+    {"key": "net_income", "label": "Lucro liquido", "kind": "positive", "row_class": "is-highlight"},
+]
+BUSINESS_BALANCE_SHEET_SERIES = [
+    {
+        "year": 2023,
+        "cash": 96_000_000,
+        "accounts_receivable": 118_000_000,
+        "inventory": 84_000_000,
+        "other_current_assets": 32_000_000,
+        "fixed_assets": 285_000_000,
+        "intangible_assets": 148_000_000,
+        "other_non_current_assets": 37_000_000,
+        "suppliers": 92_000_000,
+        "short_term_debt": 58_000_000,
+        "taxes_payable": 24_000_000,
+        "other_current_liabilities": 46_000_000,
+        "long_term_debt": 205_000_000,
+        "provisions": 35_000_000,
+        "share_capital": 180_000_000,
+        "reserves": 55_000_000,
+        "retained_earnings": 105_000_000,
+    },
+    {
+        "year": 2024,
+        "cash": 112_000_000,
+        "accounts_receivable": 136_000_000,
+        "inventory": 92_000_000,
+        "other_current_assets": 36_000_000,
+        "fixed_assets": 302_000_000,
+        "intangible_assets": 155_000_000,
+        "other_non_current_assets": 42_000_000,
+        "suppliers": 101_000_000,
+        "short_term_debt": 62_000_000,
+        "taxes_payable": 26_000_000,
+        "other_current_liabilities": 50_000_000,
+        "long_term_debt": 214_000_000,
+        "provisions": 37_000_000,
+        "share_capital": 180_000_000,
+        "reserves": 67_000_000,
+        "retained_earnings": 138_000_000,
+    },
+    {
+        "year": 2025,
+        "cash": 144_000_000,
+        "accounts_receivable": 152_000_000,
+        "inventory": 101_000_000,
+        "other_current_assets": 41_000_000,
+        "fixed_assets": 327_000_000,
+        "intangible_assets": 162_000_000,
+        "other_non_current_assets": 48_000_000,
+        "suppliers": 110_000_000,
+        "short_term_debt": 57_000_000,
+        "taxes_payable": 29_000_000,
+        "other_current_liabilities": 54_000_000,
+        "long_term_debt": 220_000_000,
+        "provisions": 39_000_000,
+        "share_capital": 180_000_000,
+        "reserves": 81_000_000,
+        "retained_earnings": 205_000_000,
+    },
+]
+BUSINESS_BALANCE_SHEET_ROW_DEFINITIONS = [
+    {"key": "cash", "label": "Ativo circulante - Caixa e equivalentes", "row_class": "is-detail"},
+    {"key": "accounts_receivable", "label": "Ativo circulante - Contas a receber", "row_class": "is-detail"},
+    {"key": "inventory", "label": "Ativo circulante - Estoques", "row_class": "is-detail"},
+    {"key": "other_current_assets", "label": "Ativo circulante - Outros ativos", "row_class": "is-detail"},
+    {"key": "total_current_assets", "label": "Ativo circulante total", "row_class": "is-total"},
+    {"key": "fixed_assets", "label": "Ativo nao circulante - Imobilizado", "row_class": "is-detail"},
+    {"key": "intangible_assets", "label": "Ativo nao circulante - Intangivel", "row_class": "is-detail"},
+    {"key": "other_non_current_assets", "label": "Ativo nao circulante - Outros ativos", "row_class": "is-detail"},
+    {"key": "total_non_current_assets", "label": "Ativo nao circulante total", "row_class": "is-total"},
+    {"key": "total_assets", "label": "Total do ativo", "row_class": "is-highlight"},
+    {"key": "suppliers", "label": "Passivo circulante - Fornecedores", "row_class": "is-detail"},
+    {"key": "short_term_debt", "label": "Passivo circulante - Divida de curto prazo", "row_class": "is-detail"},
+    {"key": "taxes_payable", "label": "Passivo circulante - Tributos a recolher", "row_class": "is-detail"},
+    {"key": "other_current_liabilities", "label": "Passivo circulante - Outros passivos", "row_class": "is-detail"},
+    {"key": "total_current_liabilities", "label": "Passivo circulante total", "row_class": "is-total"},
+    {"key": "long_term_debt", "label": "Passivo nao circulante - Divida de longo prazo", "row_class": "is-detail"},
+    {"key": "provisions", "label": "Passivo nao circulante - Provisoes", "row_class": "is-detail"},
+    {"key": "total_non_current_liabilities", "label": "Passivo nao circulante total", "row_class": "is-total"},
+    {"key": "total_liabilities", "label": "Passivo total", "row_class": "is-subtotal"},
+    {"key": "share_capital", "label": "Patrimonio liquido - Capital social", "row_class": "is-detail"},
+    {"key": "reserves", "label": "Patrimonio liquido - Reservas", "row_class": "is-detail"},
+    {"key": "retained_earnings", "label": "Patrimonio liquido - Lucros acumulados", "row_class": "is-detail"},
+    {"key": "total_equity", "label": "Patrimonio liquido", "row_class": "is-highlight"},
+    {"key": "total_liabilities_equity", "label": "Passivo + patrimonio liquido", "row_class": "is-total"},
+]
+BUSINESS_CASH_FLOW_SERIES = [
+    {
+        "year": 2023,
+        "opening_cash": 82_000_000,
+        "net_income": 49_000_000,
+        "depreciation_amortization": 38_000_000,
+        "other_operational_adjustments": 54_000_000,
+        "working_capital_variation": 11_000_000,
+        "interest_and_taxes_paid": 12_000_000,
+        "capex": 58_000_000,
+        "intangibles_investments": 14_000_000,
+        "debt_raised": 40_000_000,
+        "debt_repayment": 46_000_000,
+        "dividends": 26_000_000,
+    },
+    {
+        "year": 2024,
+        "opening_cash": 96_000_000,
+        "net_income": 78_000_000,
+        "depreciation_amortization": 42_000_000,
+        "other_operational_adjustments": 59_000_000,
+        "working_capital_variation": 14_000_000,
+        "interest_and_taxes_paid": 19_000_000,
+        "capex": 71_000_000,
+        "intangibles_investments": 17_000_000,
+        "debt_raised": 35_000_000,
+        "debt_repayment": 44_000_000,
+        "dividends": 33_000_000,
+    },
+    {
+        "year": 2025,
+        "opening_cash": 112_000_000,
+        "net_income": 113_000_000,
+        "depreciation_amortization": 45_000_000,
+        "other_operational_adjustments": 69_000_000,
+        "working_capital_variation": 12_000_000,
+        "interest_and_taxes_paid": 22_000_000,
+        "capex": 83_000_000,
+        "intangibles_investments": 26_000_000,
+        "debt_raised": 24_000_000,
+        "debt_repayment": 51_000_000,
+        "dividends": 25_000_000,
+    },
+]
+BUSINESS_CASH_FLOW_ROW_DEFINITIONS = [
+    {"key": "opening_cash", "label": "Caixa inicial", "kind": "positive", "row_class": "is-headline"},
+    {"key": "net_income", "label": "Lucro liquido", "kind": "positive", "row_class": "is-detail"},
+    {"key": "depreciation_amortization", "label": "Depreciacao e amortizacao", "kind": "positive", "row_class": "is-detail"},
+    {"key": "other_operational_adjustments", "label": "Outros ajustes operacionais", "kind": "positive", "row_class": "is-detail"},
+    {"key": "working_capital_variation", "label": "Consumo de capital de giro", "kind": "negative", "row_class": "is-detail"},
+    {"key": "interest_and_taxes_paid", "label": "Juros e tributos pagos", "kind": "negative", "row_class": "is-detail"},
+    {"key": "operating_cash_flow", "label": "Fluxo de caixa operacional", "kind": "positive", "row_class": "is-highlight"},
+    {"key": "capex", "label": "Capex", "kind": "negative", "row_class": "is-detail"},
+    {"key": "intangibles_investments", "label": "Investimentos em intangivel e software", "kind": "negative", "row_class": "is-detail"},
+    {"key": "investing_cash_flow", "label": "Fluxo de caixa de investimentos", "kind": "negative", "row_class": "is-subtotal"},
+    {"key": "debt_raised", "label": "Captacao de divida", "kind": "positive", "row_class": "is-detail"},
+    {"key": "debt_repayment", "label": "Amortizacao de divida", "kind": "negative", "row_class": "is-detail"},
+    {"key": "dividends", "label": "Dividendos e JCP", "kind": "negative", "row_class": "is-detail"},
+    {"key": "financing_cash_flow", "label": "Fluxo de caixa de financiamento", "kind": "negative", "row_class": "is-subtotal"},
+    {"key": "free_cash_flow", "label": "Fluxo de caixa livre", "kind": "positive", "row_class": "is-total"},
+    {"key": "net_change_in_cash", "label": "Variacao liquida de caixa", "kind": "positive", "row_class": "is-highlight"},
+    {"key": "ending_cash", "label": "Caixa final", "kind": "positive", "row_class": "is-total"},
+]
+BUSINESS_CAPEX_SERIES = [
+    {
+        "year": 2023,
+        "maintenance_capex": 24_000_000,
+        "expansion_capex": 22_000_000,
+        "technology_capex": 12_000_000,
+        "intangibles_investments": 14_000_000,
+    },
+    {
+        "year": 2024,
+        "maintenance_capex": 28_000_000,
+        "expansion_capex": 27_000_000,
+        "technology_capex": 16_000_000,
+        "intangibles_investments": 17_000_000,
+    },
+    {
+        "year": 2025,
+        "maintenance_capex": 31_000_000,
+        "expansion_capex": 34_000_000,
+        "technology_capex": 18_000_000,
+        "intangibles_investments": 26_000_000,
+    },
+]
+BUSINESS_CAPEX_ROW_DEFINITIONS = [
+    {"key": "maintenance_capex", "label": "Capex de manutencao", "kind": "negative", "row_class": "is-detail"},
+    {"key": "expansion_capex", "label": "Capex de expansao", "kind": "negative", "row_class": "is-detail"},
+    {"key": "technology_capex", "label": "Capex de tecnologia e automacao", "kind": "negative", "row_class": "is-detail"},
+    {"key": "total_physical_capex", "label": "Capex fisico total", "kind": "negative", "row_class": "is-subtotal"},
+    {"key": "intangibles_investments", "label": "Investimentos em intangivel e software", "kind": "negative", "row_class": "is-detail"},
+    {"key": "total_investments", "label": "Investimento total", "kind": "negative", "row_class": "is-highlight"},
+    {"key": "depreciation_amortization", "label": "Depreciacao e amortizacao", "kind": "positive", "row_class": "is-detail"},
+    {"key": "free_cash_after_investments", "label": "Caixa livre apos investimentos", "kind": "positive", "row_class": "is-total"},
+]
+BUSINESS_OPEX_ROW_DEFINITIONS = [
+    {"key": "gross_profit", "label": "Lucro bruto", "kind": "positive", "row_class": "is-headline"},
+    {"key": "selling_expenses", "label": "Despesas comerciais", "kind": "negative", "row_class": "is-detail"},
+    {"key": "administrative_expenses", "label": "Despesas administrativas", "kind": "negative", "row_class": "is-detail"},
+    {"key": "research_expenses", "label": "Pesquisa e desenvolvimento", "kind": "negative", "row_class": "is-detail"},
+    {"key": "sgna", "label": "SG&A", "kind": "negative", "row_class": "is-subtotal"},
+    {"key": "total_opex", "label": "Opex total", "kind": "negative", "row_class": "is-highlight"},
+    {"key": "other_operating_income", "label": "Outras receitas operacionais", "kind": "positive", "row_class": "is-detail"},
+    {"key": "net_opex", "label": "Opex liquido", "kind": "negative", "row_class": "is-total"},
+    {"key": "ebitda", "label": "EBITDA", "kind": "positive", "row_class": "is-highlight"},
+]
+BUSINESS_CAPEX_PROJECTS = [
+    {
+        "name": "Automacao da linha industrial",
+        "focus": "Produtividade e capacidade",
+        "year": 2025,
+        "investment": 28_000_000,
+        "annual_cash_gain": 8_400_000,
+        "annual_ebit_gain": 6_900_000,
+    },
+    {
+        "name": "Hub de analytics comercial",
+        "focus": "Receita e eficiencia comercial",
+        "year": 2025,
+        "investment": 16_000_000,
+        "annual_cash_gain": 5_600_000,
+        "annual_ebit_gain": 4_800_000,
+    },
+    {
+        "name": "Expansao do centro de distribuicao",
+        "focus": "Escala logistica",
+        "year": 2025,
+        "investment": 44_000_000,
+        "annual_cash_gain": 11_000_000,
+        "annual_ebit_gain": 9_200_000,
+    },
+]
+BUSINESS_INDICATOR_ROW_DEFINITIONS = [
+    {"key": "roe", "label": "ROE", "unit": "percent", "row_class": "is-highlight"},
+    {"key": "roa", "label": "ROA", "unit": "percent", "row_class": "is-detail"},
+    {"key": "roic", "label": "ROIC", "unit": "percent", "row_class": "is-highlight"},
+    {"key": "wacc", "label": "WACC", "unit": "percent", "row_class": "is-detail"},
+    {"key": "roic_spread", "label": "Spread ROIC - WACC", "unit": "pp", "row_class": "is-total"},
+    {"key": "eva", "label": "EVA", "unit": "currency", "row_class": "is-total"},
+    {"key": "contribution_margin", "label": "Margem de contribuicao", "unit": "percent", "row_class": "is-highlight"},
+    {"key": "interest_coverage", "label": "Cobertura de juros", "unit": "multiple", "row_class": "is-detail"},
+    {"key": "cash_conversion_ebitda_pct", "label": "Conversao de caixa / EBITDA", "unit": "percent", "row_class": "is-detail"},
+    {"key": "fcf_yield_revenue", "label": "FCF yield interno / receita", "unit": "percent", "row_class": "is-detail"},
+    {"key": "fcf_yield_ebitda", "label": "FCF yield interno / EBITDA", "unit": "percent", "row_class": "is-detail"},
+    {"key": "pmr", "label": "PMR", "unit": "days", "row_class": "is-detail"},
+    {"key": "pmp", "label": "PMP", "unit": "days", "row_class": "is-detail"},
+    {"key": "pme", "label": "PME", "unit": "days", "row_class": "is-detail"},
+    {"key": "financial_cycle", "label": "Ciclo financeiro", "unit": "days", "row_class": "is-total"},
+    {"key": "working_capital_need", "label": "Necessidade de capital de giro", "unit": "currency", "row_class": "is-total"},
+    {"key": "net_debt_to_ebitda", "label": "Divida liquida / EBITDA", "unit": "multiple", "row_class": "is-detail"},
+    {"key": "debt_to_equity_pct", "label": "Divida bruta / patrimonio liquido", "unit": "percent", "row_class": "is-detail"},
+    {"key": "short_term_debt_ratio", "label": "Divida CP / divida total", "unit": "percent", "row_class": "is-detail"},
+    {"key": "interest_bearing_liabilities_assets", "label": "Passivo oneroso / ativo total", "unit": "percent", "row_class": "is-detail"},
+    {"key": "dscr", "label": "DSCR", "unit": "multiple", "row_class": "is-total"},
+    {"key": "opex_ratio", "label": "Opex / receita", "unit": "percent", "row_class": "is-detail"},
+    {"key": "sgna_ratio", "label": "SG&A / receita", "unit": "percent", "row_class": "is-detail"},
+    {"key": "research_ratio", "label": "P&D / receita", "unit": "percent", "row_class": "is-detail"},
+    {"key": "asset_productivity", "label": "Produtividade do ativo", "unit": "multiple", "row_class": "is-detail"},
+    {"key": "invested_capital_turnover", "label": "Giro do capital investido", "unit": "multiple", "row_class": "is-detail"},
+    {"key": "maintenance_ratio", "label": "Capex manutencao / receita", "unit": "percent", "row_class": "is-detail"},
+    {"key": "expansion_ratio", "label": "Capex expansao / receita", "unit": "percent", "row_class": "is-detail"},
+    {"key": "reinvestment_multiple", "label": "Capex / depreciacao", "unit": "multiple", "row_class": "is-detail"},
+    {"key": "capex_intensity", "label": "Capex / receita", "unit": "percent", "row_class": "is-detail"},
+    {"key": "operating_leverage", "label": "Alavancagem operacional", "unit": "multiple", "row_class": "is-total"},
+    {"key": "break_even_revenue", "label": "Ponto de equilibrio", "unit": "currency", "row_class": "is-total"},
+    {"key": "health_score", "label": "Score de saude financeira", "unit": "score", "row_class": "is-highlight"},
+]
 GDP_CACHE = None
 GDP_PER_CAPITA_CACHE = None
 GDP_REAL_GROWTH_CACHE = None
@@ -738,6 +1050,34 @@ def fmt_currency_unit(value):
     return f"US$ {value:,.0f}".replace(",", ".")
 
 
+def fmt_brl_compact(value, digits=1):
+    if value is None or pd.isna(value):
+        return "--"
+
+    prefix = "-" if value < 0 else ""
+    absolute_value = abs(float(value))
+    if absolute_value >= 1e9:
+        scaled_value = absolute_value / 1e9
+        suffix = " bi"
+    elif absolute_value >= 1e6:
+        scaled_value = absolute_value / 1e6
+        suffix = " mi"
+    elif absolute_value >= 1e3:
+        scaled_value = absolute_value / 1e3
+        suffix = " mil"
+    else:
+        return f"{prefix}R$ {absolute_value:,.0f}".replace(",", ".")
+
+    return f"{prefix}R$ {scaled_value:.{digits}f}{suffix}".replace(".", ",")
+
+
+def fmt_brl_full(value):
+    if value is None or pd.isna(value):
+        return "--"
+    prefix = "-" if value < 0 else ""
+    return f"{prefix}R$ {abs(float(value)):,.0f}".replace(",", ".")
+
+
 def fmt_percent(value, signed=False):
     if value is None or pd.isna(value):
         return "--"
@@ -749,6 +1089,342 @@ def fmt_decimal(value, digits=1):
     if value is None or pd.isna(value):
         return "--"
     return f"{value:.{digits}f}".replace(".", ",")
+
+
+def fmt_pp(value, signed=True):
+    if value is None or pd.isna(value):
+        return "--"
+    prefix = "+" if signed and value > 0 else ""
+    return f"{prefix}{value:.1f} p.p.".replace(".", ",")
+
+
+def fmt_multiple(value, digits=2, signed=False):
+    if value is None or pd.isna(value):
+        return "--"
+    prefix = "+" if signed and value > 0 else ""
+    return f"{prefix}{value:.{digits}f}x".replace(".", ",")
+
+
+def fmt_days(value):
+    if value is None or pd.isna(value):
+        return "--"
+    return f"{value:.0f} dias".replace(".", ",")
+
+
+def fmt_signed_days(value):
+    if value is None or pd.isna(value):
+        return "--"
+    prefix = "+" if value > 0 else ""
+    return f"{prefix}{value:.0f} dias".replace(".", ",")
+
+
+def fmt_score(value):
+    if value is None or pd.isna(value):
+        return "--"
+    return f"{value:.0f}/100"
+
+
+def fmt_points(value):
+    if value is None or pd.isna(value):
+        return "--"
+    prefix = "+" if value > 0 else ""
+    return f"{prefix}{value:.0f} pts"
+
+
+def format_business_indicator_value(unit, value):
+    if unit == "percent":
+        return fmt_percent(value)
+    if unit == "pp":
+        return fmt_pp(value)
+    if unit == "multiple":
+        return fmt_multiple(value, digits=2)
+    if unit == "currency":
+        return fmt_brl_compact(value)
+    if unit == "days":
+        return fmt_days(value)
+    if unit == "score":
+        return fmt_score(value)
+    return fmt_decimal(value, digits=2)
+
+
+def clamp_percent(value, minimum=0.0, maximum=100.0):
+    if value is None or pd.isna(value):
+        return minimum
+    return max(minimum, min(float(value), maximum))
+
+
+def build_business_line_chart(years, series_items, formatter=fmt_brl_compact, width=420, height=240):
+    left_padding, right_padding, top_padding, bottom_padding = 52, 18, 20, 36
+    plot_width = width - left_padding - right_padding
+    plot_height = height - top_padding - bottom_padding
+
+    all_values = [
+        float(value)
+        for item in series_items
+        for value in item.get("values", [])
+        if value is not None and not pd.isna(value)
+    ]
+    if not all_values:
+        all_values = [0.0, 1.0]
+
+    min_value = min(0.0, min(all_values))
+    max_value = max(all_values)
+    if max_value <= min_value:
+        max_value = min_value + 1.0
+
+    def x_pos(index):
+        if len(years) <= 1:
+            return left_padding + (plot_width / 2)
+        return left_padding + ((plot_width / (len(years) - 1)) * index)
+
+    def y_pos(value):
+        ratio = (float(value) - min_value) / (max_value - min_value)
+        return top_padding + plot_height - (ratio * plot_height)
+
+    grid_lines = []
+    for step in range(4):
+        tick_value = min_value + ((max_value - min_value) * step / 3)
+        grid_lines.append(
+            {
+                "y": round(y_pos(tick_value), 1),
+                "label": formatter(tick_value),
+            }
+        )
+    grid_lines.sort(key=lambda item: item["y"])
+
+    x_labels = [{"x": round(x_pos(index), 1), "label": str(year)} for index, year in enumerate(years)]
+    chart_series = []
+    for item in series_items:
+        points = []
+        dots = []
+        for index, value in enumerate(item.get("values", [])):
+            x = x_pos(index)
+            y = y_pos(value)
+            points.append(f"{x:.1f},{y:.1f}")
+            dots.append(
+                {
+                    "x": round(x, 1),
+                    "y": round(y, 1),
+                    "year": years[index],
+                    "value_display": formatter(value),
+                }
+            )
+        chart_series.append(
+            {
+                "label": item["label"],
+                "slug": item["slug"],
+                "color": item["color"],
+                "points": " ".join(points),
+                "dots": dots,
+            }
+        )
+
+    return {
+        "width": width,
+        "height": height,
+        "grid_lines": grid_lines,
+        "x_labels": x_labels,
+        "series": chart_series,
+    }
+
+
+def build_business_grouped_bar_chart(groups, series_items, formatter=fmt_brl_compact, width=520, height=310):
+    tone_fill_map = {
+        "bright": "rgba(255, 255, 255, 0.92)",
+        "mid": "rgba(255, 255, 255, 0.58)",
+        "soft": "rgba(255, 255, 255, 0.32)",
+        "neutral": "rgba(255, 255, 255, 0.42)",
+    }
+    left_padding, right_padding, top_padding, bottom_padding = 44, 18, 28, 72
+    plot_width = width - left_padding - right_padding
+    plot_height = height - top_padding - bottom_padding
+    max_value = max(
+        [
+            abs(float(group.get(item["key"]) or 0))
+            for group in groups
+            for item in series_items
+        ]
+        or [1.0]
+    )
+    if max_value <= 0:
+        max_value = 1.0
+
+    group_slot_width = plot_width / max(len(groups), 1)
+    inner_padding = max(18.0, group_slot_width * 0.12)
+    bar_gap = 10.0
+    total_bar_gap = bar_gap * max(len(series_items) - 1, 0)
+    bar_width = min(34.0, (group_slot_width - (inner_padding * 2) - total_bar_gap) / max(len(series_items), 1))
+    bar_width = max(bar_width, 14.0)
+    total_bar_width = (bar_width * len(series_items)) + total_bar_gap
+    baseline_y = top_padding + plot_height
+
+    grid_lines = []
+    for step in range(4):
+        tick_value = max_value * step / 3
+        y = baseline_y - ((tick_value / max_value) * plot_height if max_value else 0)
+        grid_lines.append({"y": round(y, 1), "label": formatter(tick_value)})
+    grid_lines.sort(key=lambda item: item["y"])
+
+    bars = []
+    group_labels = []
+    group_dividers = []
+    for group_index, group in enumerate(groups):
+        group_start = left_padding + (group_slot_width * group_index)
+        bars_start = group_start + ((group_slot_width - total_bar_width) / 2)
+        group_labels.append({"x": round(group_start + (group_slot_width / 2), 1), "label": group["label"]})
+        if group_index < len(groups) - 1:
+            group_dividers.append(round(group_start + group_slot_width, 1))
+
+        for item_index, item in enumerate(series_items):
+            value = abs(float(group.get(item["key"]) or 0))
+            bar_height = (value / max_value) * plot_height if max_value else 0.0
+            x = bars_start + (item_index * (bar_width + bar_gap))
+            y = baseline_y - bar_height
+            center_x = x + (bar_width / 2)
+            bars.append(
+                {
+                    "group_label": group["label"],
+                    "label": item["label"],
+                    "short_label": item.get("short_label", item["label"]),
+                    "tone": item.get("tone", "neutral"),
+                    "fill": tone_fill_map.get(item.get("tone", "neutral"), tone_fill_map["neutral"]),
+                    "x": round(x, 1),
+                    "y": round(y, 1),
+                    "width": round(bar_width, 1),
+                    "height": round(bar_height, 1),
+                    "center_x": round(center_x, 1),
+                    "value_display": formatter(value),
+                    "value_y": round(max(top_padding + 12, y - 8), 1),
+                    "series_y": round(height - 32, 1),
+                }
+            )
+
+    return {
+        "width": width,
+        "height": height,
+        "baseline_y": round(baseline_y, 1),
+        "grid_lines": grid_lines,
+        "bars": bars,
+        "group_labels": group_labels,
+        "group_dividers": group_dividers,
+        "legend": [{"label": item["label"], "tone": item.get("tone", "neutral")} for item in series_items],
+        "max_value_label": formatter(max_value),
+    }
+
+
+def build_business_pareto_chart(items, formatter=fmt_brl_compact, width=420, height=260):
+    sorted_items = sorted(
+        [item for item in items if item.get("value") not in (None, 0)],
+        key=lambda item: item["value"],
+        reverse=True,
+    )
+    if not sorted_items:
+        sorted_items = [{"label": "Base", "short_label": "Base", "value": 1.0}]
+
+    left_padding, right_padding, top_padding, bottom_padding = 38, 42, 18, 54
+    plot_width = width - left_padding - right_padding
+    plot_height = height - top_padding - bottom_padding
+    max_value = max(float(item["value"]) for item in sorted_items) or 1.0
+    total_value = sum(float(item["value"]) for item in sorted_items) or 1.0
+    slot_width = plot_width / len(sorted_items)
+    bar_width = slot_width * 0.56
+
+    cumulative = 0.0
+    bars = []
+    line_points = []
+    line_dots = []
+    for index, item in enumerate(sorted_items):
+        value = float(item["value"])
+        share_pct = (value / total_value) * 100
+        cumulative += share_pct
+        x = left_padding + (slot_width * index) + ((slot_width - bar_width) / 2)
+        bar_height = (value / max_value) * plot_height
+        y = top_padding + plot_height - bar_height
+        center_x = x + (bar_width / 2)
+        line_y = top_padding + plot_height - ((cumulative / 100) * plot_height)
+        line_points.append(f"{center_x:.1f},{line_y:.1f}")
+        line_dots.append({"x": round(center_x, 1), "y": round(line_y, 1), "label": fmt_percent(cumulative)})
+        bars.append(
+            {
+                "label": item["label"],
+                "short_label": item.get("short_label", item["label"]),
+                "value_display": formatter(value),
+                "share_pct": share_pct,
+                "share_display": fmt_percent(share_pct),
+                "cumulative_pct": cumulative,
+                "cumulative_display": fmt_percent(cumulative),
+                "x": round(x, 1),
+                "y": round(y, 1),
+                "width": round(bar_width, 1),
+                "height": round(bar_height, 1),
+                "center_x": round(center_x, 1),
+                "fill": f"rgba(255, 255, 255, {max(0.34, 0.92 - (index * 0.08)):.2f})",
+            }
+        )
+
+    left_ticks = []
+    for step in range(4):
+        tick_value = max_value * step / 3
+        y = top_padding + plot_height - ((tick_value / max_value) * plot_height if max_value else 0)
+        left_ticks.append({"y": round(y, 1), "label": formatter(tick_value)})
+    left_ticks.sort(key=lambda item: item["y"])
+
+    right_ticks = []
+    for tick_value in [100, 50, 0]:
+        y = top_padding + plot_height - ((tick_value / 100) * plot_height)
+        right_ticks.append({"y": round(y, 1), "label": fmt_percent(tick_value)})
+
+    return {
+        "width": width,
+        "height": height,
+        "bars": bars,
+        "line_points": " ".join(line_points),
+        "line_dots": line_dots,
+        "left_ticks": left_ticks,
+        "right_ticks": right_ticks,
+    }
+
+
+def build_business_pie_chart(items, center_title, center_value):
+    palette = [
+        "rgba(255, 255, 255, 0.92)",
+        "rgba(255, 255, 255, 0.72)",
+        "rgba(255, 255, 255, 0.48)",
+        "rgba(255, 255, 255, 0.26)",
+        "rgba(255, 255, 255, 0.14)",
+    ]
+    normalized_items = [item for item in items if item.get("value") not in (None, 0)]
+    total_value = sum(float(item["value"]) for item in normalized_items) or 1.0
+
+    gradient_parts = []
+    legend = []
+    cursor = 0.0
+    for index, item in enumerate(normalized_items):
+        value = float(item["value"])
+        share = (value / total_value) * 100
+        start = cursor
+        end = cursor + share
+        color = palette[index % len(palette)]
+        gradient_parts.append(f"{color} {start:.2f}% {end:.2f}%")
+        legend.append(
+            {
+                "label": item["label"],
+                "value_display": fmt_brl_compact(value),
+                "share_display": fmt_percent(share),
+                "color": color,
+            }
+        )
+        cursor = end
+
+    if not gradient_parts:
+        gradient_parts = ["rgba(255, 255, 255, 0.16) 0% 100%"]
+
+    return {
+        "gradient": f"conic-gradient({', '.join(gradient_parts)})",
+        "legend": legend,
+        "center_title": center_title,
+        "center_value": center_value,
+    }
 
 
 def fmt_quote_date(value):
@@ -860,6 +1536,1537 @@ def parse_language(raw_language):
 def normalize_search(value):
     normalized = unicodedata.normalize("NFKD", str(value or ""))
     return normalized.encode("ascii", "ignore").decode("ascii").lower().strip()
+
+
+def build_business_dre_context():
+    series = []
+    for item in BUSINESS_DRE_SERIES:
+        operating_expenses = item["selling_expenses"] + item["administrative_expenses"] + item["research_expenses"]
+        net_revenue = item["gross_revenue"] - item["deductions"]
+        gross_profit = net_revenue - item["cost_of_sales"]
+        ebitda = gross_profit - operating_expenses + item["other_operating_income"]
+        ebit = ebitda - item["depreciation_amortization"]
+        pretax_income = ebit - item["financial_expenses"]
+        net_income = pretax_income - item["income_tax"]
+        series.append(
+            {
+                **item,
+                "net_revenue": net_revenue,
+                "gross_profit": gross_profit,
+                "operating_expenses": operating_expenses,
+                "ebitda": ebitda,
+                "ebit": ebit,
+                "pretax_income": pretax_income,
+                "net_income": net_income,
+                "gross_margin": (gross_profit / net_revenue) * 100 if net_revenue else None,
+                "ebitda_margin": (ebitda / net_revenue) * 100 if net_revenue else None,
+                "ebit_margin": (ebit / net_revenue) * 100 if net_revenue else None,
+                "net_margin": (net_income / net_revenue) * 100 if net_revenue else None,
+                "opex_ratio": (operating_expenses / net_revenue) * 100 if net_revenue else None,
+                "financial_ratio": (item["financial_expenses"] / net_revenue) * 100 if net_revenue else None,
+                "tax_rate": (item["income_tax"] / pretax_income) * 100 if pretax_income else None,
+                "cash_conversion": (net_income / ebitda) * 100 if ebitda else None,
+            }
+        )
+
+    years = [entry["year"] for entry in series]
+    latest = series[-1]
+    previous = series[-2]
+    first = series[0]
+
+    dre_rows = []
+    for definition in BUSINESS_DRE_ROW_DEFINITIONS:
+        cells = []
+        for index, entry in enumerate(series):
+            raw_value = entry.get(definition["key"])
+            signed_value = -raw_value if definition["kind"] == "negative" else raw_value
+            base_revenue = entry.get("net_revenue")
+            previous_raw_value = series[index - 1].get(definition["key"]) if index > 0 else None
+            horizontal = ((raw_value / previous_raw_value) - 1) * 100 if previous_raw_value not in (None, 0) else None
+            vertical = ((signed_value / base_revenue) * 100) if base_revenue else None
+            cells.append(
+                {
+                    "value_display": fmt_brl_compact(signed_value),
+                    "value_title": fmt_brl_full(signed_value),
+                    "vertical_display": fmt_percent(vertical),
+                    "horizontal_display": "Base" if index == 0 else fmt_percent(horizontal, signed=True),
+                    "horizontal_class": (
+                        "neutral"
+                        if index == 0
+                        else "positive"
+                        if horizontal and horizontal > 0
+                        else "negative"
+                        if horizontal and horizontal < 0
+                        else "neutral"
+                    ),
+                }
+            )
+
+        dre_rows.append({"label": definition["label"], "row_class": definition["row_class"], "cells": cells})
+
+    summary_cards = [
+        {
+            "kicker": "Receita liquida 2025",
+            "value": fmt_brl_compact(latest["net_revenue"]),
+            "chip": fmt_percent(((latest["net_revenue"] / previous["net_revenue"]) - 1) * 100, signed=True),
+            "chip_class": "positive",
+            "copy": f"Crescimento anual saindo de {fmt_brl_compact(first['net_revenue'])} em {first['year']} para {fmt_brl_compact(latest['net_revenue'])} em {latest['year']}.",
+        },
+        {
+            "kicker": "EBITDA",
+            "value": fmt_brl_compact(latest["ebitda"]),
+            "chip": f"Margem {fmt_percent(latest['ebitda_margin'])}",
+            "chip_class": "positive",
+            "copy": f"O EBITDA avancou {fmt_percent(((latest['ebitda'] / previous['ebitda']) - 1) * 100, signed=True)} contra {previous['year']}, com alavancagem operacional.",
+        },
+        {
+            "kicker": "EBIT",
+            "value": fmt_brl_compact(latest["ebit"]),
+            "chip": f"Margem {fmt_percent(latest['ebit_margin'])}",
+            "chip_class": "positive",
+            "copy": f"O lucro operacional ficou em {fmt_percent(latest['ebit_margin'])} da receita liquida apos depreciacao e amortizacao.",
+        },
+        {
+            "kicker": "Lucro liquido",
+            "value": fmt_brl_compact(latest["net_income"]),
+            "chip": fmt_percent(((latest["net_income"] / previous["net_income"]) - 1) * 100, signed=True),
+            "chip_class": "positive",
+            "copy": f"A margem liquida encerrou {latest['year']} em {fmt_percent(latest['net_margin'])}, contra {fmt_percent(previous['net_margin'])} no ano anterior.",
+        },
+    ]
+
+    margin_cards = [
+        {
+            "label": "Margem bruta",
+            "value": fmt_percent(latest["gross_margin"]),
+            "delta": fmt_pp(latest["gross_margin"] - previous["gross_margin"]),
+            "delta_class": "positive" if latest["gross_margin"] >= previous["gross_margin"] else "negative",
+            "copy": "Leitura da eficiencia industrial depois do CPV.",
+        },
+        {
+            "label": "Despesas operacionais / RL",
+            "value": fmt_percent(latest["opex_ratio"]),
+            "delta": fmt_pp(latest["opex_ratio"] - previous["opex_ratio"]),
+            "delta_class": "positive" if latest["opex_ratio"] <= previous["opex_ratio"] else "negative",
+            "copy": "Soma de despesas comerciais, administrativas e P&D sobre a receita liquida.",
+        },
+        {
+            "label": "Margem EBITDA",
+            "value": fmt_percent(latest["ebitda_margin"]),
+            "delta": fmt_pp(latest["ebitda_margin"] - previous["ebitda_margin"]),
+            "delta_class": "positive" if latest["ebitda_margin"] >= previous["ebitda_margin"] else "negative",
+            "copy": "Capacidade operacional antes da estrutura de capital e das amortizacoes.",
+        },
+        {
+            "label": "Margem EBIT",
+            "value": fmt_percent(latest["ebit_margin"]),
+            "delta": fmt_pp(latest["ebit_margin"] - previous["ebit_margin"]),
+            "delta_class": "positive" if latest["ebit_margin"] >= previous["ebit_margin"] else "negative",
+            "copy": "Rentabilidade operacional apos depreciacao e amortizacao.",
+        },
+        {
+            "label": "Resultado financeiro / RL",
+            "value": fmt_percent(latest["financial_ratio"]),
+            "delta": fmt_pp(latest["financial_ratio"] - previous["financial_ratio"]),
+            "delta_class": "positive" if latest["financial_ratio"] <= previous["financial_ratio"] else "negative",
+            "copy": "Peso do resultado financeiro sobre a receita liquida.",
+        },
+        {
+            "label": "Aliquota efetiva",
+            "value": fmt_percent(latest["tax_rate"]),
+            "delta": fmt_pp(latest["tax_rate"] - previous["tax_rate"]),
+            "delta_class": "negative" if latest["tax_rate"] > previous["tax_rate"] else "positive",
+            "copy": "Relacao entre IR/CSLL e lucro antes do IR/CS.",
+        },
+    ]
+
+    margin_tracks = [
+        {"label": "Margem bruta", "value": fmt_percent(latest["gross_margin"]), "width": latest["gross_margin"]},
+        {"label": "Margem EBITDA", "value": fmt_percent(latest["ebitda_margin"]), "width": latest["ebitda_margin"]},
+        {"label": "Margem EBIT", "value": fmt_percent(latest["ebit_margin"]), "width": latest["ebit_margin"]},
+        {"label": "Margem liquida", "value": fmt_percent(latest["net_margin"]), "width": latest["net_margin"]},
+    ]
+
+    insight_cards = [
+        {
+            "kicker": "Alavancagem operacional",
+            "title": "Receita cresce acima das despesas",
+            "copy": f"A receita liquida avancou {fmt_percent(((latest['net_revenue'] / previous['net_revenue']) - 1) * 100, signed=True)} em {latest['year']}, enquanto as despesas operacionais subiram {fmt_percent(((latest['operating_expenses'] / previous['operating_expenses']) - 1) * 100, signed=True)}.",
+        },
+        {
+            "kicker": "Qualidade de margem",
+            "title": "Lucro bruto e EBITDA em expansao",
+            "copy": f"A margem bruta ganhou {fmt_pp(latest['gross_margin'] - previous['gross_margin'])} e a margem EBITDA abriu {fmt_pp(latest['ebitda_margin'] - previous['ebitda_margin'])}.",
+        },
+        {
+            "kicker": "Resultado final",
+            "title": "Maior retencao no lucro liquido",
+            "copy": f"O lucro liquido atingiu {fmt_brl_compact(latest['net_income'])}, com conversao de {fmt_percent(latest['cash_conversion'])} do EBITDA em lucro e peso financeiro de {fmt_percent(latest['financial_ratio'])} da receita liquida.",
+        },
+    ]
+
+    dre_ebitda_by_year = {entry["year"]: entry["ebitda"] for entry in series}
+
+    balance_series = []
+    for item in BUSINESS_BALANCE_SHEET_SERIES:
+        total_current_assets = item["cash"] + item["accounts_receivable"] + item["inventory"] + item["other_current_assets"]
+        total_non_current_assets = item["fixed_assets"] + item["intangible_assets"] + item["other_non_current_assets"]
+        total_assets = total_current_assets + total_non_current_assets
+        total_current_liabilities = (
+            item["suppliers"] + item["short_term_debt"] + item["taxes_payable"] + item["other_current_liabilities"]
+        )
+        total_non_current_liabilities = item["long_term_debt"] + item["provisions"]
+        total_liabilities = total_current_liabilities + total_non_current_liabilities
+        total_equity = item["share_capital"] + item["reserves"] + item["retained_earnings"]
+        total_liabilities_equity = total_liabilities + total_equity
+        gross_debt = item["short_term_debt"] + item["long_term_debt"]
+        net_debt = gross_debt - item["cash"]
+        working_capital = total_current_assets - total_current_liabilities
+        current_ratio = total_current_assets / total_current_liabilities if total_current_liabilities else None
+        quick_ratio = (item["cash"] + item["accounts_receivable"]) / total_current_liabilities if total_current_liabilities else None
+        debt_to_equity = gross_debt / total_equity if total_equity else None
+        net_debt_to_ebitda = net_debt / dre_ebitda_by_year.get(item["year"]) if dre_ebitda_by_year.get(item["year"]) else None
+        equity_ratio = (total_equity / total_assets) * 100 if total_assets else None
+        liabilities_ratio = (total_liabilities / total_assets) * 100 if total_assets else None
+
+        balance_series.append(
+            {
+                **item,
+                "total_current_assets": total_current_assets,
+                "total_non_current_assets": total_non_current_assets,
+                "total_assets": total_assets,
+                "total_current_liabilities": total_current_liabilities,
+                "total_non_current_liabilities": total_non_current_liabilities,
+                "total_liabilities": total_liabilities,
+                "total_equity": total_equity,
+                "total_liabilities_equity": total_liabilities_equity,
+                "gross_debt": gross_debt,
+                "net_debt": net_debt,
+                "working_capital": working_capital,
+                "current_ratio": current_ratio,
+                "quick_ratio": quick_ratio,
+                "debt_to_equity": debt_to_equity,
+                "net_debt_to_ebitda": net_debt_to_ebitda,
+                "equity_ratio": equity_ratio,
+                "liabilities_ratio": liabilities_ratio,
+            }
+        )
+
+    latest_balance = balance_series[-1]
+    previous_balance = balance_series[-2]
+    balance_rows = []
+    for definition in BUSINESS_BALANCE_SHEET_ROW_DEFINITIONS:
+        cells = []
+        for index, entry in enumerate(balance_series):
+            raw_value = entry.get(definition["key"])
+            base_assets = entry.get("total_assets")
+            previous_raw_value = balance_series[index - 1].get(definition["key"]) if index > 0 else None
+            horizontal = ((raw_value / previous_raw_value) - 1) * 100 if previous_raw_value not in (None, 0) else None
+            vertical = ((raw_value / base_assets) * 100) if base_assets else None
+            cells.append(
+                {
+                    "value_display": fmt_brl_compact(raw_value),
+                    "value_title": fmt_brl_full(raw_value),
+                    "vertical_display": fmt_percent(vertical),
+                    "horizontal_display": "Base" if index == 0 else fmt_percent(horizontal, signed=True),
+                    "horizontal_class": (
+                        "neutral"
+                        if index == 0
+                        else "positive"
+                        if horizontal and horizontal > 0
+                        else "negative"
+                        if horizontal and horizontal < 0
+                        else "neutral"
+                    ),
+                }
+            )
+        balance_rows.append({"label": definition["label"], "row_class": definition["row_class"], "cells": cells})
+
+    balance_summary_cards = [
+        {
+            "kicker": "Total de ativos",
+            "value": fmt_brl_compact(latest_balance["total_assets"]),
+            "chip": fmt_percent(((latest_balance["total_assets"] / previous_balance["total_assets"]) - 1) * 100, signed=True),
+            "chip_class": "positive",
+            "copy": f"A base de ativos encerrou {latest_balance['year']} em {fmt_brl_compact(latest_balance['total_assets'])}, refletindo expansao sobre {previous_balance['year']}.",
+        },
+        {
+            "kicker": "Capital de giro",
+            "value": fmt_brl_compact(latest_balance["working_capital"]),
+            "chip": f"Liquidez {fmt_multiple(latest_balance['current_ratio'], digits=2)}",
+            "chip_class": "positive",
+            "copy": f"O capital de giro permaneceu positivo e a liquidez corrente fechou em {fmt_multiple(latest_balance['current_ratio'], digits=2)}.",
+        },
+        {
+            "kicker": "Divida liquida",
+            "value": fmt_brl_compact(latest_balance["net_debt"]),
+            "chip": fmt_multiple(latest_balance["net_debt_to_ebitda"], digits=2),
+            "chip_class": "positive" if latest_balance["net_debt"] <= previous_balance["net_debt"] else "negative",
+            "copy": f"A relacao divida liquida / EBITDA ficou em {fmt_multiple(latest_balance['net_debt_to_ebitda'], digits=2)}, reforcando capacidade de cobertura operacional.",
+        },
+        {
+            "kicker": "Patrimonio liquido",
+            "value": fmt_brl_compact(latest_balance["total_equity"]),
+            "chip": f"PL/Ativo {fmt_percent(latest_balance['equity_ratio'])}",
+            "chip_class": "positive",
+            "copy": f"O patrimonio liquido atingiu {fmt_brl_compact(latest_balance['total_equity'])}, equivalente a {fmt_percent(latest_balance['equity_ratio'])} do ativo total.",
+        },
+    ]
+
+    balance_ratio_cards = [
+        {
+            "label": "Liquidez corrente",
+            "value": fmt_multiple(latest_balance["current_ratio"], digits=2),
+            "delta": fmt_multiple(latest_balance["current_ratio"] - previous_balance["current_ratio"], digits=2, signed=True),
+            "delta_class": "positive" if latest_balance["current_ratio"] >= previous_balance["current_ratio"] else "negative",
+            "copy": "Ativo circulante dividido pelo passivo circulante.",
+        },
+        {
+            "label": "Liquidez seca",
+            "value": fmt_multiple(latest_balance["quick_ratio"], digits=2),
+            "delta": fmt_multiple(latest_balance["quick_ratio"] - previous_balance["quick_ratio"], digits=2, signed=True),
+            "delta_class": "positive" if latest_balance["quick_ratio"] >= previous_balance["quick_ratio"] else "negative",
+            "copy": "Caixa e contas a receber sobre passivo circulante.",
+        },
+        {
+            "label": "Divida bruta / PL",
+            "value": fmt_percent(latest_balance["debt_to_equity"] * 100 if latest_balance["debt_to_equity"] is not None else None),
+            "delta": fmt_pp(
+                (latest_balance["debt_to_equity"] - previous_balance["debt_to_equity"]) * 100
+                if latest_balance["debt_to_equity"] is not None and previous_balance["debt_to_equity"] is not None
+                else None
+            ),
+            "delta_class": "positive" if latest_balance["debt_to_equity"] <= previous_balance["debt_to_equity"] else "negative",
+            "copy": "Grau de alavancagem financeira em relacao ao patrimonio liquido.",
+        },
+        {
+            "label": "Divida liquida / EBITDA",
+            "value": fmt_multiple(latest_balance["net_debt_to_ebitda"], digits=2),
+            "delta": fmt_multiple(
+                latest_balance["net_debt_to_ebitda"] - previous_balance["net_debt_to_ebitda"],
+                digits=2,
+                signed=True,
+            ),
+            "delta_class": "positive"
+            if latest_balance["net_debt_to_ebitda"] <= previous_balance["net_debt_to_ebitda"]
+            else "negative",
+            "copy": "Integra estrutura de capital com a geracao operacional da DRE.",
+        },
+        {
+            "label": "Passivo total / ativo",
+            "value": fmt_percent(latest_balance["liabilities_ratio"]),
+            "delta": fmt_pp(latest_balance["liabilities_ratio"] - previous_balance["liabilities_ratio"]),
+            "delta_class": "positive" if latest_balance["liabilities_ratio"] <= previous_balance["liabilities_ratio"] else "negative",
+            "copy": "Percentual do ativo financiado por passivos de curto e longo prazo.",
+        },
+        {
+            "label": "Patrimonio liquido / ativo",
+            "value": fmt_percent(latest_balance["equity_ratio"]),
+            "delta": fmt_pp(latest_balance["equity_ratio"] - previous_balance["equity_ratio"]),
+            "delta_class": "positive" if latest_balance["equity_ratio"] >= previous_balance["equity_ratio"] else "negative",
+            "copy": "Participacao do capital proprio na estrutura total de financiamento.",
+        },
+    ]
+
+    balance_tracks = [
+        {
+            "label": "Ativo circulante / ativo",
+            "value": fmt_percent((latest_balance["total_current_assets"] / latest_balance["total_assets"]) * 100),
+            "width": (latest_balance["total_current_assets"] / latest_balance["total_assets"]) * 100,
+        },
+        {
+            "label": "Ativo nao circulante / ativo",
+            "value": fmt_percent((latest_balance["total_non_current_assets"] / latest_balance["total_assets"]) * 100),
+            "width": (latest_balance["total_non_current_assets"] / latest_balance["total_assets"]) * 100,
+        },
+        {
+            "label": "Passivo total / ativo",
+            "value": fmt_percent(latest_balance["liabilities_ratio"]),
+            "width": latest_balance["liabilities_ratio"],
+        },
+        {
+            "label": "Patrimonio liquido / ativo",
+            "value": fmt_percent(latest_balance["equity_ratio"]),
+            "width": latest_balance["equity_ratio"],
+        },
+    ]
+
+    balance_insight_cards = [
+        {
+            "kicker": "Liquidez",
+            "title": "Folga financeira no curto prazo",
+            "copy": f"O capital de giro fechou em {fmt_brl_compact(latest_balance['working_capital'])} e a liquidez corrente foi de {fmt_multiple(latest_balance['current_ratio'], digits=2)}, acima do ano anterior.",
+        },
+        {
+            "kicker": "Estrutura de capital",
+            "title": "Patrimonio ainda financia quase metade do ativo",
+            "copy": f"O patrimonio liquido representa {fmt_percent(latest_balance['equity_ratio'])} do ativo total, enquanto o passivo total financia {fmt_percent(latest_balance['liabilities_ratio'])}.",
+        },
+        {
+            "kicker": "Endividamento",
+            "title": "Alavancagem permanece controlada",
+            "copy": f"A divida liquida encerrou em {fmt_brl_compact(latest_balance['net_debt'])}, com relacao de {fmt_multiple(latest_balance['net_debt_to_ebitda'], digits=2)} sobre o EBITDA e divida bruta equivalente a {fmt_percent(latest_balance['debt_to_equity'] * 100)} do PL.",
+        },
+    ]
+
+    revenue_by_year = {entry["year"]: entry["net_revenue"] for entry in series}
+    ebitda_by_year = {entry["year"]: entry["ebitda"] for entry in series}
+    financial_expense_by_year = {entry["year"]: entry["financial_expenses"] for entry in series}
+    ending_cash_by_year = {entry["year"]: entry["cash"] for entry in balance_series}
+
+    cash_flow_series = []
+    for item in BUSINESS_CASH_FLOW_SERIES:
+        operating_cash_flow = (
+            item["net_income"]
+            + item["depreciation_amortization"]
+            + item["other_operational_adjustments"]
+            - item["working_capital_variation"]
+            - item["interest_and_taxes_paid"]
+        )
+        investing_cash_flow = item["capex"] + item["intangibles_investments"]
+        financing_cash_flow = item["debt_raised"] - item["debt_repayment"] - item["dividends"]
+        free_cash_flow = operating_cash_flow - investing_cash_flow
+        net_change_in_cash = operating_cash_flow - investing_cash_flow + financing_cash_flow
+        ending_cash = item["opening_cash"] + net_change_in_cash
+        revenue = revenue_by_year.get(item["year"])
+        ebitda_value = ebitda_by_year.get(item["year"])
+        financial_expense = financial_expense_by_year.get(item["year"])
+
+        cash_flow_series.append(
+            {
+                **item,
+                "operating_cash_flow": operating_cash_flow,
+                "investing_cash_flow": investing_cash_flow,
+                "financing_cash_flow": abs(financing_cash_flow),
+                "financing_cash_flow_signed": financing_cash_flow,
+                "free_cash_flow": free_cash_flow,
+                "net_change_in_cash": net_change_in_cash,
+                "ending_cash": ending_cash,
+                "cash_conversion_ebitda": operating_cash_flow / ebitda_value if ebitda_value else None,
+                "cash_conversion_income": operating_cash_flow / item["net_income"] if item["net_income"] else None,
+                "operating_cash_margin": (operating_cash_flow / revenue) * 100 if revenue else None,
+                "free_cash_flow_margin": (free_cash_flow / revenue) * 100 if revenue else None,
+                "capex_intensity": (item["capex"] + item["intangibles_investments"]) / revenue * 100 if revenue else None,
+                "dividend_payout_cash": (item["dividends"] / operating_cash_flow) * 100 if operating_cash_flow else None,
+                "cash_interest_coverage": operating_cash_flow / financial_expense if financial_expense else None,
+            }
+        )
+
+    latest_cash_flow = cash_flow_series[-1]
+    previous_cash_flow = cash_flow_series[-2]
+    cash_flow_rows = []
+    for definition in BUSINESS_CASH_FLOW_ROW_DEFINITIONS:
+        cells = []
+        for index, entry in enumerate(cash_flow_series):
+            raw_value = entry.get(definition["key"])
+            signed_value = -raw_value if definition["kind"] == "negative" else raw_value
+            base_revenue = revenue_by_year.get(entry["year"])
+            previous_raw_value = cash_flow_series[index - 1].get(definition["key"]) if index > 0 else None
+            horizontal = ((raw_value / previous_raw_value) - 1) * 100 if previous_raw_value not in (None, 0) else None
+            vertical = ((signed_value / base_revenue) * 100) if base_revenue else None
+            cells.append(
+                {
+                    "value_display": fmt_brl_compact(signed_value),
+                    "value_title": fmt_brl_full(signed_value),
+                    "vertical_display": fmt_percent(vertical),
+                    "horizontal_display": "Base" if index == 0 else fmt_percent(horizontal, signed=True),
+                    "horizontal_class": (
+                        "neutral"
+                        if index == 0
+                        else "positive"
+                        if horizontal and horizontal > 0
+                        else "negative"
+                        if horizontal and horizontal < 0
+                        else "neutral"
+                    ),
+                }
+            )
+        cash_flow_rows.append({"label": definition["label"], "row_class": definition["row_class"], "cells": cells})
+
+    cash_flow_summary_cards = [
+        {
+            "kicker": "Fluxo operacional",
+            "value": fmt_brl_compact(latest_cash_flow["operating_cash_flow"]),
+            "chip": fmt_percent(((latest_cash_flow["operating_cash_flow"] / previous_cash_flow["operating_cash_flow"]) - 1) * 100, signed=True),
+            "chip_class": "positive",
+            "copy": f"A geracao operacional de caixa fechou {latest_cash_flow['year']} em {fmt_brl_compact(latest_cash_flow['operating_cash_flow'])}, equivalente a {fmt_percent(latest_cash_flow['operating_cash_margin'])} da receita liquida.",
+        },
+        {
+            "kicker": "Fluxo de caixa livre",
+            "value": fmt_brl_compact(latest_cash_flow["free_cash_flow"]),
+            "chip": f"Margem {fmt_percent(latest_cash_flow['free_cash_flow_margin'])}",
+            "chip_class": "positive",
+            "copy": f"O caixa livre apos investimentos recorrentes ficou em {fmt_brl_compact(latest_cash_flow['free_cash_flow'])}, mantendo espaco para reduzir alavancagem e remunerar acionistas.",
+        },
+        {
+            "kicker": "Caixa final",
+            "value": fmt_brl_compact(latest_cash_flow["ending_cash"]),
+            "chip": fmt_percent(((latest_cash_flow["ending_cash"] / previous_cash_flow["ending_cash"]) - 1) * 100, signed=True),
+            "chip_class": "positive",
+            "copy": f"O saldo final de caixa subiu para {fmt_brl_compact(latest_cash_flow['ending_cash'])}, em linha com o caixa do balanco patrimonial.",
+        },
+        {
+            "kicker": "Conversao de EBITDA em caixa",
+            "value": fmt_multiple(latest_cash_flow["cash_conversion_ebitda"], digits=2),
+            "chip": fmt_multiple(latest_cash_flow["cash_conversion_income"], digits=2),
+            "chip_class": "positive",
+            "copy": f"O fluxo operacional representou {fmt_multiple(latest_cash_flow['cash_conversion_ebitda'], digits=2)} do EBITDA e {fmt_multiple(latest_cash_flow['cash_conversion_income'], digits=2)} do lucro liquido.",
+        },
+    ]
+
+    cash_flow_ratio_cards = [
+        {
+            "label": "Caixa operacional / receita",
+            "value": fmt_percent(latest_cash_flow["operating_cash_margin"]),
+            "delta": fmt_pp(latest_cash_flow["operating_cash_margin"] - previous_cash_flow["operating_cash_margin"]),
+            "delta_class": "positive" if latest_cash_flow["operating_cash_margin"] >= previous_cash_flow["operating_cash_margin"] else "negative",
+            "copy": "Capacidade de transformar receita em caixa gerado pelas operacoes.",
+        },
+        {
+            "label": "Fluxo livre / receita",
+            "value": fmt_percent(latest_cash_flow["free_cash_flow_margin"]),
+            "delta": fmt_pp(latest_cash_flow["free_cash_flow_margin"] - previous_cash_flow["free_cash_flow_margin"]),
+            "delta_class": "positive" if latest_cash_flow["free_cash_flow_margin"] >= previous_cash_flow["free_cash_flow_margin"] else "negative",
+            "copy": "Caixa disponivel apos os investimentos de manutencao e expansao.",
+        },
+        {
+            "label": "Capex + intangivel / receita",
+            "value": fmt_percent(latest_cash_flow["capex_intensity"]),
+            "delta": fmt_pp(latest_cash_flow["capex_intensity"] - previous_cash_flow["capex_intensity"]),
+            "delta_class": "positive" if latest_cash_flow["capex_intensity"] <= previous_cash_flow["capex_intensity"] else "negative",
+            "copy": "Intensidade de investimento em ativos fisicos e tecnologia sobre a receita.",
+        },
+        {
+            "label": "Dividendos / caixa operacional",
+            "value": fmt_percent(latest_cash_flow["dividend_payout_cash"]),
+            "delta": fmt_pp(latest_cash_flow["dividend_payout_cash"] - previous_cash_flow["dividend_payout_cash"]),
+            "delta_class": "positive" if latest_cash_flow["dividend_payout_cash"] <= previous_cash_flow["dividend_payout_cash"] else "negative",
+            "copy": "Percentual da geracao operacional comprometido com distribuicoes aos acionistas.",
+        },
+        {
+            "label": "Cobertura de juros por caixa",
+            "value": fmt_multiple(latest_cash_flow["cash_interest_coverage"], digits=2),
+            "delta": fmt_multiple(latest_cash_flow["cash_interest_coverage"] - previous_cash_flow["cash_interest_coverage"], digits=2, signed=True),
+            "delta_class": "positive" if latest_cash_flow["cash_interest_coverage"] >= previous_cash_flow["cash_interest_coverage"] else "negative",
+            "copy": "Fluxo operacional em relacao ao gasto financeiro do mesmo periodo.",
+        },
+        {
+            "label": "Financiamento liquido",
+            "value": fmt_brl_compact(latest_cash_flow["financing_cash_flow_signed"]),
+            "delta": fmt_percent(((latest_cash_flow["financing_cash_flow"] / previous_cash_flow["financing_cash_flow"]) - 1) * 100, signed=True),
+            "delta_class": "positive" if latest_cash_flow["financing_cash_flow"] <= previous_cash_flow["financing_cash_flow"] else "negative",
+            "copy": "Caixa consumido ou gerado pela estrutura de capital, apos captacoes, amortizacoes e dividendos.",
+        },
+    ]
+
+    cash_flow_tracks = [
+        {
+            "label": "Fluxo operacional / receita",
+            "value": fmt_percent(latest_cash_flow["operating_cash_margin"]),
+            "width": latest_cash_flow["operating_cash_margin"],
+        },
+        {
+            "label": "Investimentos / receita",
+            "value": fmt_percent(latest_cash_flow["capex_intensity"]),
+            "width": latest_cash_flow["capex_intensity"],
+        },
+        {
+            "label": "Fluxo livre / receita",
+            "value": fmt_percent(latest_cash_flow["free_cash_flow_margin"]),
+            "width": latest_cash_flow["free_cash_flow_margin"],
+        },
+        {
+            "label": "Caixa final / receita",
+            "value": fmt_percent((latest_cash_flow["ending_cash"] / revenue_by_year.get(latest_cash_flow["year"])) * 100),
+            "width": (latest_cash_flow["ending_cash"] / revenue_by_year.get(latest_cash_flow["year"])) * 100,
+        },
+    ]
+
+    cash_flow_insight_cards = [
+        {
+            "kicker": "Geracao operacional",
+            "title": "Caixa cresce acima do lucro",
+            "copy": f"O fluxo operacional atingiu {fmt_brl_compact(latest_cash_flow['operating_cash_flow'])} em {latest_cash_flow['year']}, o equivalente a {fmt_multiple(latest_cash_flow['cash_conversion_income'], digits=2)} do lucro liquido e {fmt_multiple(latest_cash_flow['cash_conversion_ebitda'], digits=2)} do EBITDA.",
+        },
+        {
+            "kicker": "Disciplina de investimento",
+            "title": "Capex segue financiado pelo proprio caixa",
+            "copy": f"A intensidade de investimento ficou em {fmt_percent(latest_cash_flow['capex_intensity'])} da receita, enquanto o fluxo de caixa livre permaneceu positivo em {fmt_brl_compact(latest_cash_flow['free_cash_flow'])}.",
+        },
+        {
+            "kicker": "Estrutura financeira",
+            "title": "Empresa reduz dependencia de financiamento",
+            "copy": f"O fluxo de financiamento foi de {fmt_brl_compact(latest_cash_flow['financing_cash_flow_signed'])} em {latest_cash_flow['year']}, ainda assim o caixa final subiu para {fmt_brl_compact(ending_cash_by_year.get(latest_cash_flow['year']))}.",
+        },
+    ]
+
+    opex_series = []
+    for entry in series:
+        sgna = entry["selling_expenses"] + entry["administrative_expenses"]
+        total_opex = entry["operating_expenses"]
+        net_opex = total_opex - entry["other_operating_income"]
+        opex_series.append(
+            {
+                **entry,
+                "sgna": sgna,
+                "total_opex": total_opex,
+                "net_opex": net_opex,
+                "selling_ratio": (entry["selling_expenses"] / entry["net_revenue"]) * 100 if entry["net_revenue"] else None,
+                "administrative_ratio": (entry["administrative_expenses"] / entry["net_revenue"]) * 100 if entry["net_revenue"] else None,
+                "research_ratio": (entry["research_expenses"] / entry["net_revenue"]) * 100 if entry["net_revenue"] else None,
+                "sgna_ratio": (sgna / entry["net_revenue"]) * 100 if entry["net_revenue"] else None,
+                "net_opex_ratio": (net_opex / entry["net_revenue"]) * 100 if entry["net_revenue"] else None,
+                "gross_profit_coverage": entry["gross_profit"] / total_opex if total_opex else None,
+                "research_share_opex": (entry["research_expenses"] / total_opex) * 100 if total_opex else None,
+            }
+        )
+
+    latest_opex = opex_series[-1]
+    previous_opex = opex_series[-2]
+    opex_rows = []
+    for definition in BUSINESS_OPEX_ROW_DEFINITIONS:
+        cells = []
+        for index, entry in enumerate(opex_series):
+            raw_value = entry.get(definition["key"])
+            signed_value = -raw_value if definition["kind"] == "negative" else raw_value
+            base_revenue = entry.get("net_revenue")
+            previous_raw_value = opex_series[index - 1].get(definition["key"]) if index > 0 else None
+            horizontal = ((raw_value / previous_raw_value) - 1) * 100 if previous_raw_value not in (None, 0) else None
+            vertical = ((signed_value / base_revenue) * 100) if base_revenue else None
+            cells.append(
+                {
+                    "value_display": fmt_brl_compact(signed_value),
+                    "value_title": fmt_brl_full(signed_value),
+                    "vertical_display": fmt_percent(vertical),
+                    "horizontal_display": "Base" if index == 0 else fmt_percent(horizontal, signed=True),
+                    "horizontal_class": (
+                        "neutral"
+                        if index == 0
+                        else "positive"
+                        if horizontal and horizontal > 0
+                        else "negative"
+                        if horizontal and horizontal < 0
+                        else "neutral"
+                    ),
+                }
+            )
+        opex_rows.append({"label": definition["label"], "row_class": definition["row_class"], "cells": cells})
+
+    opex_summary_cards = [
+        {
+            "kicker": "Opex total",
+            "value": fmt_brl_compact(latest_opex["total_opex"]),
+            "chip": fmt_percent(((latest_opex["total_opex"] / previous_opex["total_opex"]) - 1) * 100, signed=True),
+            "chip_class": "positive" if latest_opex["opex_ratio"] <= previous_opex["opex_ratio"] else "negative",
+            "copy": f"As despesas operacionais somaram {fmt_brl_compact(latest_opex['total_opex'])} em {latest_opex['year']}, equivalentes a {fmt_percent(latest_opex['opex_ratio'])} da receita liquida.",
+        },
+        {
+            "kicker": "Opex liquido",
+            "value": fmt_brl_compact(latest_opex["net_opex"]),
+            "chip": f"Margem {fmt_percent(latest_opex['net_opex_ratio'])}",
+            "chip_class": "positive",
+            "copy": f"Depois de outras receitas operacionais, o consumo liquido de despesas ficou em {fmt_brl_compact(latest_opex['net_opex'])}.",
+        },
+        {
+            "kicker": "SG&A",
+            "value": fmt_brl_compact(latest_opex["sgna"]),
+            "chip": fmt_percent(latest_opex["sgna_ratio"]),
+            "chip_class": "positive",
+            "copy": f"As despesas comerciais e administrativas fecharam em {fmt_percent(latest_opex['sgna_ratio'])} da receita liquida, com melhora frente a {previous_opex['year']}.",
+        },
+        {
+            "kicker": "Cobertura do lucro bruto",
+            "value": fmt_multiple(latest_opex["gross_profit_coverage"], digits=2),
+            "chip": fmt_percent(latest_opex["research_share_opex"]),
+            "chip_class": "positive",
+            "copy": f"O lucro bruto cobre {fmt_multiple(latest_opex['gross_profit_coverage'], digits=2)} do opex, enquanto P&D representa {fmt_percent(latest_opex['research_share_opex'])} das despesas operacionais.",
+        },
+    ]
+
+    opex_ratio_cards = [
+        {
+            "label": "Comercial / receita",
+            "value": fmt_percent(latest_opex["selling_ratio"]),
+            "delta": fmt_pp(latest_opex["selling_ratio"] - previous_opex["selling_ratio"]),
+            "delta_class": "positive" if latest_opex["selling_ratio"] <= previous_opex["selling_ratio"] else "negative",
+            "copy": "Peso da frente comercial sobre a receita liquida.",
+        },
+        {
+            "label": "Administrativo / receita",
+            "value": fmt_percent(latest_opex["administrative_ratio"]),
+            "delta": fmt_pp(latest_opex["administrative_ratio"] - previous_opex["administrative_ratio"]),
+            "delta_class": "positive" if latest_opex["administrative_ratio"] <= previous_opex["administrative_ratio"] else "negative",
+            "copy": "Carga administrativa em relacao ao volume de vendas.",
+        },
+        {
+            "label": "P&D / receita",
+            "value": fmt_percent(latest_opex["research_ratio"]),
+            "delta": fmt_pp(latest_opex["research_ratio"] - previous_opex["research_ratio"]),
+            "delta_class": "positive" if latest_opex["research_ratio"] <= previous_opex["research_ratio"] else "negative",
+            "copy": "Intensidade de investimento operacional em inovacao.",
+        },
+        {
+            "label": "SG&A / receita",
+            "value": fmt_percent(latest_opex["sgna_ratio"]),
+            "delta": fmt_pp(latest_opex["sgna_ratio"] - previous_opex["sgna_ratio"]),
+            "delta_class": "positive" if latest_opex["sgna_ratio"] <= previous_opex["sgna_ratio"] else "negative",
+            "copy": "Soma das despesas comerciais e administrativas sobre a receita.",
+        },
+        {
+            "label": "Opex liquido / receita",
+            "value": fmt_percent(latest_opex["net_opex_ratio"]),
+            "delta": fmt_pp(latest_opex["net_opex_ratio"] - previous_opex["net_opex_ratio"]),
+            "delta_class": "positive" if latest_opex["net_opex_ratio"] <= previous_opex["net_opex_ratio"] else "negative",
+            "copy": "Consumo liquido de despesas depois de outras receitas operacionais.",
+        },
+        {
+            "label": "Lucro bruto / opex",
+            "value": fmt_multiple(latest_opex["gross_profit_coverage"], digits=2),
+            "delta": fmt_multiple(latest_opex["gross_profit_coverage"] - previous_opex["gross_profit_coverage"], digits=2, signed=True),
+            "delta_class": "positive" if latest_opex["gross_profit_coverage"] >= previous_opex["gross_profit_coverage"] else "negative",
+            "copy": "Capacidade do lucro bruto absorver o bloco de despesas operacionais.",
+        },
+    ]
+
+    opex_tracks = [
+        {"label": "Comercial / opex", "value": fmt_percent((latest_opex["selling_expenses"] / latest_opex["total_opex"]) * 100), "width": (latest_opex["selling_expenses"] / latest_opex["total_opex"]) * 100},
+        {"label": "Administrativo / opex", "value": fmt_percent((latest_opex["administrative_expenses"] / latest_opex["total_opex"]) * 100), "width": (latest_opex["administrative_expenses"] / latest_opex["total_opex"]) * 100},
+        {"label": "P&D / opex", "value": fmt_percent((latest_opex["research_expenses"] / latest_opex["total_opex"]) * 100), "width": (latest_opex["research_expenses"] / latest_opex["total_opex"]) * 100},
+        {"label": "Opex total / receita", "value": fmt_percent(latest_opex["opex_ratio"]), "width": latest_opex["opex_ratio"]},
+    ]
+
+    opex_insight_cards = [
+        {
+            "kicker": "Diluição operacional",
+            "title": "Receita cresce mais que as despesas",
+            "copy": f"O opex total subiu {fmt_percent(((latest_opex['total_opex'] / previous_opex['total_opex']) - 1) * 100, signed=True)} em {latest_opex['year']}, abaixo do crescimento da receita liquida, que foi de {fmt_percent(((latest_opex['net_revenue'] / previous_opex['net_revenue']) - 1) * 100, signed=True)}.",
+        },
+        {
+            "kicker": "Produtividade comercial",
+            "title": "Despesas comerciais ganham eficiencia",
+            "copy": f"As despesas comerciais fecharam em {fmt_percent(latest_opex['selling_ratio'])} da receita, contra {fmt_percent(previous_opex['selling_ratio'])} no ano anterior, abrindo espaco para margem EBITDA.",
+        },
+        {
+            "kicker": "Base fixa",
+            "title": "SG&A segue disciplinado",
+            "copy": f"O SG&A encerrou em {fmt_percent(latest_opex['sgna_ratio'])} da receita e o lucro bruto cobre {fmt_multiple(latest_opex['gross_profit_coverage'], digits=2)} do bloco de opex.",
+        },
+    ]
+
+    cash_flow_by_year = {entry["year"]: entry for entry in cash_flow_series}
+    capex_series = []
+    for item in BUSINESS_CAPEX_SERIES:
+        total_physical_capex = item["maintenance_capex"] + item["expansion_capex"] + item["technology_capex"]
+        total_investments = total_physical_capex + item["intangibles_investments"]
+        revenue = revenue_by_year.get(item["year"])
+        depreciation_value = next((entry["depreciation_amortization"] for entry in series if entry["year"] == item["year"]), None)
+        free_cash_after_investments = cash_flow_by_year[item["year"]]["free_cash_flow"] if item["year"] in cash_flow_by_year else None
+        capex_series.append(
+            {
+                **item,
+                "total_physical_capex": total_physical_capex,
+                "total_investments": total_investments,
+                "depreciation_amortization": depreciation_value,
+                "free_cash_after_investments": free_cash_after_investments,
+                "capex_intensity": (total_investments / revenue) * 100 if revenue else None,
+                "maintenance_ratio": (item["maintenance_capex"] / revenue) * 100 if revenue else None,
+                "expansion_ratio": (item["expansion_capex"] / revenue) * 100 if revenue else None,
+                "technology_ratio": (item["technology_capex"] / revenue) * 100 if revenue else None,
+                "reinvestment_multiple": total_investments / depreciation_value if depreciation_value else None,
+                "expansion_share": (item["expansion_capex"] / total_investments) * 100 if total_investments else None,
+                "maintenance_share": (item["maintenance_capex"] / total_investments) * 100 if total_investments else None,
+                "technology_share": (item["technology_capex"] / total_investments) * 100 if total_investments else None,
+                "intangibles_share": (item["intangibles_investments"] / total_investments) * 100 if total_investments else None,
+            }
+        )
+
+    latest_capex = capex_series[-1]
+    previous_capex = capex_series[-2]
+    capex_rows = []
+    for definition in BUSINESS_CAPEX_ROW_DEFINITIONS:
+        cells = []
+        for index, entry in enumerate(capex_series):
+            raw_value = entry.get(definition["key"])
+            signed_value = -raw_value if definition["kind"] == "negative" else raw_value
+            base_revenue = revenue_by_year.get(entry["year"])
+            previous_raw_value = capex_series[index - 1].get(definition["key"]) if index > 0 else None
+            horizontal = ((raw_value / previous_raw_value) - 1) * 100 if previous_raw_value not in (None, 0) else None
+            vertical = ((signed_value / base_revenue) * 100) if base_revenue else None
+            cells.append(
+                {
+                    "value_display": fmt_brl_compact(signed_value),
+                    "value_title": fmt_brl_full(signed_value),
+                    "vertical_display": fmt_percent(vertical),
+                    "horizontal_display": "Base" if index == 0 else fmt_percent(horizontal, signed=True),
+                    "horizontal_class": (
+                        "neutral"
+                        if index == 0
+                        else "positive"
+                        if horizontal and horizontal > 0
+                        else "negative"
+                        if horizontal and horizontal < 0
+                        else "neutral"
+                    ),
+                }
+            )
+        capex_rows.append({"label": definition["label"], "row_class": definition["row_class"], "cells": cells})
+
+    capex_summary_cards = [
+        {
+            "kicker": "Investimento total",
+            "value": fmt_brl_compact(latest_capex["total_investments"]),
+            "chip": fmt_percent(((latest_capex["total_investments"] / previous_capex["total_investments"]) - 1) * 100, signed=True),
+            "chip_class": "negative" if latest_capex["capex_intensity"] > previous_capex["capex_intensity"] else "positive",
+            "copy": f"O capex total ficou em {fmt_brl_compact(latest_capex['total_investments'])} em {latest_capex['year']}, com intensidade de {fmt_percent(latest_capex['capex_intensity'])} da receita liquida.",
+        },
+        {
+            "kicker": "Capex fisico",
+            "value": fmt_brl_compact(latest_capex["total_physical_capex"]),
+            "chip": fmt_percent(latest_capex["expansion_share"]),
+            "chip_class": "positive",
+            "copy": f"A frente de expansao responde por {fmt_percent(latest_capex['expansion_share'])} do investimento total do periodo.",
+        },
+        {
+            "kicker": "Reinvestimento",
+            "value": fmt_multiple(latest_capex["reinvestment_multiple"], digits=2),
+            "chip": fmt_brl_compact(latest_capex["free_cash_after_investments"]),
+            "chip_class": "positive",
+            "copy": f"O investimento total representa {fmt_multiple(latest_capex['reinvestment_multiple'], digits=2)} da depreciacao e amortizacao, com caixa livre ainda positivo apos os investimentos.",
+        },
+        {
+            "kicker": "Intangivel e software",
+            "value": fmt_brl_compact(latest_capex["intangibles_investments"]),
+            "chip": fmt_percent(latest_capex["intangibles_share"]),
+            "chip_class": "positive",
+            "copy": f"Os investimentos em tecnologia e intangivel somaram {fmt_percent(latest_capex['intangibles_share'])} do pacote total de capex.",
+        },
+    ]
+
+    capex_ratio_cards = [
+        {
+            "label": "Capex manutencao / receita",
+            "value": fmt_percent(latest_capex["maintenance_ratio"]),
+            "delta": fmt_pp(latest_capex["maintenance_ratio"] - previous_capex["maintenance_ratio"]),
+            "delta_class": "positive" if latest_capex["maintenance_ratio"] <= previous_capex["maintenance_ratio"] else "negative",
+            "copy": "Parte do investimento destinada a manter a base operacional.",
+        },
+        {
+            "label": "Capex expansao / receita",
+            "value": fmt_percent(latest_capex["expansion_ratio"]),
+            "delta": fmt_pp(latest_capex["expansion_ratio"] - previous_capex["expansion_ratio"]),
+            "delta_class": "negative" if latest_capex["expansion_ratio"] > previous_capex["expansion_ratio"] else "positive",
+            "copy": "Parcela da receita reinvestida em crescimento de capacidade.",
+        },
+        {
+            "label": "Capex tecnologia / receita",
+            "value": fmt_percent(latest_capex["technology_ratio"]),
+            "delta": fmt_pp(latest_capex["technology_ratio"] - previous_capex["technology_ratio"]),
+            "delta_class": "negative" if latest_capex["technology_ratio"] > previous_capex["technology_ratio"] else "positive",
+            "copy": "Investimento em automacao, digitalizacao e sistemas.",
+        },
+        {
+            "label": "Investimento total / receita",
+            "value": fmt_percent(latest_capex["capex_intensity"]),
+            "delta": fmt_pp(latest_capex["capex_intensity"] - previous_capex["capex_intensity"]),
+            "delta_class": "positive" if latest_capex["capex_intensity"] <= previous_capex["capex_intensity"] else "negative",
+            "copy": "Intensidade total do investimento em relacao ao volume de receita.",
+        },
+        {
+            "label": "Investimento / D&A",
+            "value": fmt_multiple(latest_capex["reinvestment_multiple"], digits=2),
+            "delta": fmt_multiple(latest_capex["reinvestment_multiple"] - previous_capex["reinvestment_multiple"], digits=2, signed=True),
+            "delta_class": "negative" if latest_capex["reinvestment_multiple"] > previous_capex["reinvestment_multiple"] else "positive",
+            "copy": "Relação entre investimento total e depreciacao/amortizacao do periodo.",
+        },
+        {
+            "label": "Caixa livre apos capex",
+            "value": fmt_brl_compact(latest_capex["free_cash_after_investments"]),
+            "delta": fmt_percent(((latest_capex["free_cash_after_investments"] / previous_capex["free_cash_after_investments"]) - 1) * 100, signed=True),
+            "delta_class": "positive" if latest_capex["free_cash_after_investments"] >= previous_capex["free_cash_after_investments"] else "negative",
+            "copy": "Caixa residual depois de sustentar todo o ciclo de investimento do ano.",
+        },
+    ]
+
+    capex_tracks = [
+        {"label": "Manutencao / investimento total", "value": fmt_percent(latest_capex["maintenance_share"]), "width": latest_capex["maintenance_share"]},
+        {"label": "Expansao / investimento total", "value": fmt_percent(latest_capex["expansion_share"]), "width": latest_capex["expansion_share"]},
+        {"label": "Tecnologia / investimento total", "value": fmt_percent(latest_capex["technology_share"]), "width": latest_capex["technology_share"]},
+        {"label": "Intangivel / investimento total", "value": fmt_percent(latest_capex["intangibles_share"]), "width": latest_capex["intangibles_share"]},
+    ]
+
+    capex_insight_cards = [
+        {
+            "kicker": "Portifolio de investimento",
+            "title": "Capex avanca com foco em expansao",
+            "copy": f"A parcela de expansao atingiu {fmt_percent(latest_capex['expansion_share'])} do investimento total em {latest_capex['year']}, acima da manutencao em {fmt_percent(latest_capex['maintenance_share'])}.",
+        },
+        {
+            "kicker": "Cobertura por caixa",
+            "title": "Investimento segue financiado pela operacao",
+            "copy": f"O caixa livre apos investimentos ficou em {fmt_brl_compact(latest_capex['free_cash_after_investments'])}, mesmo com intensidade de capex total em {fmt_percent(latest_capex['capex_intensity'])} da receita.",
+        },
+        {
+            "kicker": "Reinvestimento",
+            "title": "Empresa reinveste acima da depreciacao",
+            "copy": f"O investimento total representa {fmt_multiple(latest_capex['reinvestment_multiple'], digits=2)} da depreciacao e amortizacao, indicando reforco de capacidade e modernizacao da base operacional.",
+        },
+    ]
+
+    balance_by_year = {entry["year"]: entry for entry in balance_series}
+    opex_by_year = {entry["year"]: entry for entry in opex_series}
+    capex_by_year = {entry["year"]: entry for entry in capex_series}
+    risk_free_rate = 11.0
+    market_premium = 6.0
+    beta = 1.05
+
+    indicator_series = []
+    for index, entry in enumerate(series):
+        year = entry["year"]
+        balance_entry = balance_by_year[year]
+        cash_entry = cash_flow_by_year[year]
+        opex_entry = opex_by_year[year]
+        capex_entry = capex_by_year[year]
+        previous_year = years[index - 1] if index > 0 else None
+        previous_balance_entry = balance_by_year[previous_year] if previous_year else balance_entry
+        previous_invested_capital = previous_balance_entry["total_equity"] + previous_balance_entry["gross_debt"] - previous_balance_entry["cash"]
+        invested_capital = balance_entry["total_equity"] + balance_entry["gross_debt"] - balance_entry["cash"]
+        avg_assets = (balance_entry["total_assets"] + previous_balance_entry["total_assets"]) / 2 if previous_year else balance_entry["total_assets"]
+        avg_equity = (balance_entry["total_equity"] + previous_balance_entry["total_equity"]) / 2 if previous_year else balance_entry["total_equity"]
+        avg_invested_capital = (invested_capital + previous_invested_capital) / 2 if previous_year else invested_capital
+        tax_rate_decimal = (entry["tax_rate"] or 0) / 100
+        nopat = entry["ebit"] * (1 - tax_rate_decimal)
+        cost_equity = risk_free_rate + beta * market_premium
+        gross_debt = balance_entry["gross_debt"]
+        debt_cost_pre_tax = (entry["financial_expenses"] / gross_debt) * 100 if gross_debt else None
+        capital_base = balance_entry["total_equity"] + gross_debt
+        equity_weight = (balance_entry["total_equity"] / capital_base) if capital_base else None
+        debt_weight = (gross_debt / capital_base) if capital_base else None
+        wacc = (
+            (equity_weight * cost_equity) + (debt_weight * debt_cost_pre_tax * (1 - tax_rate_decimal))
+            if equity_weight is not None and debt_weight is not None and debt_cost_pre_tax is not None
+            else None
+        )
+        eva = nopat - (avg_invested_capital * wacc / 100) if wacc is not None else None
+        variable_selling_expenses = entry["selling_expenses"] * 0.45
+        contribution_amount = entry["net_revenue"] - entry["cost_of_sales"] - variable_selling_expenses
+        contribution_margin = (contribution_amount / entry["net_revenue"]) * 100 if entry["net_revenue"] else None
+        fixed_cost_base = (
+            (entry["selling_expenses"] - variable_selling_expenses)
+            + entry["administrative_expenses"]
+            + entry["research_expenses"]
+            + entry["depreciation_amortization"]
+            - entry["other_operating_income"]
+        )
+        contribution_ratio_decimal = contribution_amount / entry["net_revenue"] if entry["net_revenue"] else None
+        break_even_revenue = fixed_cost_base / contribution_ratio_decimal if contribution_ratio_decimal else None
+        interest_coverage = entry["ebit"] / entry["financial_expenses"] if entry["financial_expenses"] else None
+        pmr = (balance_entry["accounts_receivable"] / entry["net_revenue"]) * 365 if entry["net_revenue"] else None
+        pme = (balance_entry["inventory"] / entry["cost_of_sales"]) * 365 if entry["cost_of_sales"] else None
+        pmp = (balance_entry["suppliers"] / entry["cost_of_sales"]) * 365 if entry["cost_of_sales"] else None
+        financial_cycle = pmr + pme - pmp if pmr is not None and pme is not None and pmp is not None else None
+        working_capital_need = balance_entry["accounts_receivable"] + balance_entry["inventory"] - balance_entry["suppliers"]
+        short_term_debt_ratio = (balance_entry["short_term_debt"] / gross_debt) * 100 if gross_debt else None
+        interest_bearing_liabilities_assets = (gross_debt / balance_entry["total_assets"]) * 100 if balance_entry["total_assets"] else None
+        debt_service = cash_entry["debt_repayment"] + entry["financial_expenses"]
+        dscr = cash_entry["operating_cash_flow"] / debt_service if debt_service else None
+        fcf_yield_ebitda = (cash_entry["free_cash_flow"] / entry["ebitda"]) * 100 if entry["ebitda"] else None
+        asset_productivity = entry["net_revenue"] / avg_assets if avg_assets else None
+        invested_capital_turnover = entry["net_revenue"] / avg_invested_capital if avg_invested_capital else None
+        roic = (nopat / avg_invested_capital) * 100 if avg_invested_capital else None
+        roic_spread = roic - wacc if roic is not None and wacc is not None else None
+        debt_to_equity_pct = (balance_entry["debt_to_equity"] * 100) if balance_entry["debt_to_equity"] is not None else None
+        operating_leverage = contribution_amount / entry["ebit"] if entry["ebit"] else None
+        health_score = sum(
+            [
+                max(0.0, min((entry["ebitda_margin"] / 25) * 20, 20)),
+                max(0.0, min((balance_entry["current_ratio"] / 2.0) * 20, 20)),
+                max(0.0, min(((3.0 - balance_entry["net_debt_to_ebitda"]) / 3.0) * 20, 20)) if balance_entry["net_debt_to_ebitda"] is not None else 0,
+                max(0.0, min((cash_entry["free_cash_flow_margin"] / 10) * 20, 20)) if cash_entry["free_cash_flow_margin"] is not None else 0,
+                max(0.0, min(((roic_spread + 5) / 10) * 20, 20)) if roic_spread is not None else 0,
+            ]
+        )
+
+        indicator_series.append(
+            {
+                "year": year,
+                "roe": (entry["net_income"] / avg_equity) * 100 if avg_equity else None,
+                "roa": (entry["net_income"] / avg_assets) * 100 if avg_assets else None,
+                "roic": roic,
+                "wacc": wacc,
+                "roic_spread": roic_spread,
+                "eva": eva,
+                "contribution_margin": contribution_margin,
+                "interest_coverage": interest_coverage,
+                "cash_conversion_ebitda_pct": cash_entry["cash_conversion_ebitda"] * 100 if cash_entry["cash_conversion_ebitda"] is not None else None,
+                "fcf_yield_revenue": cash_entry["free_cash_flow_margin"],
+                "fcf_yield_ebitda": fcf_yield_ebitda,
+                "pmr": pmr,
+                "pmp": pmp,
+                "pme": pme,
+                "financial_cycle": financial_cycle,
+                "working_capital_need": working_capital_need,
+                "net_debt_to_ebitda": balance_entry["net_debt_to_ebitda"],
+                "debt_to_equity_pct": debt_to_equity_pct,
+                "short_term_debt_ratio": short_term_debt_ratio,
+                "interest_bearing_liabilities_assets": interest_bearing_liabilities_assets,
+                "dscr": dscr,
+                "opex_ratio": opex_entry["opex_ratio"],
+                "sgna_ratio": opex_entry["sgna_ratio"],
+                "research_ratio": opex_entry["research_ratio"],
+                "asset_productivity": asset_productivity,
+                "invested_capital_turnover": invested_capital_turnover,
+                "maintenance_ratio": capex_entry["maintenance_ratio"],
+                "expansion_ratio": capex_entry["expansion_ratio"],
+                "reinvestment_multiple": capex_entry["reinvestment_multiple"],
+                "capex_intensity": capex_entry["capex_intensity"],
+                "operating_leverage": operating_leverage,
+                "break_even_revenue": break_even_revenue,
+                "health_score": health_score,
+            }
+        )
+
+    latest_indicators = indicator_series[-1]
+    previous_indicators = indicator_series[-2]
+    indicator_rows = []
+    for definition in BUSINESS_INDICATOR_ROW_DEFINITIONS:
+        cells = []
+        for index, entry in enumerate(indicator_series):
+            raw_value = entry.get(definition["key"])
+            previous_raw_value = indicator_series[index - 1].get(definition["key"]) if index > 0 else None
+            horizontal = ((raw_value / previous_raw_value) - 1) * 100 if previous_raw_value not in (None, 0) else None
+            cells.append(
+                {
+                    "value_display": format_business_indicator_value(definition["unit"], raw_value),
+                    "horizontal_display": "Base" if index == 0 else fmt_percent(horizontal, signed=True),
+                    "horizontal_class": (
+                        "neutral"
+                        if index == 0
+                        else "positive"
+                        if horizontal and horizontal > 0
+                        else "negative"
+                        if horizontal and horizontal < 0
+                        else "neutral"
+                    ),
+                }
+            )
+        indicator_rows.append({"label": definition["label"], "row_class": definition["row_class"], "cells": cells})
+
+    indicator_summary_cards = [
+        {
+            "kicker": "ROIC",
+            "value": fmt_percent(latest_indicators["roic"]),
+            "chip": fmt_pp(latest_indicators["roic_spread"]),
+            "chip_class": "positive" if latest_indicators["roic_spread"] and latest_indicators["roic_spread"] > 0 else "negative",
+            "copy": f"O retorno sobre o capital investido ficou em {fmt_percent(latest_indicators['roic'])}, contra um WACC estimado de {fmt_percent(latest_indicators['wacc'])}.",
+        },
+        {
+            "kicker": "ROE",
+            "value": fmt_percent(latest_indicators["roe"]),
+            "chip": fmt_pp(latest_indicators["roe"] - previous_indicators["roe"]),
+            "chip_class": "positive",
+            "copy": f"O retorno ao acionista encerrou {latest['year']} em {fmt_percent(latest_indicators['roe'])}, sustentado por maior lucro liquido e reforco do patrimonio.",
+        },
+        {
+            "kicker": "EVA",
+            "value": fmt_brl_compact(latest_indicators["eva"]),
+            "chip": fmt_percent(((latest_indicators["eva"] / previous_indicators["eva"]) - 1) * 100, signed=True),
+            "chip_class": "positive" if latest_indicators["eva"] and latest_indicators["eva"] > 0 else "negative",
+            "copy": f"O lucro economico estimado ficou em {fmt_brl_compact(latest_indicators['eva'])}, capturando o spread positivo entre retorno e custo de capital.",
+        },
+        {
+            "kicker": "Saude financeira",
+            "value": fmt_score(latest_indicators["health_score"]),
+            "chip": fmt_points(latest_indicators["health_score"] - previous_indicators["health_score"]),
+            "chip_class": "positive",
+            "copy": "Score sintético que combina margem EBITDA, liquidez, alavancagem, caixa livre e spread ROIC-WACC.",
+        },
+    ]
+
+    profitability_indicator_cards = [
+        {
+            "label": "ROE",
+            "value": fmt_percent(latest_indicators["roe"]),
+            "delta": fmt_pp(latest_indicators["roe"] - previous_indicators["roe"]),
+            "delta_class": "positive" if latest_indicators["roe"] >= previous_indicators["roe"] else "negative",
+            "copy": "Retorno do lucro liquido sobre o patrimonio liquido medio.",
+        },
+        {
+            "label": "ROA",
+            "value": fmt_percent(latest_indicators["roa"]),
+            "delta": fmt_pp(latest_indicators["roa"] - previous_indicators["roa"]),
+            "delta_class": "positive" if latest_indicators["roa"] >= previous_indicators["roa"] else "negative",
+            "copy": "Retorno do lucro liquido sobre a base media de ativos.",
+        },
+        {
+            "label": "ROIC",
+            "value": fmt_percent(latest_indicators["roic"]),
+            "delta": fmt_pp(latest_indicators["roic"] - previous_indicators["roic"]),
+            "delta_class": "positive" if latest_indicators["roic"] >= previous_indicators["roic"] else "negative",
+            "copy": "Retorno operacional apos impostos sobre o capital investido medio.",
+        },
+        {
+            "label": "WACC",
+            "value": fmt_percent(latest_indicators["wacc"]),
+            "delta": fmt_pp(latest_indicators["wacc"] - previous_indicators["wacc"]),
+            "delta_class": "positive" if latest_indicators["wacc"] <= previous_indicators["wacc"] else "negative",
+            "copy": "Custo medio ponderado de capital estimado a partir da estrutura de financiamento atual.",
+        },
+        {
+            "label": "Spread ROIC - WACC",
+            "value": fmt_pp(latest_indicators["roic_spread"]),
+            "delta": fmt_pp(latest_indicators["roic_spread"] - previous_indicators["roic_spread"]),
+            "delta_class": "positive" if latest_indicators["roic_spread"] >= previous_indicators["roic_spread"] else "negative",
+            "copy": "Diferenca entre retorno operacional e custo de capital.",
+        },
+        {
+            "label": "EVA",
+            "value": fmt_brl_compact(latest_indicators["eva"]),
+            "delta": fmt_percent(((latest_indicators["eva"] / previous_indicators["eva"]) - 1) * 100, signed=True),
+            "delta_class": "positive" if latest_indicators["eva"] >= previous_indicators["eva"] else "negative",
+            "copy": "Valor economico agregado apos remunerar o capital investido.",
+        },
+    ]
+
+    working_capital_indicator_cards = [
+        {
+            "label": "PMR",
+            "value": fmt_days(latest_indicators["pmr"]),
+            "delta": fmt_signed_days(latest_indicators["pmr"] - previous_indicators["pmr"]),
+            "delta_class": "positive" if latest_indicators["pmr"] <= previous_indicators["pmr"] else "negative",
+            "copy": "Prazo medio de recebimento dos clientes.",
+        },
+        {
+            "label": "PME",
+            "value": fmt_days(latest_indicators["pme"]),
+            "delta": fmt_signed_days(latest_indicators["pme"] - previous_indicators["pme"]),
+            "delta_class": "positive" if latest_indicators["pme"] <= previous_indicators["pme"] else "negative",
+            "copy": "Prazo medio de permanencia dos estoques.",
+        },
+        {
+            "label": "PMP",
+            "value": fmt_days(latest_indicators["pmp"]),
+            "delta": fmt_signed_days(latest_indicators["pmp"] - previous_indicators["pmp"]),
+            "delta_class": "positive" if latest_indicators["pmp"] >= previous_indicators["pmp"] else "negative",
+            "copy": "Prazo medio de pagamento a fornecedores.",
+        },
+        {
+            "label": "Ciclo financeiro",
+            "value": fmt_days(latest_indicators["financial_cycle"]),
+            "delta": fmt_signed_days(latest_indicators["financial_cycle"] - previous_indicators["financial_cycle"]),
+            "delta_class": "positive" if latest_indicators["financial_cycle"] <= previous_indicators["financial_cycle"] else "negative",
+            "copy": "Tempo liquido que o caixa fica preso no capital de giro.",
+        },
+        {
+            "label": "Necessidade de capital de giro",
+            "value": fmt_brl_compact(latest_indicators["working_capital_need"]),
+            "delta": fmt_percent(((latest_indicators["working_capital_need"] / previous_indicators["working_capital_need"]) - 1) * 100, signed=True),
+            "delta_class": "positive" if latest_indicators["working_capital_need"] <= previous_indicators["working_capital_need"] else "negative",
+            "copy": "Clientes mais estoques menos fornecedores.",
+        },
+        {
+            "label": "Produtividade do ativo",
+            "value": fmt_multiple(latest_indicators["asset_productivity"], digits=2),
+            "delta": fmt_multiple(latest_indicators["asset_productivity"] - previous_indicators["asset_productivity"], digits=2, signed=True),
+            "delta_class": "positive" if latest_indicators["asset_productivity"] >= previous_indicators["asset_productivity"] else "negative",
+            "copy": "Receita gerada por unidade de ativo medio.",
+        },
+    ]
+
+    leverage_indicator_cards = [
+        {
+            "label": "Divida liquida / EBITDA",
+            "value": fmt_multiple(latest_indicators["net_debt_to_ebitda"], digits=2),
+            "delta": fmt_multiple(latest_indicators["net_debt_to_ebitda"] - previous_indicators["net_debt_to_ebitda"], digits=2, signed=True),
+            "delta_class": "positive" if latest_indicators["net_debt_to_ebitda"] <= previous_indicators["net_debt_to_ebitda"] else "negative",
+            "copy": "Alavancagem financeira liquida sobre a geracao operacional.",
+        },
+        {
+            "label": "Divida bruta / PL",
+            "value": fmt_percent(latest_indicators["debt_to_equity_pct"]),
+            "delta": fmt_pp(latest_indicators["debt_to_equity_pct"] - previous_indicators["debt_to_equity_pct"]),
+            "delta_class": "positive" if latest_indicators["debt_to_equity_pct"] <= previous_indicators["debt_to_equity_pct"] else "negative",
+            "copy": "Grau de endividamento em relacao ao capital proprio.",
+        },
+        {
+            "label": "Divida CP / divida total",
+            "value": fmt_percent(latest_indicators["short_term_debt_ratio"]),
+            "delta": fmt_pp(latest_indicators["short_term_debt_ratio"] - previous_indicators["short_term_debt_ratio"]),
+            "delta_class": "positive" if latest_indicators["short_term_debt_ratio"] <= previous_indicators["short_term_debt_ratio"] else "negative",
+            "copy": "Parcela do endividamento concentrada no curto prazo.",
+        },
+        {
+            "label": "Passivo oneroso / ativo",
+            "value": fmt_percent(latest_indicators["interest_bearing_liabilities_assets"]),
+            "delta": fmt_pp(latest_indicators["interest_bearing_liabilities_assets"] - previous_indicators["interest_bearing_liabilities_assets"]),
+            "delta_class": "positive" if latest_indicators["interest_bearing_liabilities_assets"] <= previous_indicators["interest_bearing_liabilities_assets"] else "negative",
+            "copy": "Peso das obrigacoes financeiras na estrutura de ativos.",
+        },
+        {
+            "label": "Cobertura de juros",
+            "value": fmt_multiple(latest_indicators["interest_coverage"], digits=2),
+            "delta": fmt_multiple(latest_indicators["interest_coverage"] - previous_indicators["interest_coverage"], digits=2, signed=True),
+            "delta_class": "positive" if latest_indicators["interest_coverage"] >= previous_indicators["interest_coverage"] else "negative",
+            "copy": "EBIT dividido pela despesa financeira do periodo.",
+        },
+        {
+            "label": "DSCR",
+            "value": fmt_multiple(latest_indicators["dscr"], digits=2),
+            "delta": fmt_multiple(latest_indicators["dscr"] - previous_indicators["dscr"], digits=2, signed=True),
+            "delta_class": "positive" if latest_indicators["dscr"] >= previous_indicators["dscr"] else "negative",
+            "copy": "Capacidade de pagar servico da divida com o caixa operacional.",
+        },
+    ]
+
+    efficiency_indicator_cards = [
+        {
+            "label": "Margem de contribuicao",
+            "value": fmt_percent(latest_indicators["contribution_margin"]),
+            "delta": fmt_pp(latest_indicators["contribution_margin"] - previous_indicators["contribution_margin"]),
+            "delta_class": "positive" if latest_indicators["contribution_margin"] >= previous_indicators["contribution_margin"] else "negative",
+            "copy": "Margem apos CPV e componente variavel comercial.",
+        },
+        {
+            "label": "Caixa / EBITDA",
+            "value": fmt_percent(latest_indicators["cash_conversion_ebitda_pct"]),
+            "delta": fmt_pp(latest_indicators["cash_conversion_ebitda_pct"] - previous_indicators["cash_conversion_ebitda_pct"]),
+            "delta_class": "positive" if latest_indicators["cash_conversion_ebitda_pct"] >= previous_indicators["cash_conversion_ebitda_pct"] else "negative",
+            "copy": "Conversao do EBITDA em fluxo operacional de caixa.",
+        },
+        {
+            "label": "FCF yield / receita",
+            "value": fmt_percent(latest_indicators["fcf_yield_revenue"]),
+            "delta": fmt_pp(latest_indicators["fcf_yield_revenue"] - previous_indicators["fcf_yield_revenue"]),
+            "delta_class": "positive" if latest_indicators["fcf_yield_revenue"] >= previous_indicators["fcf_yield_revenue"] else "negative",
+            "copy": "Caixa livre gerado sobre a receita liquida.",
+        },
+        {
+            "label": "FCF yield / EBITDA",
+            "value": fmt_percent(latest_indicators["fcf_yield_ebitda"]),
+            "delta": fmt_pp(latest_indicators["fcf_yield_ebitda"] - previous_indicators["fcf_yield_ebitda"]),
+            "delta_class": "positive" if latest_indicators["fcf_yield_ebitda"] >= previous_indicators["fcf_yield_ebitda"] else "negative",
+            "copy": "Caixa livre gerado em relacao ao EBITDA do periodo.",
+        },
+        {
+            "label": "Alavancagem operacional",
+            "value": fmt_multiple(latest_indicators["operating_leverage"], digits=2),
+            "delta": fmt_multiple(latest_indicators["operating_leverage"] - previous_indicators["operating_leverage"], digits=2, signed=True),
+            "delta_class": "negative" if latest_indicators["operating_leverage"] > previous_indicators["operating_leverage"] else "positive",
+            "copy": "Sensibilidade do EBIT a variacoes na margem de contribuicao.",
+        },
+        {
+            "label": "Ponto de equilibrio",
+            "value": fmt_brl_compact(latest_indicators["break_even_revenue"]),
+            "delta": fmt_percent(((latest_indicators["break_even_revenue"] / previous_indicators["break_even_revenue"]) - 1) * 100, signed=True),
+            "delta_class": "positive" if latest_indicators["break_even_revenue"] <= previous_indicators["break_even_revenue"] else "negative",
+            "copy": "Receita minima estimada para cobrir a estrutura fixa operacional.",
+        },
+    ]
+
+    cost_structure_indicator_cards = [
+        {
+            "label": "Opex / receita",
+            "value": fmt_percent(latest_indicators["opex_ratio"]),
+            "delta": fmt_pp(latest_indicators["opex_ratio"] - previous_indicators["opex_ratio"]),
+            "delta_class": "positive" if latest_indicators["opex_ratio"] <= previous_indicators["opex_ratio"] else "negative",
+            "copy": "Despesa operacional total sobre a receita liquida.",
+        },
+        {
+            "label": "SG&A / receita",
+            "value": fmt_percent(latest_indicators["sgna_ratio"]),
+            "delta": fmt_pp(latest_indicators["sgna_ratio"] - previous_indicators["sgna_ratio"]),
+            "delta_class": "positive" if latest_indicators["sgna_ratio"] <= previous_indicators["sgna_ratio"] else "negative",
+            "copy": "Comercial e administrativo sobre a receita liquida.",
+        },
+        {
+            "label": "P&D / receita",
+            "value": fmt_percent(latest_indicators["research_ratio"]),
+            "delta": fmt_pp(latest_indicators["research_ratio"] - previous_indicators["research_ratio"]),
+            "delta_class": "positive" if latest_indicators["research_ratio"] <= previous_indicators["research_ratio"] else "negative",
+            "copy": "Intensidade de pesquisa e desenvolvimento na estrutura de custo.",
+        },
+        {
+            "label": "Capex manutencao / receita",
+            "value": fmt_percent(latest_indicators["maintenance_ratio"]),
+            "delta": fmt_pp(latest_indicators["maintenance_ratio"] - previous_indicators["maintenance_ratio"]),
+            "delta_class": "positive" if latest_indicators["maintenance_ratio"] <= previous_indicators["maintenance_ratio"] else "negative",
+            "copy": "Peso do investimento de sustentacao da base instalada.",
+        },
+        {
+            "label": "Capex expansao / receita",
+            "value": fmt_percent(latest_indicators["expansion_ratio"]),
+            "delta": fmt_pp(latest_indicators["expansion_ratio"] - previous_indicators["expansion_ratio"]),
+            "delta_class": "negative" if latest_indicators["expansion_ratio"] > previous_indicators["expansion_ratio"] else "positive",
+            "copy": "Parcela reinvestida em crescimento e aumento de capacidade.",
+        },
+        {
+            "label": "Capex / depreciacao",
+            "value": fmt_multiple(latest_indicators["reinvestment_multiple"], digits=2),
+            "delta": fmt_multiple(latest_indicators["reinvestment_multiple"] - previous_indicators["reinvestment_multiple"], digits=2, signed=True),
+            "delta_class": "negative" if latest_indicators["reinvestment_multiple"] > previous_indicators["reinvestment_multiple"] else "positive",
+            "copy": "Ritmo de reinvestimento frente ao desgaste contabil do ativo.",
+        },
+    ]
+
+    indicator_insight_cards = [
+        {
+            "kicker": "Rentabilidade e valor",
+            "title": "Retorno segue acima do custo de capital",
+            "copy": f"O ROIC fechou {latest['year']} em {fmt_percent(latest_indicators['roic'])}, frente a um WACC estimado de {fmt_percent(latest_indicators['wacc'])}, gerando spread de {fmt_pp(latest_indicators['roic_spread'])} e EVA de {fmt_brl_compact(latest_indicators['eva'])}.",
+        },
+        {
+            "kicker": "Capital de giro",
+            "title": "Ciclo financeiro permanece controlado",
+            "copy": f"O ciclo financeiro ficou em {fmt_days(latest_indicators['financial_cycle'])}, com PMR de {fmt_days(latest_indicators['pmr'])}, PME de {fmt_days(latest_indicators['pme'])} e PMP de {fmt_days(latest_indicators['pmp'])}.",
+        },
+        {
+            "kicker": "Eficiência e caixa",
+            "title": "Negocio converte margem em caixa e reinveste",
+            "copy": f"A margem de contribuicao atingiu {fmt_percent(latest_indicators['contribution_margin'])}, o FCF yield interno foi de {fmt_percent(latest_indicators['fcf_yield_revenue'])} da receita e o score de saude financeira ficou em {fmt_score(latest_indicators['health_score'])}.",
+        },
+    ]
+
+    result_chart = build_business_line_chart(
+        years,
+        [
+            {
+                "label": "Receita liquida",
+                "slug": "revenue",
+                "color": "#f8fbff",
+                "values": [entry["net_revenue"] for entry in series],
+            },
+            {
+                "label": "EBITDA",
+                "slug": "ebitda",
+                "color": "rgba(248, 251, 255, 0.74)",
+                "values": [entry["ebitda"] for entry in series],
+            },
+            {
+                "label": "Lucro liquido",
+                "slug": "net-income",
+                "color": "rgba(248, 251, 255, 0.48)",
+                "values": [entry["net_income"] for entry in series],
+            },
+        ],
+    )
+
+    cash_chart = build_business_grouped_bar_chart(
+        [
+            {
+                "label": str(year),
+                "operating_cash_flow": cash_flow_by_year[year]["operating_cash_flow"],
+                "investments": capex_by_year[year]["total_investments"],
+                "free_cash_flow": cash_flow_by_year[year]["free_cash_flow"],
+            }
+            for year in years
+        ],
+        [
+            {"key": "operating_cash_flow", "label": "Caixa operacional", "short_label": "Operac.", "tone": "bright"},
+            {"key": "investments", "label": "Investimentos", "short_label": "Invest.", "tone": "mid"},
+            {"key": "free_cash_flow", "label": "Caixa livre", "short_label": "FCL", "tone": "soft"},
+        ],
+    )
+
+    opex_column_chart = build_business_grouped_bar_chart(
+        [
+            {
+                "label": str(entry["year"]),
+                "selling_expenses": entry["selling_expenses"],
+                "administrative_expenses": entry["administrative_expenses"],
+                "research_expenses": entry["research_expenses"],
+            }
+            for entry in opex_series
+        ],
+        [
+            {"key": "selling_expenses", "label": "Comercial", "short_label": "Com.", "tone": "bright"},
+            {"key": "administrative_expenses", "label": "Administrativo", "short_label": "Adm.", "tone": "mid"},
+            {"key": "research_expenses", "label": "P&D", "short_label": "P&D", "tone": "soft"},
+        ],
+    )
+
+    balance_mix_rows = []
+    for entry in balance_series:
+        total_assets = entry["total_assets"] or 1
+        current_assets_ratio = (entry["total_current_assets"] / total_assets) * 100
+        non_current_assets_ratio = (entry["total_non_current_assets"] / total_assets) * 100
+        balance_mix_rows.append(
+            {
+                "year": entry["year"],
+                "asset_segments": [
+                    {
+                        "label": "Ativo circulante",
+                        "value": fmt_percent(current_assets_ratio),
+                        "width": clamp_percent(current_assets_ratio),
+                        "tone": "bright",
+                    },
+                    {
+                        "label": "Ativo nao circulante",
+                        "value": fmt_percent(non_current_assets_ratio),
+                        "width": clamp_percent(non_current_assets_ratio),
+                        "tone": "mid",
+                    },
+                ],
+                "funding_segments": [
+                    {
+                        "label": "Passivo",
+                        "value": fmt_percent(entry["liabilities_ratio"]),
+                        "width": clamp_percent(entry["liabilities_ratio"]),
+                        "tone": "soft",
+                    },
+                    {
+                        "label": "Patrimonio liquido",
+                        "value": fmt_percent(entry["equity_ratio"]),
+                        "width": clamp_percent(entry["equity_ratio"]),
+                        "tone": "bright",
+                    },
+                ],
+            }
+        )
+
+    pareto_chart = build_business_pareto_chart(
+        [
+            {"label": "CPV", "short_label": "CPV", "value": latest["cost_of_sales"]},
+            {"label": "Comercial", "short_label": "Com.", "value": latest["selling_expenses"]},
+            {"label": "Administrativo", "short_label": "Adm.", "value": latest["administrative_expenses"]},
+            {"label": "IR/CSLL", "short_label": "IR", "value": latest["income_tax"]},
+            {"label": "Depreciacao", "short_label": "Deprec.", "value": latest["depreciation_amortization"]},
+            {"label": "P&D", "short_label": "P&D", "value": latest["research_expenses"]},
+            {"label": "Financeiro", "short_label": "Fin.", "value": latest["financial_expenses"]},
+        ]
+    )
+
+    capex_pie_chart = build_business_pie_chart(
+        [
+            {"label": "Capex de manutencao", "value": latest_capex["maintenance_capex"]},
+            {"label": "Capex de expansao", "value": latest_capex["expansion_capex"]},
+            {"label": "Capex de tecnologia", "value": latest_capex["technology_capex"]},
+            {"label": "Intangivel e software", "value": latest_capex["intangibles_investments"]},
+        ],
+        center_title=f"CAPEX {latest_capex['year']}",
+        center_value=fmt_brl_compact(latest_capex["total_investments"]),
+    )
+
+    top_three_pareto_share = sum(item["share_pct"] for item in pareto_chart["bars"][:3])
+    top_pareto_label = pareto_chart["bars"][0]["label"]
+    chart_summary_cards = [
+        {
+            "kicker": "Receita liquida",
+            "value": fmt_brl_compact(latest["net_revenue"]),
+            "chip": fmt_percent(((latest["net_revenue"] / previous["net_revenue"]) - 1) * 100, signed=True),
+            "chip_class": "positive",
+            "copy": f"A linha de receita saiu de {fmt_brl_compact(previous['net_revenue'])} em {previous['year']} para {fmt_brl_compact(latest['net_revenue'])} em {latest['year']}.",
+        },
+        {
+            "kicker": "EBITDA",
+            "value": fmt_brl_compact(latest["ebitda"]),
+            "chip": f"Margem {fmt_percent(latest['ebitda_margin'])}",
+            "chip_class": "positive",
+            "copy": "O grafico de resultado consolida crescimento de receita, margem operacional e lucro liquido na mesma leitura.",
+        },
+        {
+            "kicker": "Caixa operacional",
+            "value": fmt_brl_compact(latest_cash_flow["operating_cash_flow"]),
+            "chip": f"FCL {fmt_brl_compact(latest_cash_flow['free_cash_flow'])}",
+            "chip_class": "positive",
+            "copy": "A aba de graficos destaca a cobertura dos investimentos recorrentes pela geracao operacional.",
+        },
+        {
+            "kicker": "Pareto de despesas",
+            "value": fmt_percent(top_three_pareto_share),
+            "chip": top_pareto_label,
+            "chip_class": "positive",
+            "copy": f"As tres maiores rubricas concentram {fmt_percent(top_three_pareto_share)} da pressao total sobre o resultado em {latest['year']}.",
+        },
+    ]
+
+    chart_insight_cards = [
+        {
+            "kicker": "Resultado",
+            "title": "Crescimento preserva a expansao de margem",
+            "copy": f"Receita liquida, EBITDA e lucro liquido sobem em sequencia ate {latest['year']}, com margem EBITDA em {fmt_percent(latest['ebitda_margin'])} e margem liquida em {fmt_percent(latest['net_margin'])}.",
+        },
+        {
+            "kicker": "Caixa e investimento",
+            "title": "Operacao cobre o ciclo de investimento",
+            "copy": f"O caixa operacional de {fmt_brl_compact(latest_cash_flow['operating_cash_flow'])} segue acima do pacote de investimentos de {fmt_brl_compact(latest_capex['total_investments'])}, sustentando FCL positivo em {fmt_brl_compact(latest_cash_flow['free_cash_flow'])}.",
+        },
+        {
+            "kicker": "Pareto",
+            "title": "CPV lidera a concentracao de despesas",
+            "copy": f"{pareto_chart['bars'][0]['label']}, {pareto_chart['bars'][1]['label']} e {pareto_chart['bars'][2]['label']} explicam {fmt_percent(top_three_pareto_share)} da pressao total sobre o resultado.",
+        },
+    ]
+
+    capex_project_rows = []
+    for project in BUSINESS_CAPEX_PROJECTS:
+        roi = (project["annual_ebit_gain"] / project["investment"]) * 100 if project["investment"] else None
+        payback = (project["investment"] / project["annual_cash_gain"]) if project["annual_cash_gain"] else None
+        capex_project_rows.append(
+            {
+                "name": project["name"],
+                "focus": project["focus"],
+                "year": project["year"],
+                "investment": fmt_brl_compact(project["investment"]),
+                "annual_cash_gain": fmt_brl_compact(project["annual_cash_gain"]),
+                "annual_ebit_gain": fmt_brl_compact(project["annual_ebit_gain"]),
+                "roi": fmt_percent(roi),
+                "payback": f"{payback:.1f} anos".replace(".", ",") if payback is not None else "--",
+            }
+        )
+
+    return {
+        "company_name": "DS CORP Holding",
+        "period_label": f"{years[0]} a {years[-1]}",
+        "report_currency": "BRL",
+        "analysis_basis": "Analise vertical com base na receita liquida = 100%. Analise horizontal calculada sobre a variacao anual de cada linha em valor absoluto.",
+        "years": years,
+        "summary_cards": summary_cards,
+        "margin_cards": margin_cards,
+        "margin_tracks": margin_tracks,
+        "dre_rows": dre_rows,
+        "insight_cards": insight_cards,
+        "balance_analysis_basis": "Analise vertical com base no ativo total = 100%. Analise horizontal calculada sobre a variacao anual de cada conta patrimonial em valor absoluto.",
+        "balance_summary_cards": balance_summary_cards,
+        "balance_ratio_cards": balance_ratio_cards,
+        "balance_tracks": balance_tracks,
+        "balance_rows": balance_rows,
+        "balance_insight_cards": balance_insight_cards,
+        "cash_flow_analysis_basis": "Analise vertical com base na receita liquida = 100%. Analise horizontal calculada sobre a variacao anual da magnitude de cada fluxo de caixa.",
+        "cash_flow_summary_cards": cash_flow_summary_cards,
+        "cash_flow_ratio_cards": cash_flow_ratio_cards,
+        "cash_flow_tracks": cash_flow_tracks,
+        "cash_flow_rows": cash_flow_rows,
+        "cash_flow_insight_cards": cash_flow_insight_cards,
+        "chart_summary_cards": chart_summary_cards,
+        "result_chart": result_chart,
+        "cash_chart": cash_chart,
+        "opex_column_chart": opex_column_chart,
+        "balance_mix_rows": balance_mix_rows,
+        "pareto_chart": pareto_chart,
+        "capex_pie_chart": capex_pie_chart,
+        "chart_insight_cards": chart_insight_cards,
+        "indicator_summary_cards": indicator_summary_cards,
+        "profitability_indicator_cards": profitability_indicator_cards,
+        "working_capital_indicator_cards": working_capital_indicator_cards,
+        "leverage_indicator_cards": leverage_indicator_cards,
+        "efficiency_indicator_cards": efficiency_indicator_cards,
+        "cost_structure_indicator_cards": cost_structure_indicator_cards,
+        "indicator_rows": indicator_rows,
+        "indicator_insight_cards": indicator_insight_cards,
+        "opex_analysis_basis": "Analise vertical com base na receita liquida = 100%. Analise horizontal calculada sobre a variacao anual de cada bloco de despesas operacionais.",
+        "opex_summary_cards": opex_summary_cards,
+        "opex_ratio_cards": opex_ratio_cards,
+        "opex_tracks": opex_tracks,
+        "opex_rows": opex_rows,
+        "opex_insight_cards": opex_insight_cards,
+        "capex_analysis_basis": "Analise vertical com base na receita liquida = 100%. Analise horizontal calculada sobre a variacao anual de cada frente de investimento.",
+        "capex_summary_cards": capex_summary_cards,
+        "capex_ratio_cards": capex_ratio_cards,
+        "capex_tracks": capex_tracks,
+        "capex_rows": capex_rows,
+        "capex_insight_cards": capex_insight_cards,
+        "capex_project_rows": capex_project_rows,
+        "latest_year": latest["year"],
+    }
 
 
 def load_country_locale_names(force=False):
@@ -1235,6 +3442,10 @@ def merge_country_history_frames(country_name, indicator_frames):
 
 def index(request):
     return render(request, "dashboard/index.html")
+
+
+def empresarial(request):
+    return render(request, "dashboard/empresarial.html", build_business_dre_context())
 
 
 def cotacao_moedas(request):
