@@ -246,15 +246,18 @@
     }
 
     .table-wrap {
-        overflow: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
         border-radius: 22px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         background: rgba(255, 255, 255, 0.015);
     }
 
     .dre-table {
-        width: 100%;
-        min-width: 1400px;
+        width: max(100%, 1180px);
+        min-width: 0;
         border-collapse: collapse;
     }
 
@@ -271,10 +274,12 @@
         top: 0;
         z-index: 1;
         font-family: var(--font-mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.14em;
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--text-muted);
+        line-height: 1.45;
+        white-space: normal;
     }
 
     .dre-table td {
@@ -295,7 +300,7 @@
     }
 
     .line-cell {
-        min-width: 320px;
+        min-width: 240px;
     }
 
     .line-label {
@@ -727,11 +732,28 @@
 
         .panel-head,
         .table-toolbar {
+            flex-direction: column;
             align-items: flex-start;
         }
 
         .tabs-nav {
             border-radius: 24px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            justify-content: flex-start;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-button {
+            flex: 0 0 auto;
+            white-space: nowrap;
         }
 
         .bar-groups {
@@ -745,6 +767,27 @@
 
         .pareto-row {
             grid-template-columns: 1fr;
+        }
+
+        .table-wrap {
+            margin: 0 -22px;
+            padding: 0 22px 6px;
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+        }
+
+        .dre-table {
+            width: max(100%, 980px);
+        }
+
+        .dre-table th,
+        .dre-table td {
+            padding: 12px 10px;
+        }
+
+        .line-cell {
+            min-width: 200px;
         }
     }
 </style>

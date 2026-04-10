@@ -196,12 +196,14 @@
             justify-content: flex-end;
             gap: 18px;
             flex-wrap: wrap;
+            min-width: 0;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
             gap: 8px;
+            max-width: 100%;
             padding: 8px;
             border: 1px solid var(--line);
             border-radius: 999px;
@@ -218,6 +220,8 @@
             font-size: 0.86rem;
             font-weight: 700;
             letter-spacing: 0.02em;
+            white-space: nowrap;
+            flex: 0 0 auto;
             transition: color var(--transition), background var(--transition), transform var(--transition), box-shadow var(--transition);
         }
 
@@ -560,8 +564,14 @@
             }
 
             .nav-links {
-                justify-content: center;
-                flex-wrap: wrap;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                scroll-snap-type: x proximity;
+                -webkit-overflow-scrolling: touch;
             }
 
             .header-status {
@@ -582,6 +592,11 @@
         }
 
         @media (max-width: 640px) {
+            .nav-links a {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+
             .display-title {
                 font-size: clamp(2.6rem, 18vw, 4rem);
             }
@@ -609,6 +624,10 @@
             .button {
                 justify-content: center;
             }
+        }
+
+        .nav-links::-webkit-scrollbar {
+            display: none;
         }
     </style>
     {% block extra_head %}{% endblock %}
