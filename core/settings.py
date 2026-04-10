@@ -66,7 +66,7 @@ if not SECRET_KEY:
 
 ALLOWED_HOSTS = [host for host in (normalize_host(item) for item in env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")) if host]
 CSRF_TRUSTED_ORIGINS = [origin for origin in (normalize_origin(item) for item in env_list("CSRF_TRUSTED_ORIGINS")) if origin]
-EXPLICIT_ALLOWED_HOSTS = bool(os.environ.get("ALLOWED_HOSTS", "").strip())
+PROJECT_DOMAINS = env_list("PROJECT_DOMAINS", "eco.dscorp.top")
 
 
 def add_host_and_origin(host):
@@ -77,6 +77,10 @@ def add_host_and_origin(host):
     origin = build_https_origin(normalized_host)
     if origin and origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(origin)
+
+
+for project_domain in PROJECT_DOMAINS:
+    add_host_and_origin(project_domain)
 
 APP_NAME = os.environ.get("APP_NAME", os.environ.get("HEROKU_APP_NAME", "")).strip()
 if APP_NAME:
