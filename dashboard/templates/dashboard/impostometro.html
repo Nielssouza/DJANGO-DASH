@@ -1,0 +1,654 @@
+{% extends "dashboard/base.html" %}
+{% load l10n %}
+{% block title %}Analytics | Impost&ocirc;metro{% endblock %}
+{% block nav_impostometro %}active{% endblock %}
+{% block main_class %}compact{% endblock %}
+
+{% block extra_head %}
+<style>
+    .impost-shell {
+        display: grid;
+        gap: 22px;
+    }
+
+    .impost-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 40px 34px 0;
+        border-radius: 28px;
+        border: 1px solid var(--line-strong);
+        background:
+            linear-gradient(180deg, rgba(24, 24, 24, 0.98), rgba(6, 6, 6, 0.98)),
+            radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 42%);
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3);
+    }
+
+    .impost-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(115deg, rgba(255, 255, 255, 0.08), transparent 38%),
+            repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 8px);
+        opacity: 0.45;
+        pointer-events: none;
+    }
+
+    .impost-hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 18% 28%, transparent 0 52px, rgba(255, 255, 255, 0.08) 53px 55px, transparent 56px),
+            radial-gradient(circle at 78% 20%, transparent 0 64px, rgba(255, 255, 255, 0.06) 65px 67px, transparent 68px),
+            radial-gradient(circle at 86% 76%, transparent 0 88px, rgba(255, 255, 255, 0.05) 89px 91px, transparent 92px);
+        opacity: 0.55;
+        pointer-events: none;
+    }
+
+    .hero-title {
+        position: relative;
+        z-index: 1;
+        width: fit-content;
+        margin: 0 auto -10px;
+        padding: 16px 34px 14px;
+        border-radius: 14px 14px 0 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+        border: 1px solid var(--line);
+        border-bottom: 0;
+        color: var(--text-primary);
+        font-family: var(--font-heading);
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.12);
+    }
+
+    .hero-panel {
+        position: relative;
+        z-index: 1;
+        padding: 18px 20px 0;
+        border-radius: 16px 16px 0 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+        border: 1px solid var(--line);
+        border-bottom: 0;
+    }
+
+    .period-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        align-items: center;
+        width: min(100%, 700px);
+        margin: 0 auto 14px;
+    }
+
+    .period-field {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        color: var(--text-primary);
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+
+    .period-chip {
+        min-width: 170px;
+        padding: 8px 16px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .counter-stage {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 18px 0 12px;
+    }
+
+    .counter-group {
+        display: grid;
+        gap: 10px;
+        justify-items: center;
+    }
+
+    .counter-digits {
+        display: flex;
+        gap: 4px;
+    }
+
+    .digit-tile {
+        width: clamp(44px, 5vw, 72px);
+        height: clamp(84px, 9.6vw, 138px);
+        border-radius: 4px;
+        background: linear-gradient(180deg, #3a3a3e, #2f2f33);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            0 8px 16px rgba(0, 0, 0, 0.16);
+        color: #e5e5e5;
+        display: grid;
+        place-items: center;
+        font-family: var(--font-heading);
+        font-size: clamp(2.4rem, 6vw, 5rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .group-label {
+        color: var(--text-primary);
+        font-size: 0.86rem;
+        font-weight: 800;
+        text-transform: none;
+        white-space: nowrap;
+    }
+
+    .period-note {
+        padding: 14px 0 16px;
+        color: var(--text-secondary);
+        text-align: center;
+        font-size: 0.98rem;
+    }
+
+    .curiosity-bar {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 14px;
+        margin-top: 12px;
+        padding: 14px 16px 16px;
+        border-radius: 4px 4px 22px 22px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+        border-top: 1px solid var(--line);
+        color: var(--text-primary);
+    }
+
+    .curiosity-nav {
+        width: 28px;
+        height: 28px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        user-select: none;
+    }
+
+    .curiosity-copy {
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.18);
+        text-align: center;
+        font-size: clamp(0.92rem, 1.6vw, 1.12rem);
+    }
+
+    .curiosity-copy strong {
+        font-size: 1.3em;
+        color: var(--text-primary);
+    }
+
+    .status-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: -6px;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .status-pill::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 14px var(--glow);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 20px;
+    }
+
+    .info-card,
+    .history-panel {
+        padding: 24px;
+    }
+
+    .info-title {
+        margin: 0 0 16px;
+        font-family: var(--font-heading);
+        font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+        letter-spacing: -0.04em;
+    }
+
+    .stats-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .stat-box {
+        padding: 16px 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .stat-box span {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .stat-box strong {
+        display: block;
+        font-size: 1.16rem;
+        color: var(--text-primary);
+    }
+
+    .stat-box small {
+        display: block;
+        margin-top: 8px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .note-list {
+        list-style: none;
+        display: grid;
+        gap: 10px;
+    }
+
+    .note-list li {
+        padding-left: 16px;
+        position: relative;
+        color: var(--text-secondary);
+        line-height: 1.75;
+    }
+
+    .note-list li::before {
+        content: "\2022";
+        position: absolute;
+        left: 0;
+        color: rgba(255, 255, 255, 0.32);
+    }
+
+    .note-list a {
+        color: var(--text-primary);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .history-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .history-head h2 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: clamp(1.5rem, 2.2vw, 2rem);
+        letter-spacing: -0.04em;
+    }
+
+    .history-head p {
+        max-width: 62ch;
+        color: var(--text-secondary);
+        line-height: 1.8;
+    }
+
+    .svg-chart {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .chart-gridline {
+        stroke: rgba(255, 255, 255, 0.07);
+        stroke-width: 1;
+        fill: none;
+    }
+
+    .chart-axis-text {
+        fill: rgba(248, 251, 255, 0.42);
+        font-size: 10px;
+        font-family: var(--font-mono);
+    }
+
+    .chart-bar-item {
+        fill: rgba(255, 255, 255, 0.2);
+    }
+
+    .chart-series-line {
+        stroke: rgba(255, 255, 255, 0.78);
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .chart-dot-item {
+        fill: rgba(255, 255, 255, 0.92);
+    }
+
+    .chart-caption {
+        margin-top: 16px;
+        color: var(--text-muted);
+        font-size: 0.86rem;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 1080px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .impost-hero {
+            padding-inline: 18px;
+        }
+
+        .hero-panel {
+            padding-inline: 12px;
+        }
+
+        .period-row {
+            grid-template-columns: 1fr;
+            width: min(100%, 420px);
+        }
+
+        .stats-list {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .digit-tile {
+            width: 36px;
+            height: 70px;
+            font-size: 2.2rem;
+        }
+
+        .counter-stage {
+            gap: 8px;
+        }
+
+        .curiosity-bar {
+            grid-template-columns: 1fr;
+        }
+
+        .curiosity-nav {
+            display: none;
+        }
+
+        .group-label {
+            font-size: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="impost-shell">
+    <section class="panel info-card">
+        <h2 class="info-title">O que &eacute;</h2>
+        <p class="section-copy">
+            O Impost&ocirc;metro mostra o total estimado de tributos arrecadados no Brasil no per&iacute;odo,
+            somando esfera federal, estadual e municipal no mesmo padr&atilde;o exibido pelo site original.
+        </p>
+    </section>
+
+    <section class="impost-hero">
+        <div class="hero-title">BRASIL</div>
+        <div class="hero-panel">
+            <div class="period-row">
+                <div class="period-field">
+                    <span>De:</span>
+                    <span class="period-chip">{{ period_start_display }}</span>
+                </div>
+                <div class="period-field">
+                    <span>At&eacute;:</span>
+                    <span class="period-chip">{{ period_end_display }}</span>
+                </div>
+            </div>
+
+            <div class="counter-stage" id="impost-counter-grid">
+                {% for group in counter_groups %}
+                <div class="counter-group">
+                    <div class="counter-digits">
+                        {% for digit in group.digits %}
+                        <span class="digit-tile">{{ digit }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="group-label">{{ group.label }}</div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="period-note">
+                Dados referentes ao per&iacute;odo entre {{ period_start_display }} e {{ period_end_display }}
+            </div>
+        </div>
+
+        <div class="curiosity-bar">
+            <div class="curiosity-nav">&lt;</div>
+            <div class="curiosity-copy">
+                Com esse dinheiro voc&ecirc; poderia comprar <strong>{{ basic_basket_count_display }}</strong> Cestas B&aacute;sicas.
+            </div>
+            <div class="curiosity-nav">&gt;</div>
+        </div>
+    </section>
+
+    <div class="status-row">
+        {% if data_source == "acsp" %}
+        <span class="status-pill">Ao vivo | Fonte: API do Impost&ocirc;metro</span>
+        {% elif data_source == "disk_snapshot" %}
+        <span class="status-pill">Snapshot | Fonte: snapshot local persistido</span>
+        {% else %}
+        <span class="status-pill">Estimado | Fallback local com base no &uacute;ltimo ano fechado</span>
+        {% endif %}
+    </div>
+
+    <section class="info-grid">
+        <div class="panel info-card">
+            <h2 class="info-title">Tributos acumulados no Brasil</h2>
+            <div class="stats-list">
+                <div class="stat-box">
+                    <span>Por segundo</span>
+                    <strong>{{ rate_per_second_display }}</strong>
+                    <small>Ritmo incremental do contador.</small>
+                </div>
+                <div class="stat-box">
+                    <span>Por minuto</span>
+                    <strong>{{ rate_per_minute_display }}</strong>
+                    <small>Estimativa no mesmo padr&atilde;o do painel.</small>
+                </div>
+                <div class="stat-box">
+                    <span>Fechamento {{ current_year|add:"-1" }}</span>
+                    <strong>{{ previous_year_total_display }}</strong>
+                    <small>Total anual encerrado.</small>
+                </div>
+                <div class="stat-box">
+                    <span>Proje&ccedil;&atilde;o {{ current_year }}</span>
+                    <strong>{{ projected_year_total_display }}</strong>
+                    <small>{% if yoy_pct is not None %}{{ yoy_pct_display }} vs {{ current_year|add:"-1" }}{% else %}Sem compara&ccedil;&atilde;o dispon&iacute;vel{% endif %}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel info-card">
+            <h2 class="info-title">Notas e Fontes</h2>
+            <ul class="note-list">
+                {% for point in source_points %}
+                <li>{{ point|safe }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <section class="panel history-panel">
+        <div class="history-head">
+            <div>
+                <h2>Tributos no Brasil por ano</h2>
+                <p>Evolu&ccedil;&atilde;o anual do total arrecadado no Brasil segundo a metodologia do Impost&ocirc;metro.</p>
+            </div>
+        </div>
+
+        <svg viewBox="0 0 {{ history_chart.width }} {{ history_chart.height }}" class="svg-chart" role="img" aria-label="Grafico de barras do total anual de tributos no Brasil">
+            {% for tick in history_chart.grid_lines %}
+            <line x1="64" y1="{{ tick.y|unlocalize }}" x2="{{ history_chart.width|add:"-18"|unlocalize }}" y2="{{ tick.y|unlocalize }}" class="chart-gridline"></line>
+            <text x="4" y="{{ tick.y|add:"4"|unlocalize }}" class="chart-axis-text">{{ tick.label }}</text>
+            {% endfor %}
+
+            {% for bar in history_chart.bars %}
+            <rect x="{{ bar.x|unlocalize }}" y="{{ bar.y|unlocalize }}" width="{{ bar.width|unlocalize }}" height="{{ bar.height|unlocalize }}" rx="3" class="chart-bar-item">
+                <title>{{ bar.year }}: {{ bar.value_display }}</title>
+            </rect>
+            {% endfor %}
+
+            {% if history_chart.points %}
+            <polyline points="{{ history_chart.points }}" class="chart-series-line"></polyline>
+            {% endif %}
+
+            {% for dot in history_chart.dots %}
+            <circle cx="{{ dot.x|unlocalize }}" cy="{{ dot.y|unlocalize }}" r="3.5" class="chart-dot-item">
+                <title>{{ dot.year }}: {{ dot.value_display }}</title>
+            </circle>
+            {% endfor %}
+
+            {% for item in history_chart.x_labels %}
+            {% if forloop.counter0|divisibleby:2 %}
+            <text x="{{ item.x|unlocalize }}" y="{{ history_chart.height|add:"-6"|unlocalize }}" text-anchor="middle" class="chart-axis-text">{{ item.label }}</text>
+            {% endif %}
+            {% endfor %}
+        </svg>
+
+        <p class="chart-caption">
+            Valores de {{ history_start_year }} a {{ history_last_full_year }} s&atilde;o totais anuais fechados.
+            O valor de {{ current_year }} &eacute; proje&ccedil;&atilde;o anualizada com base no acumulado at&eacute; hoje.
+        </p>
+    </section>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    const accumulated = {{ accumulated|unlocalize }};
+    const ratePerSec = {{ rate_per_second|unlocalize }};
+    const serverTsMs = {{ server_timestamp_ms|unlocalize }};
+    const counterEl = document.getElementById("impost-counter-grid");
+
+    function splitThousands(integerText) {
+        const groups = [];
+        let buffer = integerText;
+        while (buffer.length > 3) {
+            groups.unshift(buffer.slice(-3));
+            buffer = buffer.slice(0, -3);
+        }
+        groups.unshift(buffer || "0");
+        return groups;
+    }
+
+    function buildCounterGroups(value) {
+        const absolute = Math.max(0, value).toFixed(2);
+        const parts = absolute.split(".");
+        const integerGroups = splitThousands(parts[0]);
+        const labelsBySize = {
+            2: {
+                singular: ["Real", "Centavo"],
+                plural: ["Reais", "Centavos"]
+            },
+            3: {
+                singular: ["Mil", "Real", "Centavo"],
+                plural: ["Mil", "Reais", "Centavos"]
+            },
+            4: {
+                singular: ["Milhão", "Mil", "Real", "Centavo"],
+                plural: ["Milhões", "Mil", "Reais", "Centavos"]
+            },
+            5: {
+                singular: ["Bilhão", "Milhão", "Mil", "Real", "Centavo"],
+                plural: ["Bilhões", "Milhões", "Mil", "Reais", "Centavos"]
+            },
+            6: {
+                singular: ["Trilhão", "Bilhão", "Milhão", "Mil", "Real", "Centavo"],
+                plural: ["Trilhões", "Bilhões", "Milhões", "Mil", "Reais", "Centavos"]
+            }
+        };
+        const config = labelsBySize[integerGroups.length + 1] || labelsBySize[6];
+
+        return integerGroups.concat(parts[1]).map(function (groupText, index) {
+            const numericGroup = Number(groupText);
+            const label = numericGroup === 1 ? config.singular[index] : config.plural[index];
+            return {
+                digits: groupText.split(""),
+                label: label
+            };
+        });
+    }
+
+    function renderCounter(value) {
+        if (!counterEl) return;
+        const groups = buildCounterGroups(value);
+        counterEl.innerHTML = groups.map(function (group) {
+            const digitsHtml = group.digits.map(function (digit) {
+                return '<span class="digit-tile">' + digit + "</span>";
+            }).join("");
+            return [
+                '<div class="counter-group">',
+                '<div class="counter-digits">', digitsHtml, "</div>",
+                '<div class="group-label">', group.label, "</div>",
+                "</div>"
+            ].join("");
+        }).join("");
+    }
+
+    function tick() {
+        const nowMs = Date.now();
+        const elapsedSec = (nowMs - serverTsMs) / 1000;
+        const current = accumulated + (ratePerSec * elapsedSec);
+        renderCounter(current);
+    }
+
+    tick();
+    setInterval(tick, 250);
+}());
+</script>
+{% endblock %}

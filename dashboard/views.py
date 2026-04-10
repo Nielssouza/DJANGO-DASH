@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import unicodedata
@@ -23,6 +24,50 @@ CURRENCY_CATALOG_CACHE_FILE = "currency_catalog_cache.csv"
 CRYPTO_MARKETS_CACHE_FILE = "crypto_markets_cache.csv"
 GLOBAL_STOCKS_CACHE_FILE = "global_stocks_cache.csv"
 HDI_CACHE_FILE = "hdi_data_cache.csv"
+IMPOSTOMETRO_API_URL = "https://impostometro.com.br/Contador/Brasil"
+IMPOSTOMETRO_SOURCE_URL = "https://impostometro.com.br/"
+IMPOSTOMETRO_METHODOLOGY_URL = "https://impostometro.com.br/home/metodologiaimpostometro"
+IMPOSTOMETRO_LIVE_CACHE_TTL_SECONDS = 300
+IMPOSTOMETRO_HISTORY_CACHE_TTL_SECONDS = 86400
+IMPOSTOMETRO_HISTORY_YEARS = 10
+IMPOSTOMETRO_PERSISTED_CACHE_FILE = "impostometro_cache.json"
+IMPOSTOMETRO_ANNUAL_SEED_BRL = {
+    2016: 2_004_536_531_089,
+    2017: 2_172_053_819_243,
+    2018: 2_388_541_448_792,
+    2019: 2_504_853_948_529,
+    2020: 2_057_746_503_833,
+    2021: 2_592_601_562_926,
+    2022: 2_890_489_835_290,
+    2023: 3_059_131_305_527,
+    2024: 3_632_250_571_342,
+    2025: 3_985_305_326_877,
+}
+# Annual federal arrecadação managed by RFB (federal + INSS, in BRL)
+# Source: Receita Federal do Brasil – Análise da Arrecadação das Receitas Federais
+FEDERAL_ARRECADACAO_ANUAL_BRL = {
+    2005: 548_700_000_000,
+    2006: 622_300_000_000,
+    2007: 733_800_000_000,
+    2008: 846_300_000_000,
+    2009: 841_300_000_000,
+    2010: 849_700_000_000,
+    2011: 998_300_000_000,
+    2012: 1_097_300_000_000,
+    2013: 1_168_200_000_000,
+    2014: 1_221_200_000_000,
+    2015: 1_198_900_000_000,
+    2016: 1_267_800_000_000,
+    2017: 1_312_600_000_000,
+    2018: 1_421_300_000_000,
+    2019: 1_510_200_000_000,
+    2020: 1_483_800_000_000,
+    2021: 1_876_300_000_000,
+    2022: 2_069_300_000_000,
+    2023: 2_241_100_000_000,
+    2024: 2_655_500_000_000,
+    2025: 2_920_000_000_000,
+}
 HDI_SOURCE_PAGE_URL = "https://hdr.undp.org/data-center/human-development-index"
 HDI_DATA_FALLBACK_URL = "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Statistical_Annex_HDI_Table.xlsx"
 HDI_TIME_SERIES_CACHE_FILE = "hdi_time_series_cache.csv"
@@ -398,6 +443,9 @@ HDI_CACHE = None
 HDI_TIME_SERIES_CACHE = None
 HDI_DATA_URL_CACHE = HDI_DATA_FALLBACK_URL
 HDI_TIME_SERIES_URL_CACHE = HDI_TIME_SERIES_FALLBACK_URL
+IMPOSTOMETRO_RANGE_CACHE = {}
+IMPOSTOMETRO_RANGE_CACHE_TS = {}
+IMPOSTOMETRO_PERSISTED_CACHE = None
 LIMIT_OPTIONS = [10, 25, 50, 100, 0]
 METRIC_DEFINITIONS = {
     "gdp": {"label": "PIB Nominal (US$)", "short_label": "PIB", "field": "gdp"},
@@ -1056,7 +1104,10 @@ def fmt_brl_compact(value, digits=1):
 
     prefix = "-" if value < 0 else ""
     absolute_value = abs(float(value))
-    if absolute_value >= 1e9:
+    if absolute_value >= 1e12:
+        scaled_value = absolute_value / 1e12
+        suffix = " tri"
+    elif absolute_value >= 1e9:
         scaled_value = absolute_value / 1e9
         suffix = " bi"
     elif absolute_value >= 1e6:
@@ -4717,3 +4768,574 @@ def pib_mundial(request):
         "empty_message": "Nenhum dado encontrado para o filtro atual." if not table_rows else "",
     }
     return render(request, "dashboard/pib_mundial.html", context)
+
+
+# ---- Impostômetro ----
+
+def fetch_impostometro_live():
+    """Try to fetch live accumulated value from ACSP impostômetro API."""
+    import datetime as _dt
+    global IMPOSTOMETRO_CACHE, IMPOSTOMETRO_CACHE_TS
+    now = _dt.datetime.now()
+    if (
+        IMPOSTOMETRO_CACHE is not None
+        and IMPOSTOMETRO_CACHE_TS is not None
+        and (now - IMPOSTOMETRO_CACHE_TS).total_seconds() < 300
+    ):
+        return IMPOSTOMETRO_CACHE
+    try:
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "X-Requested-With": "XMLHttpRequest",
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/124.0.0.0 Safari/537.36"
+            ),
+            "Referer": "https://impostometro.com.br/",
+        }
+        response = requests.post(IMPOSTOMETRO_API_URL, json={}, headers=headers, timeout=8)
+        response.raise_for_status()
+        data = response.json()
+        accumulated = (
+            data.get("Acumulado")
+            or data.get("acumulado")
+            or data.get("ACUMULADO")
+        )
+        if accumulated is not None and float(accumulated) > 0:
+            value = float(accumulated)
+            IMPOSTOMETRO_CACHE = value
+            IMPOSTOMETRO_CACHE_TS = now
+            return value
+    except Exception:
+        pass
+    return None
+
+
+def compute_impostometro_ytd(year_total, year):
+    """Compute accumulated tax from Jan 1 of year to now, proportional to annual total."""
+    import datetime as _dt
+    now = _dt.datetime.now()
+    year_start = _dt.datetime(year, 1, 1)
+    year_end = _dt.datetime(year + 1, 1, 1)
+    year_seconds = (year_end - year_start).total_seconds()
+    elapsed = max(0.0, (now - year_start).total_seconds())
+    return year_total * (elapsed / year_seconds)
+
+
+def build_impostometro_history_chart(years, values, width=680, height=270):
+    """Build SVG-compatible bar+line chart data for historical annual arrecadação."""
+    left_padding, right_padding, top_padding, bottom_padding = 64, 18, 20, 40
+    plot_width = width - left_padding - right_padding
+    plot_height = height - top_padding - bottom_padding
+
+    if not values:
+        return {"width": width, "height": height, "grid_lines": [], "x_labels": [], "bars": [], "points": "", "dots": []}
+
+    min_val = 0.0
+    max_val = max(float(v) for v in values) * 1.08
+
+    def x_pos(i):
+        if len(years) <= 1:
+            return left_padding + plot_width / 2
+        return left_padding + (plot_width / (len(years) - 1)) * i
+
+    def y_pos(v):
+        ratio = (float(v) - min_val) / (max_val - min_val) if max_val > min_val else 0
+        return top_padding + plot_height - ratio * plot_height
+
+    grid_lines = []
+    for step in range(5):
+        tick_v = min_val + (max_val - min_val) * step / 4
+        grid_lines.append({"y": round(y_pos(tick_v), 1), "label": fmt_brl_compact(tick_v)})
+    grid_lines.sort(key=lambda g: g["y"])
+
+    x_labels = [{"x": round(x_pos(i), 1), "label": str(y)} for i, y in enumerate(years)]
+
+    bar_width = max(6.0, (plot_width / len(years)) * 0.64) if years else 10.0
+    floor_y = y_pos(min_val)
+    bars = []
+    points_list = []
+    dots = []
+    for i, (yr, val) in enumerate(zip(years, values)):
+        x = x_pos(i)
+        y = y_pos(val)
+        bars.append({
+            "x": round(x - bar_width / 2, 1),
+            "y": round(y, 1),
+            "width": round(bar_width, 1),
+            "height": round(floor_y - y, 1),
+            "year": yr,
+            "value_display": fmt_brl_compact(val),
+        })
+        points_list.append(f"{x:.1f},{y:.1f}")
+        dots.append({
+            "x": round(x, 1),
+            "y": round(y, 1),
+            "year": yr,
+            "value_display": fmt_brl_compact(val),
+        })
+
+    return {
+        "width": width,
+        "height": height,
+        "grid_lines": grid_lines,
+        "x_labels": x_labels,
+        "bars": bars,
+        "points": " ".join(points_list),
+        "dots": dots,
+    }
+
+
+def impostometro(request):
+    import datetime as _dt
+    now = _dt.datetime.now()
+    current_year = now.year
+    year_total = FEDERAL_ARRECADACAO_ANUAL_BRL.get(current_year) or FEDERAL_ARRECADACAO_ANUAL_BRL.get(current_year - 1, 0)
+    year_start = _dt.datetime(current_year, 1, 1)
+    year_end = _dt.datetime(current_year + 1, 1, 1)
+    seconds_per_year = (year_end - year_start).total_seconds()
+    rate_per_second = year_total / seconds_per_year if seconds_per_year else 0
+
+    live_value = fetch_impostometro_live()
+    if live_value is not None:
+        accumulated = live_value
+        data_source = "acsp"
+        source_label = "ACSP – Impost\u00f4metro"
+        source_url = "https://impostometro.com.br/"
+    else:
+        accumulated = compute_impostometro_ytd(year_total, current_year)
+        data_source = "rfb"
+        source_label = "Receita Federal do Brasil"
+        source_url = "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/dados-abertos/receitadata/arrecadacao"
+
+    server_timestamp_ms = int(now.timestamp() * 1000)
+
+    chart_years = sorted(FEDERAL_ARRECADACAO_ANUAL_BRL.keys())
+    chart_values = [FEDERAL_ARRECADACAO_ANUAL_BRL[y] for y in chart_years]
+    history_chart = build_impostometro_history_chart(chart_years, chart_values, width=680, height=270)
+
+    prev_year = current_year - 1
+    prev_total = FEDERAL_ARRECADACAO_ANUAL_BRL.get(prev_year)
+    yoy_pct = ((year_total - prev_total) / prev_total * 100) if prev_total else None
+
+    day_of_year = now.timetuple().tm_yday
+    ytd_days = max(1, day_of_year)
+    daily_avg = accumulated / ytd_days
+    rate_per_minute = rate_per_second * 60
+    rate_per_hour = rate_per_second * 3600
+
+    elapsed_fraction = (now - year_start).total_seconds() / seconds_per_year if seconds_per_year else 1
+    projected_year_total = (accumulated / elapsed_fraction) if elapsed_fraction > 0 else year_total
+
+    source_points = [
+        f'Fonte: <a href="{source_url}" target="_blank" rel="noopener noreferrer">{source_label}</a>.',
+        "A arrecada\u00e7\u00e3o federal inclui impostos e contribui\u00e7\u00f5es administrados pela Receita Federal do Brasil (RFB) e INSS, abrangendo IR, IPI, IOF, CSLL, PIS/COFINS e demais tributos federais.",
+        "O contador em tempo real \u00e9 calculado com base na taxa m\u00e9dia di\u00e1ria do exerc\u00edcio atual. Valores do ano corrente incluem proje\u00e7\u00e3o.",
+        "Acumulado desde 1\u00b0 de janeiro do ano corrente.",
+    ]
+
+    context = {
+        "current_year": current_year,
+        "accumulated": accumulated,
+        "rate_per_second": rate_per_second,
+        "rate_per_minute": rate_per_minute,
+        "rate_per_hour": rate_per_hour,
+        "daily_avg": daily_avg,
+        "year_total": year_total,
+        "projected_year_total": projected_year_total,
+        "yoy_pct": yoy_pct,
+        "server_timestamp_ms": server_timestamp_ms,
+        "history_chart": history_chart,
+        "data_source": data_source,
+        "source_label": source_label,
+        "source_url": source_url,
+        "source_points": source_points,
+        "rate_per_second_display": fmt_brl_full(rate_per_second),
+        "rate_per_minute_display": fmt_brl_full(rate_per_minute),
+        "rate_per_hour_display": fmt_brl_full(rate_per_hour),
+        "daily_avg_display": fmt_brl_compact(daily_avg),
+        "year_total_display": fmt_brl_compact(year_total),
+        "projected_year_total_display": fmt_brl_compact(projected_year_total),
+        "yoy_pct_display": fmt_percent(yoy_pct, signed=True) if yoy_pct is not None else "--",
+        "ytd_days": ytd_days,
+    }
+    return render(request, "dashboard/impostometro.html", context)
+
+
+def build_impostometro_api_headers():
+    return {
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        "X-Requested-With": "XMLHttpRequest",
+        "Referer": IMPOSTOMETRO_SOURCE_URL,
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36"
+        ),
+    }
+
+
+def normalize_impostometro_date(value):
+    import datetime as _dt
+
+    if isinstance(value, _dt.datetime):
+        value = value.date()
+    if isinstance(value, _dt.date):
+        return value.strftime("%d/%m/%Y")
+    return str(value)
+
+
+def build_impostometro_range_cache_key(start_str, end_str):
+    return f"{start_str}|{end_str}"
+
+
+def get_impostometro_cache_file_path():
+    return os.path.join(os.getcwd(), IMPOSTOMETRO_PERSISTED_CACHE_FILE)
+
+
+def load_impostometro_persisted_cache():
+    global IMPOSTOMETRO_PERSISTED_CACHE
+
+    if IMPOSTOMETRO_PERSISTED_CACHE is not None:
+        return IMPOSTOMETRO_PERSISTED_CACHE
+
+    cache_data = {"ranges": {}}
+    cache_path = get_impostometro_cache_file_path()
+    try:
+        with open(cache_path, "r", encoding="utf-8") as cache_file:
+            loaded = json.load(cache_file)
+        if isinstance(loaded, dict) and isinstance(loaded.get("ranges"), dict):
+            cache_data["ranges"] = loaded["ranges"]
+    except (OSError, ValueError, TypeError):
+        pass
+
+    IMPOSTOMETRO_PERSISTED_CACHE = cache_data
+    return cache_data
+
+
+def save_impostometro_persisted_cache(cache_data):
+    global IMPOSTOMETRO_PERSISTED_CACHE
+
+    cache_path = get_impostometro_cache_file_path()
+    try:
+        with open(cache_path, "w", encoding="utf-8") as cache_file:
+            json.dump(cache_data, cache_file, ensure_ascii=False, indent=2, sort_keys=True)
+        IMPOSTOMETRO_PERSISTED_CACHE = cache_data
+    except OSError:
+        IMPOSTOMETRO_PERSISTED_CACHE = cache_data
+
+
+def get_impostometro_persisted_range(start_str, end_str):
+    persisted_cache = load_impostometro_persisted_cache()
+    cache_key = build_impostometro_range_cache_key(start_str, end_str)
+    entry = persisted_cache.get("ranges", {}).get(cache_key)
+    return dict(entry) if isinstance(entry, dict) else None
+
+
+def persist_impostometro_range(result, fetched_at):
+    persisted_cache = load_impostometro_persisted_cache()
+    persisted_ranges = persisted_cache.setdefault("ranges", {})
+    persisted_result = dict(result)
+    persisted_result["fetched_at"] = fetched_at.isoformat()
+    cache_key = build_impostometro_range_cache_key(result["start_date"], result["end_date"])
+    persisted_ranges[cache_key] = persisted_result
+    save_impostometro_persisted_cache(persisted_cache)
+
+
+def parse_impostometro_timestamp(value):
+    import datetime as _dt
+
+    if not value:
+        return None
+
+    normalized = str(value).strip()
+    if "." in normalized:
+        head, tail = normalized.split(".", 1)
+        digits = "".join(ch for ch in tail if ch.isdigit())[:6]
+        normalized = f"{head}.{digits}" if digits else head
+
+    try:
+        return _dt.datetime.fromisoformat(normalized)
+    except ValueError:
+        return None
+
+
+def get_latest_impostometro_persisted_snapshot(year, max_end_date=None):
+    import datetime as _dt
+
+    persisted_ranges = load_impostometro_persisted_cache().get("ranges", {})
+    latest_entry = None
+    latest_end_date = None
+
+    for entry in persisted_ranges.values():
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("start_date") != f"01/01/{year}":
+            continue
+
+        try:
+            entry_end_date = _dt.datetime.strptime(entry.get("end_date", ""), "%d/%m/%Y").date()
+        except ValueError:
+            continue
+
+        if max_end_date is not None and entry_end_date > max_end_date:
+            continue
+        if latest_end_date is None or entry_end_date > latest_end_date:
+            latest_entry = dict(entry)
+            latest_end_date = entry_end_date
+
+    return latest_entry
+
+
+def build_impostometro_live_fallback_from_snapshot(snapshot, now=None):
+    import datetime as _dt
+
+    if snapshot is None:
+        return None
+
+    now = now or _dt.datetime.now()
+    snapshot_value = float(snapshot.get("value") or 0.0)
+    snapshot_increment = float(snapshot.get("increment") or 0.0)
+    snapshot_timestamp = parse_impostometro_timestamp(snapshot.get("data")) or parse_impostometro_timestamp(snapshot.get("fetched_at"))
+    if snapshot_timestamp is None:
+        return None
+
+    elapsed_seconds = max(0.0, (now - snapshot_timestamp).total_seconds())
+    derived = dict(snapshot)
+    derived["value"] = snapshot_value + (snapshot_increment * elapsed_seconds)
+    derived["derived_from_snapshot"] = True
+    return derived
+
+
+def fmt_integer_br(value):
+    if value is None:
+        return "--"
+    return f"{int(value):,}".replace(",", ".")
+
+
+def build_impostometro_counter_groups(value):
+    absolute_text = f"{abs(float(value or 0.0)):.2f}"
+    integer_text, cents_text = absolute_text.split(".")
+
+    integer_groups = []
+    while integer_text:
+        integer_groups.insert(0, integer_text[-3:])
+        integer_text = integer_text[:-3]
+    if not integer_groups:
+        integer_groups = ["0"]
+
+    group_count = len(integer_groups) + 1
+    labels_by_size = {
+        2: (["Real", "Centavo"], ["Reais", "Centavos"]),
+        3: (["Mil", "Real", "Centavo"], ["Mil", "Reais", "Centavos"]),
+        4: (["Milhão", "Mil", "Real", "Centavo"], ["Milhões", "Mil", "Reais", "Centavos"]),
+        5: (["Bilhão", "Milhão", "Mil", "Real", "Centavo"], ["Bilhões", "Milhões", "Mil", "Reais", "Centavos"]),
+        6: (["Trilhão", "Bilhão", "Milhão", "Mil", "Real", "Centavo"], ["Trilhões", "Bilhões", "Milhões", "Mil", "Reais", "Centavos"]),
+    }
+    singular_labels, plural_labels = labels_by_size.get(group_count, labels_by_size[6])
+
+    groups = []
+    for group_text, singular_label, plural_label in zip(integer_groups + [cents_text], singular_labels, plural_labels):
+        label = singular_label if int(group_text or "0") == 1 else plural_label
+        groups.append({"digits": list(group_text), "label": label})
+    return groups
+
+
+def fetch_impostometro_range(start_date, end_date, cache_ttl_seconds=IMPOSTOMETRO_LIVE_CACHE_TTL_SECONDS):
+    import datetime as _dt
+
+    global IMPOSTOMETRO_RANGE_CACHE, IMPOSTOMETRO_RANGE_CACHE_TS
+
+    start_str = normalize_impostometro_date(start_date)
+    end_str = normalize_impostometro_date(end_date)
+    cache_key = (start_str, end_str)
+    now = _dt.datetime.now()
+
+    cached = IMPOSTOMETRO_RANGE_CACHE.get(cache_key)
+    cached_at = IMPOSTOMETRO_RANGE_CACHE_TS.get(cache_key)
+    if (
+        cached is not None
+        and cached_at is not None
+        and (now - cached_at).total_seconds() < cache_ttl_seconds
+    ):
+        return cached
+
+    try:
+        response = requests.get(
+            IMPOSTOMETRO_API_URL,
+            params={"dataInicial": start_str, "dataFinal": end_str},
+            headers=build_impostometro_api_headers(),
+            timeout=8,
+        )
+        response.raise_for_status()
+        data = response.json()
+        result = {
+            "start_date": start_str,
+            "end_date": end_str,
+            "value": float(data.get("Valor") or 0.0),
+            "increment": float(data.get("Incremento") or 0.0),
+            "data": data.get("Data") or "",
+            "midnight": data.get("Midnight") or "",
+        }
+        IMPOSTOMETRO_RANGE_CACHE[cache_key] = result
+        IMPOSTOMETRO_RANGE_CACHE_TS[cache_key] = now
+        persist_impostometro_range(result, now)
+        return result
+    except Exception:
+        persisted = get_impostometro_persisted_range(start_str, end_str)
+        if persisted is not None:
+            IMPOSTOMETRO_RANGE_CACHE[cache_key] = persisted
+            IMPOSTOMETRO_RANGE_CACHE_TS[cache_key] = now
+            return persisted
+        return None
+
+
+def fetch_impostometro_live():
+    import datetime as _dt
+
+    today = _dt.date.today()
+    live_result = fetch_impostometro_range(
+        _dt.date(today.year, 1, 1),
+        today,
+        cache_ttl_seconds=IMPOSTOMETRO_LIVE_CACHE_TTL_SECONDS,
+    )
+    if live_result is not None:
+        return live_result
+
+    latest_snapshot = get_latest_impostometro_persisted_snapshot(today.year, max_end_date=today)
+    return build_impostometro_live_fallback_from_snapshot(latest_snapshot)
+
+
+def fetch_impostometro_year_total(year):
+    import datetime as _dt
+
+    year_total = fetch_impostometro_range(
+        _dt.date(year, 1, 1),
+        _dt.date(year, 12, 31),
+        cache_ttl_seconds=IMPOSTOMETRO_HISTORY_CACHE_TTL_SECONDS,
+    )
+    if year_total is not None:
+        return year_total
+
+    seeded_total = IMPOSTOMETRO_ANNUAL_SEED_BRL.get(year)
+    if seeded_total is not None:
+        return {
+            "start_date": f"01/01/{year}",
+            "end_date": f"31/12/{year}",
+            "value": float(seeded_total),
+            "increment": 0.0,
+            "data": "",
+            "midnight": "",
+            "seeded": True,
+        }
+    return None
+
+
+def impostometro(request):
+    import datetime as _dt
+
+    now = _dt.datetime.now()
+    today = now.date()
+    current_year = now.year
+    year_start = _dt.datetime(current_year, 1, 1)
+    year_end = _dt.datetime(current_year + 1, 1, 1)
+    seconds_per_year = (year_end - year_start).total_seconds()
+    elapsed_fraction = (now - year_start).total_seconds() / seconds_per_year if seconds_per_year else 0.0
+
+    live_data = fetch_impostometro_live()
+    previous_year_data = fetch_impostometro_year_total(current_year - 1)
+    previous_year_total = previous_year_data["value"] if previous_year_data else None
+
+    if live_data is not None:
+        accumulated = live_data["value"]
+        rate_per_second = live_data["increment"]
+        data_source = "disk_snapshot" if live_data.get("derived_from_snapshot") else "acsp"
+        source_label = (
+            "Snapshot local do Impostometro"
+            if live_data.get("derived_from_snapshot")
+            else "ACSP / IBPT - Impostometro"
+        )
+        source_url = IMPOSTOMETRO_SOURCE_URL
+    else:
+        baseline_total = previous_year_total or 0.0
+        accumulated = baseline_total * elapsed_fraction
+        rate_per_second = (baseline_total / seconds_per_year) if seconds_per_year and baseline_total else 0.0
+        data_source = "fallback"
+        source_label = "Estimativa local com base no ultimo ano fechado"
+        source_url = IMPOSTOMETRO_METHODOLOGY_URL
+
+    rate_per_minute = rate_per_second * 60
+    rate_per_hour = rate_per_second * 3600
+    day_of_year = now.timetuple().tm_yday
+    ytd_days = max(1, day_of_year)
+    daily_avg = (accumulated / ytd_days) if accumulated else 0.0
+    projected_year_total = (accumulated / elapsed_fraction) if elapsed_fraction > 0 else accumulated
+    basic_basket_reference_brl = 435.0
+    basic_basket_count = max(0, int(accumulated / basic_basket_reference_brl))
+    yoy_pct = (
+        (projected_year_total - previous_year_total) / previous_year_total * 100
+        if previous_year_total
+        else None
+    )
+
+    history_start_year = max(2005, current_year - IMPOSTOMETRO_HISTORY_YEARS)
+    history_points = []
+    for year in range(history_start_year, current_year):
+        year_data = fetch_impostometro_year_total(year)
+        if year_data is not None and year_data["value"] > 0:
+            history_points.append((year, year_data["value"]))
+
+    if projected_year_total > 0:
+        history_points.append((current_year, projected_year_total))
+
+    chart_years = [year for year, _ in history_points]
+    chart_values = [value for _, value in history_points]
+    history_chart = build_impostometro_history_chart(chart_years, chart_values, width=680, height=270)
+
+    source_points = [
+        f'Fonte principal: <a href="{IMPOSTOMETRO_SOURCE_URL}" target="_blank" rel="noopener noreferrer">Impostometro</a>.',
+        (
+            f'Metodologia oficial: <a href="{IMPOSTOMETRO_METHODOLOGY_URL}" '
+            'target="_blank" rel="noopener noreferrer">ACSP / IBPT</a>.'
+        ),
+        "O total do Brasil considera a soma dos tributos das esferas federal, estadual e municipal.",
+        "O contador usa o mesmo endpoint JSON chamado pela interface oficial do site para o periodo de 1 de janeiro ate hoje.",
+        "Quando a API falha, o sistema tenta reutilizar snapshots persistidos localmente e, na ausencia deles, usa totais anuais semeados para manter a projeção.",
+        "A serie historica usa totais anuais fechados da mesma API; o ano atual aparece como projecao anualizada.",
+    ]
+
+    context = {
+        "current_year": current_year,
+        "accumulated": accumulated,
+        "rate_per_second": rate_per_second,
+        "rate_per_minute": rate_per_minute,
+        "rate_per_hour": rate_per_hour,
+        "daily_avg": daily_avg,
+        "previous_year_total": previous_year_total,
+        "projected_year_total": projected_year_total,
+        "yoy_pct": yoy_pct,
+        "server_timestamp_ms": int(now.timestamp() * 1000),
+        "history_chart": history_chart,
+        "data_source": data_source,
+        "source_label": source_label,
+        "source_url": source_url,
+        "source_points": source_points,
+        "rate_per_second_display": fmt_brl_full(rate_per_second),
+        "rate_per_minute_display": fmt_brl_full(rate_per_minute),
+        "rate_per_hour_display": fmt_brl_full(rate_per_hour),
+        "daily_avg_display": fmt_brl_compact(daily_avg),
+        "previous_year_total_display": fmt_brl_compact(previous_year_total),
+        "projected_year_total_display": fmt_brl_compact(projected_year_total),
+        "yoy_pct_display": fmt_percent(yoy_pct, signed=True) if yoy_pct is not None else "--",
+        "ytd_days": ytd_days,
+        "history_start_year": chart_years[0] if chart_years else current_year,
+        "history_last_full_year": current_year - 1,
+        "period_start_display": year_start.strftime("%d/%m/%Y"),
+        "period_end_display": today.strftime("%d/%m/%Y"),
+        "basic_basket_reference_brl": basic_basket_reference_brl,
+        "basic_basket_count_display": fmt_integer_br(basic_basket_count),
+        "counter_groups": build_impostometro_counter_groups(accumulated),
+    }
+    return render(request, "dashboard/impostometro.html", context)

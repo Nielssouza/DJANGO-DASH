@@ -448,12 +448,16 @@ class HomeShortcutTests(SimpleTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "/empresarial/")
+        self.assertContains(response, "/impostometro/")
         self.assertContains(response, "/panorama-macroeconomico/")
         self.assertContains(response, "Abrir Panorama Macro")
+        self.assertContains(response, "Abrir Impost")
+        self.assertContains(response, "Abrir Empresarial")
         self.assertContains(response, "/cotacao-moedas/")
         self.assertContains(response, "Abrir Cota")
         self.assertContains(response, "/acoes-mercado-mundial/")
         self.assertContains(response, "Abrir A&ccedil;&otilde;es Globais")
+        self.assertContains(response, "sete frentes")
 
 
 class EmpresarialViewTests(SimpleTestCase):
@@ -600,3 +604,92 @@ class AcoesMercadoMundialViewTests(SimpleTestCase):
         self.assertContains(response, "Toyota Motor Corporation")
         self.assertContains(response, "Asia-Pacifico")
         self.assertNotContains(response, "Apple Inc.")
+
+
+class ImpostometroViewTests(SimpleTestCase):
+    @patch("dashboard.views.fetch_impostometro_year_total")
+    @patch("dashboard.views.fetch_impostometro_live")
+    def test_impostometro_page_renders_with_live_api_payload(self, mocked_live, mocked_year_total):
+        mocked_live.return_value = {
+            "value": 1234.5,
+            "increment": 10.25,
+            "data": "2026-04-09T21:04:44.4740000",
+            "midnight": "2026-04-09T00:00:00.0000000",
+        }
+        mocked_year_total.side_effect = lambda year: {"value": float(year) * 1000.0}
+
+        response = self.client.get("/impostometro/", secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Tributos acumulados no Brasil")
+        self.assertContains(response, "Fonte: API do Impost")
+        self.assertContains(response, "const accumulated = 1234.5;")
+        self.assertContains(response, "const ratePerSec = 10.25;")
+        self.assertNotContains(response, "const accumulated = 1234,5;")
+        self.assertNotContains(response, "const ratePerSec = 10,25;")
+
+    @patch("dashboard.views.fetch_impostometro_year_total")
+    @patch("dashboard.views.fetch_impostometro_live")
+    def test_impostometro_page_renders_with_fallback_when_api_is_unavailable(self, mocked_live, mocked_year_total):
+        mocked_live.return_value = None
+        mocked_year_total.side_effect = lambda year: {"value": 3_000_000_000_000.0}
+
+        response = self.client.get("/impostometro/", secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Estimado")
+        self.assertContains(response, "Fallback local com base no")
+        self.assertContains(response, "Tributos no Brasil por ano")
+
+    @patch("dashboard.views.fetch_impostometro_year_total")
+    @patch("dashboard.views.fetch_impostometro_live")
+    def test_impostometro_page_renders_with_disk_snapshot_badge(self, mocked_live, mocked_year_total):
+        mocked_live.return_value = {
+            "value": 1500.0,
+            "increment": 12.5,
+            "data": "2026-04-09T21:04:44.4740000",
+            "midnight": "2026-04-09T00:00:00.0000000",
+            "derived_from_snapshot": True,
+        }
+        mocked_year_total.side_effect = lambda year: {"value": 3_000_000_000_000.0}
+
+        response = self.client.get("/impostometro/", secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Snapshot")
+        self.assertContains(response, "Fonte: snapshot local persistido")
+
+    @patch("dashboard.views.requests.get", side_effect=Exception("offline"))
+    @patch("dashboard.views.load_impostometro_persisted_cache")
+    def test_fetch_impostometro_range_uses_persisted_cache_when_request_fails(self, mocked_load_cache, mocked_get):
+        from dashboard import views
+
+        mocked_load_cache.return_value = {
+            "ranges": {
+                "01/01/2026|09/04/2026": {
+                    "start_date": "01/01/2026",
+                    "end_date": "09/04/2026",
+                    "value": 111.0,
+                    "increment": 2.5,
+                    "data": "2026-04-09T21:04:44.4740000",
+                    "midnight": "2026-04-09T00:00:00.0000000",
+                }
+            }
+        }
+        views.IMPOSTOMETRO_RANGE_CACHE = {}
+        views.IMPOSTOMETRO_RANGE_CACHE_TS = {}
+
+        result = views.fetch_impostometro_range("01/01/2026", "09/04/2026")
+
+        self.assertEqual(result["value"], 111.0)
+        self.assertEqual(result["increment"], 2.5)
+        self.assertTrue(mocked_get.called)
+
+    @patch("dashboard.views.fetch_impostometro_range", return_value=None)
+    def test_fetch_impostometro_year_total_uses_seed_when_api_is_unavailable(self, mocked_fetch_range):
+        from dashboard import views
+
+        result = views.fetch_impostometro_year_total(2025)
+
+        self.assertEqual(result["value"], float(views.IMPOSTOMETRO_ANNUAL_SEED_BRL[2025]))
+        self.assertEqual(result["increment"], 0.0)
